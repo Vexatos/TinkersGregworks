@@ -10,7 +10,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IIcon;
-import net.minecraft.util.StatCollector;
 import tconstruct.library.util.IToolPart;
 import vexatos.tgregworks.TGregworks;
 import vexatos.tgregworks.integration.PartTypes;
@@ -55,9 +54,10 @@ public class ItemTGregPart extends CraftingItem implements IToolPart {
 		if(!data.hasKey("material") || Materials.get(data.getString("material")) == Materials._NULL) {
 			matName = "Unknown";
 		} else {
-			matName = Materials.get(data.getString("material")).name();
+			matName = Materials.get(data.getString("material")).mDefaultLocalName;
 		}
-		return StatCollector.translateToLocal("tgregworks.toolpart." + PartTypes.getFromID(stack.getItemDamage()) + "." + matName);
+		//return StatCollector.translateToLocal("tgregworks.toolpart." + PartTypes.getFromID(stack.getItemDamage()) + "." + matName);
+		return matName;
 	}
 
 	private static String[] buildTextureNames() {
