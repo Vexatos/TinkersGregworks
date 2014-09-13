@@ -12,7 +12,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IIcon;
 import tconstruct.library.util.IToolPart;
 import vexatos.tgregworks.TGregworks;
-import vexatos.tgregworks.integration.PartTypes;
+import vexatos.tgregworks.reference.PartTypes;
 
 import java.util.ArrayList;
 import java.util.HashMap;

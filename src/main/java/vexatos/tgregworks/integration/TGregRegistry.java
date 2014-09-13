@@ -3,17 +3,14 @@ package vexatos.tgregworks.integration;
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.Materials;
 import tconstruct.library.TConstructRegistry;
-import tconstruct.library.crafting.ToolBuilder;
-import tconstruct.library.crafting.ToolRecipe;
 import tconstruct.library.tools.ToolCore;
-import tconstruct.tools.BowRecipe;
-import tconstruct.tools.TinkerTools;
 import vexatos.tgregworks.TGregworks;
 import vexatos.tgregworks.item.ItemTGregPart;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * @author Vexatos
@@ -45,39 +42,42 @@ public class TGregRegistry {
 		for(Materials m : toolMaterials) {
 			toolMaterialNames.add(m.mDefaultLocalName);
 			int matID = getLatestAvailableNumber();
-			TConstructRegistry.addToolMaterial(matID, m.name(), m.mToolQuality, m.mDurability, (int) m.mToolSpeed, (int) m.mToolSpeed, (float) m.mToolQuality - 0.5F, (int) (((m.getDensity() / GregTech_API.MATERIAL_UNIT) - 1) % 3), 0F, "", (m.getRGBA()[0] << 16) | (m.getRGBA()[1] << 8) | (m.getRGBA()[2]));
+			TConstructRegistry.addToolMaterial(matID, m.name(), m.mToolQuality, m.mDurability, (int) m.mToolSpeed, (int) m.mToolSpeed, (float) m.mToolQuality - 0.5F, getReinforcedLevel(m), getStoneboundLevel(m), "", (m.getRGBA()[0] << 16) | (m.getRGBA()[1] << 8) | (m.getRGBA()[2]));
 			ToolCore.materialColourMap.put(matID, (m.getRGBA()[0] << 16) | (m.getRGBA()[1] << 8) | (m.getRGBA()[2]));
 			matIDs.put(m, matID);
-
 		}
+
 		ItemTGregPart.toolMaterialNames = toolMaterialNames;
 		ItemTGregPart.matIDs = matIDs;
 	}
 
-	private void addRecipesForToolBuilder() {
-		ToolBuilder.addNormalToolRecipe(TinkerTools.pickaxe, TinkerTools.pickaxeHead, TinkerTools.toolRod, TinkerTools.binding);
-		ToolBuilder.addNormalToolRecipe(TinkerTools.broadsword, TinkerTools.swordBlade, TinkerTools.toolRod, TinkerTools.wideGuard);
-		ToolBuilder.addNormalToolRecipe(TinkerTools.hatchet, TinkerTools.hatchetHead, TinkerTools.toolRod);
-		ToolBuilder.addNormalToolRecipe(TinkerTools.shovel, TinkerTools.shovelHead, TinkerTools.toolRod);
-		ToolBuilder.addNormalToolRecipe(TinkerTools.longsword, TinkerTools.swordBlade, TinkerTools.toolRod, TinkerTools.handGuard);
-		ToolBuilder.addNormalToolRecipe(TinkerTools.rapier, TinkerTools.swordBlade, TinkerTools.toolRod, TinkerTools.crossbar);
-		ToolBuilder.addNormalToolRecipe(TinkerTools.frypan, TinkerTools.frypanHead, TinkerTools.toolRod);
-		ToolBuilder.addNormalToolRecipe(TinkerTools.battlesign, TinkerTools.signHead, TinkerTools.toolRod);
-		ToolBuilder.addNormalToolRecipe(TinkerTools.mattock, TinkerTools.hatchetHead, TinkerTools.toolRod, TinkerTools.shovelHead);
-		ToolBuilder.addNormalToolRecipe(TinkerTools.dagger, TinkerTools.knifeBlade, TinkerTools.toolRod, TinkerTools.crossbar);
-		ToolBuilder.addNormalToolRecipe(TinkerTools.cutlass, TinkerTools.swordBlade, TinkerTools.toolRod, TinkerTools.fullGuard);
-		ToolBuilder.addNormalToolRecipe(TinkerTools.chisel, TinkerTools.chiselHead, TinkerTools.toolRod);
+	private List<Materials> stonebound1Mats = Arrays.asList(Materials.Titanium, Materials.Tungsten);
+	private List<Materials> spiny1Mats = Arrays.asList(Materials.Uranium, Materials.Uranium235);
 
-		ToolBuilder.addNormalToolRecipe(TinkerTools.scythe, TinkerTools.scytheBlade, TinkerTools.toughRod, TinkerTools.toughBinding, TinkerTools.toughRod);
-		ToolBuilder.addNormalToolRecipe(TinkerTools.lumberaxe, TinkerTools.broadAxeHead, TinkerTools.toughRod, TinkerTools.largePlate, TinkerTools.toughBinding);
-		ToolBuilder.addNormalToolRecipe(TinkerTools.cleaver, TinkerTools.largeSwordBlade, TinkerTools.toughRod, TinkerTools.largePlate, TinkerTools.toughRod);
-		ToolBuilder.addNormalToolRecipe(TinkerTools.excavator, TinkerTools.excavatorHead, TinkerTools.toughRod, TinkerTools.largePlate, TinkerTools.toughBinding);
-		ToolBuilder.addNormalToolRecipe(TinkerTools.hammer, TinkerTools.hammerHead, TinkerTools.toughRod, TinkerTools.largePlate, TinkerTools.largePlate);
-		ToolBuilder.addNormalToolRecipe(TinkerTools.battleaxe, TinkerTools.broadAxeHead, TinkerTools.toughRod, TinkerTools.broadAxeHead, TinkerTools.toughBinding);
+	private float getStoneboundLevel(Materials m) {
+		if(stonebound1Mats.contains(m)) {
+			return 1;
+		}
+		if(spiny1Mats.contains(m)) {
+			return -1;
+		}
+		return 0;
+	}
 
-		BowRecipe recipe = new BowRecipe(TinkerTools.toolRod, TinkerTools.bowstring, TinkerTools.toolRod, TinkerTools.shortbow);
-		ToolBuilder.addCustomToolRecipe(recipe);
-		ToolBuilder.addNormalToolRecipe(TinkerTools.arrow, TinkerTools.arrowhead, TinkerTools.toolRod, TinkerTools.fletching);
+	private List<Materials> reinforced1Mats = Arrays.asList(Materials.SteelMagnetic, Materials.BlackSteel, Materials.BlueSteel, Materials.Titanium, Materials.DamascusSteel, Materials.StainlessSteel, Materials.RedSteel, Materials.MeteoricSteel, Materials.TungstenSteel);
+	private List<Materials> reinforced2Mats = Arrays.asList(Materials.Osmium, Materials.Iridium);
+
+	private int getReinforcedLevel(Materials m) {
+		if(reinforced1Mats.contains(m)) {
+			return 1;
+		}
+		if(reinforced2Mats.contains(m)) {
+			return 2;
+		}
+		if(m == Materials.Osmiridium) {
+			return 3;
+		}
+		return 0;
 	}
 
 	private boolean doesMaterialExist(Materials m) {
