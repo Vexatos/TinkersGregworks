@@ -33,7 +33,9 @@ public enum PartTypes {
 	LargeSwordBlade		(		"Large Sword Blade",	"_large_sword_blade",	20	),
 	HammerHead			(		"Hammer Head",			"_hammer_head",			21	),
 
-	Chunk				(		"Shard",				"_chunk",				22	);
+	Chunk				(		"Shard",				"_chunk",				22	),
+
+	ArrowHead			(		"Arrow Head",			"_arrow_head",			23	);
 
 	public String textureName;
 	public String partName;
