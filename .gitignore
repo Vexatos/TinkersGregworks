@@ -1,0 +1,13 @@
+/*
+
+# folders
+!/docs
+!/gradle
+!/src
+
+# files
+!/.gitignore
+!/README.md
+!/build.gradle
+!/gradlew
+!/gradlew.bat
