@@ -42,7 +42,9 @@ public class TGregRegistry {
 		for(Materials m : toolMaterials) {
 			toolMaterialNames.add(m.mDefaultLocalName);
 			int matID = getLatestAvailableNumber();
-			TConstructRegistry.addToolMaterial(matID, m.name(), m.mToolQuality, m.mDurability, (int) m.mToolSpeed, (int) m.mToolSpeed, (float) m.mToolQuality - 0.5F, getReinforcedLevel(m), getStoneboundLevel(m), "", (m.getRGBA()[0] << 16) | (m.getRGBA()[1] << 8) | (m.getRGBA()[2]));
+			TConstructRegistry.addToolMaterial(matID, m.name(), m.mToolQuality, m.mDurability, (int) (m.mToolSpeed * 100F), (int) m.mToolQuality, (float) m.mToolQuality - 0.5F, getReinforcedLevel(m), getStoneboundLevel(m), "", (m.getRGBA()[0] << 16) | (m.getRGBA()[1] << 8) | (m.getRGBA()[2]));
+			TConstructRegistry.addBowMaterial(matID, m.mDurability, (int) (m.mToolQuality * 10F), ((float) m.mToolQuality) - 0.5F);
+			TConstructRegistry.addArrowMaterial(matID, (float)(((double) m.getMass()) / 10F), 0.2F, 99F);
 			ToolCore.materialColourMap.put(matID, (m.getRGBA()[0] << 16) | (m.getRGBA()[1] << 8) | (m.getRGBA()[2]));
 			matIDs.put(m, matID);
 		}
