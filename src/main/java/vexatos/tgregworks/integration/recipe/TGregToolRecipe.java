@@ -2,12 +2,11 @@ package vexatos.tgregworks.integration.recipe;
 
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import tconstruct.library.TConstructRegistry;
 import tconstruct.library.crafting.ToolRecipe;
 import tconstruct.library.tools.ToolCore;
 import tconstruct.tools.TinkerTools;
-import vexatos.tgregworks.reference.PartTypes;
+import vexatos.tgregworks.item.ItemTGregPart;
 
 import java.util.LinkedList;
 
@@ -16,23 +15,23 @@ import java.util.LinkedList;
  */
 public class TGregToolRecipe extends ToolRecipe {
 
-	protected LinkedList<ItemStack> newHeadList = new LinkedList<ItemStack>();
-	protected LinkedList<ItemStack> newHandleList = new LinkedList<ItemStack>();
-	protected LinkedList<ItemStack> newAccessoryList = new LinkedList<ItemStack>();
-	protected LinkedList<ItemStack> newExtraList = new LinkedList<ItemStack>();
+	protected LinkedList<ItemTGregPart> newHeadList = new LinkedList<ItemTGregPart>();
+	protected LinkedList<ItemTGregPart> newHandleList = new LinkedList<ItemTGregPart>();
+	protected LinkedList<ItemTGregPart> newAccessoryList = new LinkedList<ItemTGregPart>();
+	protected LinkedList<ItemTGregPart> newExtraList = new LinkedList<ItemTGregPart>();
 	protected Item toolRod = TConstructRegistry.getItem("toolRod");
 	protected Item fletching = TinkerTools.fletching;
 
-	public TGregToolRecipe(ItemStack head, ItemStack handle, ToolCore tool) {
-		super(head.getItem(), handle.getItem(), null, null, tool);
+	public TGregToolRecipe(ItemTGregPart head, ItemTGregPart handle, ToolCore tool) {
+		super(head, handle, null, null, tool);
 		this.newHeadList.add(head);
 		this.newHandleList.add(handle);
 		result = tool;
 	}
 
 	@SuppressWarnings("ConstantConditions")
-	public TGregToolRecipe(ItemStack head, ItemStack handle, ItemStack accessory, ToolCore tool) {
-		super(head.getItem(), handle.getItem(), accessory.getItem(), null, tool);
+	public TGregToolRecipe(ItemTGregPart head, ItemTGregPart handle, ItemTGregPart accessory, ToolCore tool) {
+		super(head, handle, accessory, null, tool);
 		this.newHeadList.add(head);
 		this.newHandleList.add(handle);
 		if(accessory != null) {
@@ -42,8 +41,8 @@ public class TGregToolRecipe extends ToolRecipe {
 	}
 
 	@SuppressWarnings("ConstantConditions")
-	public TGregToolRecipe(ItemStack head, ItemStack handle, ItemStack accessory, ItemStack extra, ToolCore tool) {
-		super(head.getItem(), handle.getItem(), accessory.getItem(), extra.getItem(), tool);
+	public TGregToolRecipe(ItemTGregPart head, ItemTGregPart handle, ItemTGregPart accessory, ItemTGregPart extra, ToolCore tool) {
+		super(head, handle, accessory, extra, tool);
 		this.newHeadList.add(head);
 		this.newHandleList.add(handle);
 		if(accessory != null) {
@@ -55,37 +54,53 @@ public class TGregToolRecipe extends ToolRecipe {
 		result = tool;
 	}
 
-	public TGregToolRecipe(ItemStack head, ItemStack handle, Item fletching, ToolCore arrow) {
-		this(head, handle, new ItemStack(fletching), arrow);
+	public TGregToolRecipe(ItemTGregPart head, ItemTGregPart handle, Item fletching, ToolCore arrow) {
+		super(head, handle, fletching, arrow);
+	}
+
+	public TGregToolRecipe(ItemTGregPart head, Item bowstring, ItemTGregPart accessory, ToolCore shortbow) {
+		super(head, bowstring, accessory, shortbow);
 	}
 
 	@Override
-	public void addHeadItem(ItemStack head) {
-		this.newHeadList.add(head);
+	public void addHeadItem(Item head) {
+		if(head instanceof ItemTGregPart) {
+			this.newHeadList.add((ItemTGregPart) head);
+		}
+		super.addHeadItem(head);
 	}
 
 	@Override
-	public void addHandleItem(ItemStack handle) {
-		this.newHandleList.add(handle);
+	public void addHandleItem(Item handle) {
+		if(handle instanceof ItemTGregPart) {
+			this.newHandleList.add((ItemTGregPart) handle);
+		}
+		super.addHandleItem(handle);
 	}
 
 	@Override
-	public void addAccessoryItem(ItemStack accessory) {
-		this.newAccessoryList.add(accessory);
+	public void addAccessoryItem(Item accessory) {
+		if(accessory instanceof ItemTGregPart) {
+			this.newAccessoryList.add((ItemTGregPart) accessory);
+		}
+		super.addAccessoryItem(accessory);
 	}
 
 	@Override
-	public void addExtraItem(ItemStack extra) {
-		this.newExtraList.add(extra);
+	public void addExtraItem(Item extra) {
+		if(extra instanceof ItemTGregPart) {
+			this.newExtraList.add((ItemTGregPart) extra);
+		}
+		super.addExtraItem(extra);
 	}
 
 	@Override
-	public boolean validHead(ItemStack input) {
-		for(ItemStack part : newHeadList) {
-			if((part.getItem() == input.getItem()) && (part.getItemDamage() == input.getItemDamage())) {
+	public boolean validHead(Item input) {
+		for(ItemTGregPart part : newHeadList) {
+			if((part == input) && isEqualType(part, input)) {
 				return true;
 			}
-			if(input.getItem() == PartTypes.getFromID(part.getItemDamage()).counterpart){
+			if(input == part.getType().counterpart) {
 				return true;
 			}
 		}
@@ -93,15 +108,15 @@ public class TGregToolRecipe extends ToolRecipe {
 	}
 
 	@Override
-	public boolean validHandle(ItemStack input) {
-		for(ItemStack part : newHandleList) {
-			if((part.getItem() == input.getItem()) && (part.getItemDamage() == input.getItemDamage())) {
+	public boolean validHandle(Item input) {
+		for(ItemTGregPart part : newHandleList) {
+			if((part == input) && isEqualType(part, input)) {
 				return true;
 			}
-			if(input.getItem() == PartTypes.getFromID(part.getItemDamage()).counterpart){
+			if(input == part.getType().counterpart) {
 				return true;
 			}
-			if(toolRod != null && part.getItem() == toolRod && (input.getItem() == Items.stick || input.getItem() == Items.bone)) {
+			if(toolRod != null && part.getType().counterpart == toolRod && (input == Items.stick || input == Items.bone)) {
 				return true;
 			}
 		}
@@ -109,21 +124,21 @@ public class TGregToolRecipe extends ToolRecipe {
 	}
 
 	@Override
-	public boolean validAccessory(ItemStack input) {
+	public boolean validAccessory(Item input) {
 		if(input == null) {
 			return newAccessoryList.size() < 1;
 		}
-		for(ItemStack part : newAccessoryList) {
-			if((part.getItem() == input.getItem()) && (part.getItemDamage() == input.getItemDamage())) {
+		for(ItemTGregPart part : newAccessoryList) {
+			if((part == input) && isEqualType(part, input)) {
 				return true;
 			}
-			if(input.getItem() == PartTypes.getFromID(part.getItemDamage()).counterpart){
+			if(input == part.getType().counterpart) {
 				return true;
 			}
-			if(fletching != null && part.getItem() == fletching && input.getItem() == fletching) {
+			if(fletching != null && accessoryList.contains(fletching) && input == fletching) {
 				return true;
 			}
-			if(toolRod != null && part.getItem() == toolRod && (input.getItem() == Items.stick || input.getItem() == Items.bone)) {
+			if(toolRod != null && part.getType().counterpart == toolRod && (input == Items.stick || input == Items.bone)) {
 				return true;
 			}
 		}
@@ -131,21 +146,28 @@ public class TGregToolRecipe extends ToolRecipe {
 	}
 
 	@Override
-	public boolean validExtra(ItemStack input) {
+	public boolean validExtra(Item input) {
 		if(input == null) {
 			return newExtraList.size() < 1;
 		}
-		for(ItemStack part : newExtraList) {
-			if((part.getItem() == input.getItem()) && (part.getItemDamage() == input.getItemDamage())) {
+		for(ItemTGregPart part : newExtraList) {
+			if((part == input) && isEqualType(part, input)) {
 				return true;
 			}
-			if(input.getItem() == PartTypes.getFromID(part.getItemDamage()).counterpart){
+			if(input == part.getType().counterpart) {
 				return true;
 			}
-			if(toolRod != null && part.getItem() == toolRod && (input.getItem() == Items.stick || input.getItem() == Items.bone)) {
+			if(toolRod != null && part.getType().counterpart == toolRod && (input == Items.stick || input == Items.bone)) {
 				return true;
 			}
 		}
 		return false;
+	}
+
+	protected boolean isEqualType(ItemTGregPart part, Item input) {
+		if(input instanceof ItemTGregPart) {
+			return part.getType() == ((ItemTGregPart) input).getType();
+		}
+		return input == part.getType().counterpart;
 	}
 }

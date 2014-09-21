@@ -2,10 +2,9 @@ package vexatos.tgregworks.integration.recipe;
 
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import tconstruct.library.tools.ToolCore;
 import tconstruct.tools.TinkerTools;
-import vexatos.tgregworks.reference.PartTypes;
+import vexatos.tgregworks.item.ItemTGregPart;
 
 /**
  * @author Vexatos
@@ -14,32 +13,32 @@ public class TGregBowRecipe extends TGregToolRecipe {
 
 	private Item bowstring = TinkerTools.bowstring;
 
-	public TGregBowRecipe(ItemStack head, ItemStack handle, ToolCore tool) {
+	public TGregBowRecipe(ItemTGregPart head, ItemTGregPart handle, ToolCore tool) {
 		super(head, handle, tool);
 	}
 
-	public TGregBowRecipe(ItemStack head, ItemStack handle, ItemStack accessory, ToolCore tool) {
+	public TGregBowRecipe(ItemTGregPart head, ItemTGregPart handle, ItemTGregPart accessory, ToolCore tool) {
 		super(head, handle, accessory, tool);
 	}
 
-	public TGregBowRecipe(ItemStack head, ItemStack handle, ItemStack accessory, ItemStack extra, ToolCore tool) {
+	public TGregBowRecipe(ItemTGregPart head, ItemTGregPart handle, ItemTGregPart accessory, ItemTGregPart extra, ToolCore tool) {
 		super(head, handle, accessory, extra, tool);
 	}
 
-	public TGregBowRecipe(ItemStack head, Item bowstring, ItemStack accessory, ToolCore shortbow) {
-		this(head, new ItemStack(bowstring), accessory, shortbow);
+	public TGregBowRecipe(ItemTGregPart head, Item bowstring, ItemTGregPart accessory, ToolCore shortbow) {
+		super(head, bowstring, accessory, shortbow);
 	}
 
 	@Override
-	public boolean validHead(ItemStack input) {
-		for(ItemStack part : newHeadList) {
-			if((part.getItem() == input.getItem()) && (part.getItemDamage() == input.getItemDamage())) {
+	public boolean validHead(Item input) {
+		for(ItemTGregPart part : newHeadList) {
+			if((part == input) && isEqualType(part, input)) {
 				return true;
 			}
-			if(input.getItem() == PartTypes.getFromID(part.getItemDamage()).counterpart) {
+			if(input == part.getType().counterpart) {
 				return true;
 			}
-			if(toolRod != null && part.getItem() == toolRod && (input.getItem() == Items.stick || input.getItem() == Items.bone)) {
+			if(toolRod != null && part.getType().counterpart == toolRod && (input == Items.stick || input == Items.bone)) {
 				return true;
 			}
 		}
@@ -47,21 +46,19 @@ public class TGregBowRecipe extends TGregToolRecipe {
 	}
 
 	@Override
-	public boolean validAccessory(ItemStack input) {
-		if(input == null) {
-			return newAccessoryList.size() < 1;
-		}
-		for(ItemStack part : newAccessoryList) {
-			if((part.getItem() == input.getItem()) && (part.getItemDamage() == input.getItemDamage())) {
+	public boolean validHandle(Item input) {
+
+		for(ItemTGregPart part : newHandleList) {
+			if((part == input) && isEqualType(part, input)) {
 				return true;
 			}
-			if(input.getItem() == PartTypes.getFromID(part.getItemDamage()).counterpart){
+			if(input == part.getType().counterpart) {
 				return true;
 			}
-			if(bowstring != null && part.getItem() == bowstring && input.getItem() == bowstring) {
+			if(bowstring != null && handleList.contains(bowstring) && input == bowstring) {
 				return true;
 			}
-			if(toolRod != null && part.getItem() == toolRod && (input.getItem() == Items.stick || input.getItem() == Items.bone)) {
+			if(toolRod != null && part.getType().counterpart == toolRod && (input == Items.stick || input == Items.bone)) {
 				return true;
 			}
 		}

@@ -7,4 +7,8 @@ public class CommonProxy {
 	public void addToolRenderMappings() {
 		//NO-OP
 	}
+
+	public void registerRenderers() {
+		//NO-OP
+	}
 }

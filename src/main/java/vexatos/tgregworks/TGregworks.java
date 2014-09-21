@@ -6,20 +6,21 @@ import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.registry.GameRegistry;
 import gregtech.api.enums.Materials;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import tconstruct.library.TConstructCreativeTab;
 import vexatos.tgregworks.integration.TGregRecipeRegistry;
-import vexatos.tgregworks.reference.PartTypes;
 import vexatos.tgregworks.integration.TGregRegistry;
-import vexatos.tgregworks.item.ItemTGregPart;
 import vexatos.tgregworks.proxy.CommonProxy;
 import vexatos.tgregworks.reference.Mods;
+import vexatos.tgregworks.reference.PartTypes;
+import vexatos.tgregworks.util.BuildingHandler;
+import vexatos.tgregworks.util.TGregUtils;
 
 /**
  * @author Vexatos
@@ -31,7 +32,7 @@ public class TGregworks {
 	public Configuration config;
 
 	@Mod.Instance(value = Mods.TGregworks)
-	public TGregworks instance;
+	public static TGregworks instance;
 
 	@SidedProxy(clientSide = "vexatos.tgregworks.proxy.ClientProxy", serverSide = "vexatos.tgregworks.proxy.CommonProxy")
 	public static CommonProxy proxy;
@@ -39,12 +40,10 @@ public class TGregworks {
 	public static TGregRegistry registry;
 	public static TGregRecipeRegistry recipes;
 
-	public static ItemTGregPart toolParts;
-
 	public static TConstructCreativeTab tab = new TConstructCreativeTab("tabTGregworks");
 
-	public TGregworks(){
-		if(Loader.isModLoaded(Mods.TConstruct)){
+	public TGregworks() {
+		if(Loader.isModLoaded(Mods.TConstruct)) {
 			log.info("Hey, TConstruct, I'm here as well! May I join you?");
 			LogManager.getLogger(Mods.TConstruct).info("Sure, let's take over the world together!");
 		}
@@ -61,23 +60,27 @@ public class TGregworks {
 		registry.registerToolParts();
 		recipes = new TGregRecipeRegistry();
 
-		toolParts = new ItemTGregPart();
-
-		GameRegistry.registerItem(toolParts, "tGregToolParts");
+		registry.registerItems();
 
 		{
-			ItemStack stack = new ItemStack(toolParts, 1, PartTypes.LargeSwordBlade.metaID);
-			NBTTagCompound data = ItemTGregPart.getTagCompound(stack);
+			ItemStack stack = new ItemStack(registry.toolParts.get(PartTypes.LargeSwordBlade));
+			NBTTagCompound data = TGregUtils.getTagCompound(stack);
 			data.setString("material", Materials.Osmiridium.name());
 			stack.setTagCompound(data);
 			TGregworks.tab.init(stack);
 		}
+
+		registry.registerTools();
+
+		MinecraftForge.EVENT_BUS.register(new BuildingHandler());
 	}
 
 	@Mod.EventHandler
 	public void init(FMLInitializationEvent event) {
 		proxy.addToolRenderMappings();
 		recipes.addRecipesForToolBuilder();
+		recipes.addGregTechPartRecipes();
+		proxy.registerRenderers();
 	}
 
 	@Mod.EventHandler

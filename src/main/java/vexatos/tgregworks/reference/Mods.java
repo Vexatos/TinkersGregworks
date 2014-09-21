@@ -2,7 +2,6 @@ package vexatos.tgregworks.reference;
 
 /**
  * List of used mod IDs
- *
  * @author Vexatos
  */
 public class Mods {

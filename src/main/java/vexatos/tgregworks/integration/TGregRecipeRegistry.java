@@ -1,56 +1,81 @@
 package vexatos.tgregworks.integration;
 
+import gregtech.api.GregTech_API;
+import gregtech.api.enums.Materials;
+import gregtech.api.enums.OrePrefixes;
+import gregtech.api.util.GT_OreDictUnificator;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import tconstruct.library.crafting.ToolBuilder;
 import tconstruct.library.tools.ToolCore;
 import tconstruct.tools.TinkerTools;
 import vexatos.tgregworks.TGregworks;
 import vexatos.tgregworks.integration.recipe.TGregBowRecipe;
 import vexatos.tgregworks.integration.recipe.TGregToolRecipe;
+import vexatos.tgregworks.item.ItemTGregPart;
 import vexatos.tgregworks.reference.PartTypes;
+import vexatos.tgregworks.util.TGregUtils;
 
 import java.util.HashMap;
 
 /**
- * @author Vexatos
+ * @author SlimeKnights, Vexatos
  */
 public class TGregRecipeRegistry {
 
-	private HashMap<PartTypes, ItemStack> partMap = new HashMap<PartTypes, ItemStack>();
+	private HashMap<PartTypes, ItemTGregPart> partMap = new HashMap<PartTypes, ItemTGregPart>();
+
+	public void addGregTechPartRecipes() {
+		for(Materials m : TGregworks.registry.toolMaterials) {
+			for(PartTypes p : PartTypes.values()) {
+				ItemStack input = new ItemStack(TGregworks.registry.toolParts.get(p));
+				NBTTagCompound data = TGregUtils.getTagCompound(input);
+				data.setString("material", m.name());
+				input.setTagCompound(data);
+				GregTech_API.sRecipeAdder.addAlloySmelterRecipe(GT_OreDictUnificator.get(OrePrefixes.ingot, m, p.price), p.pattern, input, 80 * p.price, 30);
+				GregTech_API.sRecipeAdder.addAlloySmelterRecipe(getChunk(m, p.price), p.pattern, input, 80 * p.price, 30);
+			}
+		}
+	}
+
+	private ItemStack getChunk(Materials m, int amount) {
+		ItemStack stack = new ItemStack(TGregworks.registry.toolParts.get(PartTypes.Chunk), amount, 0);
+		NBTTagCompound data = TGregUtils.getTagCompound(stack);
+		data.setString("material", m.name());
+		return stack;
+	}
 
 	public void addRecipesForToolBuilder() {
 
-		Item parts = TGregworks.toolParts;
-
 		for(PartTypes p : PartTypes.values()) {
-			partMap.put(p, new ItemStack(parts, 1, p.metaID));
+			partMap.put(p, TGregworks.registry.toolParts.get(p));
 		}
 
-		addTGregToolRecipe(TinkerTools.pickaxe,		PartTypes.PickaxeHead,		PartTypes.ToolRod,		PartTypes.Binding							);
-		addTGregToolRecipe(TinkerTools.shovel,		PartTypes.ShovelHead,		PartTypes.ToolRod													);
-		addTGregToolRecipe(TinkerTools.hatchet,		PartTypes.AxeHead,			PartTypes.ToolRod													);
-		addTGregToolRecipe(TinkerTools.mattock,		PartTypes.PickaxeHead,		PartTypes.ToolRod,		PartTypes.ShovelHead						);
-		addTGregToolRecipe(TinkerTools.chisel,		PartTypes.ChiselHead,		PartTypes.ToolRod													);
+		addTGregToolRecipe(TGregRegistry.pickaxe, PartTypes.PickaxeHead, PartTypes.ToolRod, PartTypes.Binding);
+		addTGregToolRecipe(TGregRegistry.shovel, PartTypes.ShovelHead, PartTypes.ToolRod);
+		addTGregToolRecipe(TGregRegistry.hatchet, PartTypes.AxeHead, PartTypes.ToolRod);
+		addTGregToolRecipe(TGregRegistry.mattock, PartTypes.PickaxeHead, PartTypes.ToolRod, PartTypes.ShovelHead);
+		addTGregToolRecipe(TGregRegistry.chisel, PartTypes.ChiselHead, PartTypes.ToolRod);
 
-		addTGregToolRecipe(TinkerTools.broadsword,	PartTypes.SwordBlade,		PartTypes.ToolRod,		PartTypes.LargeGuard						);
-		addTGregToolRecipe(TinkerTools.longsword,	PartTypes.SwordBlade,		PartTypes.ToolRod,		PartTypes.MediumGuard						);
-		addTGregToolRecipe(TinkerTools.rapier,		PartTypes.SwordBlade,		PartTypes.ToolRod,		PartTypes.Crossbar							);
-		addTGregToolRecipe(TinkerTools.dagger,		PartTypes.KnifeBlade,		PartTypes.ToolRod,		PartTypes.Crossbar							);
-		addTGregToolRecipe(TinkerTools.cutlass,		PartTypes.SwordBlade,		PartTypes.ToolRod,		PartTypes.FullGuard							);
-		addTGregToolRecipe(TinkerTools.frypan,		PartTypes.FrypanHead,		PartTypes.ToolRod													);
-		addTGregToolRecipe(TinkerTools.battlesign,	PartTypes.SignHead,			PartTypes.ToolRod													);
+		addTGregToolRecipe(TGregRegistry.broadsword, PartTypes.SwordBlade, PartTypes.ToolRod, PartTypes.LargeGuard);
+		addTGregToolRecipe(TGregRegistry.longsword, PartTypes.SwordBlade, PartTypes.ToolRod, PartTypes.MediumGuard);
+		addTGregToolRecipe(TGregRegistry.rapier, PartTypes.SwordBlade, PartTypes.ToolRod, PartTypes.Crossbar);
+		addTGregToolRecipe(TGregRegistry.dagger, PartTypes.KnifeBlade, PartTypes.ToolRod, PartTypes.Crossbar);
+		addTGregToolRecipe(TGregRegistry.cutlass, PartTypes.SwordBlade, PartTypes.ToolRod, PartTypes.FullGuard);
+		addTGregToolRecipe(TGregRegistry.frypan, PartTypes.FrypanHead, PartTypes.ToolRod);
+		addTGregToolRecipe(TGregRegistry.battlesign, PartTypes.SignHead, PartTypes.ToolRod);
 
-		addTGregToolRecipe(TinkerTools.scythe,		PartTypes.ScytheHead,		PartTypes.ToughRod,		PartTypes.ToughBind,	PartTypes.ToughRod	);
-		addTGregToolRecipe(TinkerTools.lumberaxe,	PartTypes.LumberHead,		PartTypes.ToughRod,		PartTypes.LargePlate,	PartTypes.ToughBind	);
-		addTGregToolRecipe(TinkerTools.cleaver,		PartTypes.LargeSwordBlade,	PartTypes.ToughRod,		PartTypes.LargePlate,	PartTypes.ToughRod	);
-		addTGregToolRecipe(TinkerTools.excavator,	PartTypes.ExcavatorHead,	PartTypes.ToughRod,		PartTypes.LargePlate,	PartTypes.ToughBind	);
-		addTGregToolRecipe(TinkerTools.hammer,		PartTypes.HammerHead,		PartTypes.ToughRod,		PartTypes.LargePlate,	PartTypes.LargePlate);
-		addTGregToolRecipe(TinkerTools.battleaxe,	PartTypes.LumberHead,		PartTypes.ToughRod,		PartTypes.LumberHead,	PartTypes.ToughBind	);
+		addTGregToolRecipe(TGregRegistry.scythe, PartTypes.ScytheHead, PartTypes.ToughRod, PartTypes.ToughBind, PartTypes.ToughRod);
+		addTGregToolRecipe(TGregRegistry.lumberaxe, PartTypes.LumberHead, PartTypes.ToughRod, PartTypes.LargePlate, PartTypes.ToughBind);
+		addTGregToolRecipe(TGregRegistry.cleaver, PartTypes.LargeSwordBlade, PartTypes.ToughRod, PartTypes.LargePlate, PartTypes.ToughRod);
+		addTGregToolRecipe(TGregRegistry.excavator, PartTypes.ExcavatorHead, PartTypes.ToughRod, PartTypes.LargePlate, PartTypes.ToughBind);
+		addTGregToolRecipe(TGregRegistry.hammer, PartTypes.HammerHead, PartTypes.ToughRod, PartTypes.LargePlate, PartTypes.LargePlate);
+		addTGregToolRecipe(TGregRegistry.battleaxe, PartTypes.LumberHead, PartTypes.ToughRod, PartTypes.LumberHead, PartTypes.ToughBind);
 
-		ToolBuilder.addCustomToolRecipe(new TGregBowRecipe(partMap.get(PartTypes.ToolRod), TinkerTools.bowstring, partMap.get(PartTypes.ToolRod), TinkerTools.shortbow));
+		ToolBuilder.addCustomToolRecipe(new TGregBowRecipe(partMap.get(PartTypes.ToolRod), TinkerTools.bowstring, partMap.get(PartTypes.ToolRod), TGregRegistry.shortbow));
 
-		addTGregToolRecipe(TinkerTools.arrow, PartTypes.ArrowHead, PartTypes.ToolRod, TinkerTools.fletching);
+		addTGregToolRecipe(TGregRegistry.arrow, PartTypes.ArrowHead, PartTypes.ToolRod, TinkerTools.fletching);
 	}
 
 	private void addTGregToolRecipe(ToolCore arrow, PartTypes arrowHead, PartTypes toolRod, Item fletching) {
