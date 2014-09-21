@@ -1,0 +1,79 @@
+#Educational Public License
+
+by Calclavia
+
+Version 1.0.
+
+
+The following license is subject to change at anytime with or without notice and will take effect immediately. By using this license, you agree to all the following terms below.
+
+##Summary
+
+You are allowed to:
+
+* Use the software in whatever way you like with no limitations.
+* Look at the source code, decompile it and learn from it.
+* Modify the source code for personal use.
+
+You are **not** allowed to:
+
+* Copy any part of the source code and use it for redistribution, publication or any means of public distribution.
+* Redistribute the original source code or its binary form without the licencorâ€™s permission.
+* Redistribute your modified changes or derivative work either its binary form or in source code form without the licencorâ€™s permission.
+
+##Terms
+
+###0. Definitions.
+
+â€œThis Licenseâ€ refers to version 1 of the Educational Public License.
+
+â€œThe Programâ€ refers to any copyrightable work licensed under this License. Each licensee is addressed as â€œyouâ€. â€œLicenseesâ€ and â€œrecipientsâ€ may be individuals or organizations.
+
+To â€œmodifyâ€ a work means to copy from or adapt all or part of the work in any fashion, other than the making of an exact copy. The resulting work is called a â€œmodified versionâ€ of the earlier work or a work â€œbased onâ€ the earlier work.
+
+A â€œcovered workâ€ means either the unmodified Program or a work based on the Program.
+
+The â€œuserâ€ is anybody that interacts with the Program in one of the following ways:
+
+* usage
+* installation
+* decompile
+* recompile or compile
+* modify
+* distribute
+* reviewing the source code
+
+The â€œownerâ€ or â€œauthorâ€ refers to the copyright holder of the Program.
+
+â€œDistributionâ€ refers to the act of distributing, redistributing and or providing the Program to any third party in the any form including the following forms:
+
+original binary or source forms of the Program files
+modified versions of the Programâ€™s binaries or source files, as well as binaries resulting from source modifications
+patch to its source or binary files
+any copy of a portion of its binary source files
+Any of the above acts are subject to the distribution terms of the Program.
+
+###1. Scope
+
+The present license is granted to any user of The Program. Terms of license may change anytime with or without notice. The user of this Program agrees and will be subject to the newest version of this license.
+
+###2. Liability
+
+The Program is provided â€˜as isâ€™ with no warranties, implied or otherwise. The owner of the Program takes no responsibility for any damages incurred from the use of the Program. All damages caused from the use or misuse of the Program fall on the user.
+
+###3. Usage rights
+
+The user is allowed to install the Program and use it without restriction.
+
+###4. Modification rights
+
+The user has the right to decompile the source code, look at either the decompiled version or the original source code, or to modify it for educational purposes.
+
+###5. Distribution and Redistribution
+
+The user is **not** allowed to distribute the Program partially, in totality, or included in a distribution without explicit permissions from the owner. In addition, no modifications or derivative works of this program is allowed to be distributed without the ownerâ€™s permission.
+
+**If distribution permission is granted by the owner:**
+When distributing the Program in any form, the user must provide attribution to the original author which includes the original authorâ€™s name as well as a redirect URL to the original website as designated by the owner.
+
+Modified version of binaries and sources, as well as files containing sections copied from the Program, must be distributed under the terms of the present license. The source code of the modified version of the Program must be provided publically and entirely at no costs.
