@@ -25,7 +25,8 @@ import vexatos.tgregworks.util.TGregUtils;
 /**
  * @author Vexatos
  */
-@Mod(modid = Mods.TGregworks, name = Mods.TGregworks_NAME, version = "0.0.1", dependencies = "required-after:" + Mods.TConstruct + ";required-after:" + Mods.GregTech)
+@Mod(modid = Mods.TGregworks, name = Mods.TGregworks_NAME, version = "0.0.1",
+	dependencies = "required-after:" + Mods.TConstruct + "@[1.7.10-1.8.5,);required-after:" + Mods.GregTech + "@[MC1710]")
 public class TGregworks {
 
 	public static Logger log = LogManager.getLogger(Mods.TGregworks);
@@ -44,8 +45,7 @@ public class TGregworks {
 
 	public TGregworks() {
 		if(Loader.isModLoaded(Mods.TConstruct)) {
-			log.info("Hey, TConstruct, I'm here as well! May I join you?");
-			LogManager.getLogger(Mods.TConstruct).info("Sure, let's take over the world together!");
+			log.info("TConstruct detected, initializing Intergalactical integration...");
 		}
 	}
 
@@ -70,7 +70,7 @@ public class TGregworks {
 			TGregworks.tab.init(stack);
 		}
 
-		registry.registerTools();
+		//registry.registerTools();
 
 		MinecraftForge.EVENT_BUS.register(new BuildingHandler());
 	}

@@ -1,11 +1,8 @@
 package vexatos.tgregworks.proxy;
 
-import cpw.mods.fml.client.registry.RenderingRegistry;
 import gregtech.api.enums.Materials;
-import tconstruct.client.entity.projectile.DaggerRenderCustom;
 import tconstruct.library.client.TConstructClientRegistry;
 import vexatos.tgregworks.TGregworks;
-import vexatos.tgregworks.item.entity.TGregDaggerEntity;
 
 /**
  * @author Vexatos
@@ -20,6 +17,6 @@ public class ClientProxy extends CommonProxy {
 	}
 
 	public void registerRenderers() {
-		RenderingRegistry.registerEntityRenderingHandler(TGregDaggerEntity.class, new DaggerRenderCustom());
+		//RenderingRegistry.registerEntityRenderingHandler(TGregDaggerEntity.class, new DaggerRenderCustom());
 	}
 }

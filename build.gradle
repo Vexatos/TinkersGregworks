@@ -32,17 +32,24 @@ repositories {
     }*/
 }
 
+configurations {
+    provided
+    embedded
+    compile.extendsFrom provided, embedded
+    all*.exclude group: "codechicken"
+}
+
 dependencies {
     //compile "mantle:Mantle:1.7.10-0.3.1.jenkins176:deobf"
     //compile "codechicken:CodeChickenCore:1.7.10-1.0.2.9:dev"
     //compile "codechicken:NotEnoughItems:1.7.10-1.0.2.15:dev"
     //compile "tconstruct:TConstruct:1.7.10-1.6.0.build638:deobf"
-    compile "com.gregoriust.gregtech:gregtech_1.7.10:5.05.01:dev"
+    provided "com.gregoriust.gregtech:gregtech_1.7.10:5.07.07:dev"
 }
 
 minecraft {
-    version = "1.7.10-10.13.0.1208"
-    assetDir = "eclipse/assets"
+    version = "1.7.10-10.13.3.1384-1.7.10"
+    runDir = "eclipse"
 }
 
 processResources
@@ -62,6 +69,14 @@ processResources
     // copy everything else, thats not the mcmod.info
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
+    }
+}
+
+apply plugin: 'idea'
+idea {
+    module {
+        scopes.PROVIDED.plus += [configurations.provided]
+        outputDir = file('build/classes/main')
     }
 }
 

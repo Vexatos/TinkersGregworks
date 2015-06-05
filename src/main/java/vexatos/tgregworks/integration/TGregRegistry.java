@@ -1,23 +1,12 @@
 package vexatos.tgregworks.integration;
 
-import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import gregtech.api.GregTech_API;
-import gregtech.api.enums.ItemList;
 import gregtech.api.enums.Materials;
-import gregtech.api.enums.OrePrefixes;
-import gregtech.api.util.GT_OreDictUnificator;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import tconstruct.library.TConstructRegistry;
-import tconstruct.library.crafting.ModifyBuilder;
-import tconstruct.library.tools.ToolCore;
 import vexatos.tgregworks.TGregworks;
 import vexatos.tgregworks.item.ItemTGregPart;
-import vexatos.tgregworks.item.entity.TGregDaggerEntity;
-import vexatos.tgregworks.modifiers.TGregBatteryModifier;
 import vexatos.tgregworks.reference.PartTypes;
-import vexatos.tgregworks.tools.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -55,8 +44,8 @@ public class TGregRegistry {
 			toolMaterialNames.add(m.mDefaultLocalName);
 			int matID = getLatestAvailableNumber();
 			TConstructRegistry.addToolMaterial(matID, m.name(), m.mDefaultLocalName, m.mToolQuality, m.mDurability, (int) (m.mToolSpeed * 100F), (int) m.mToolQuality, (float) m.mToolQuality - 0.5F, getReinforcedLevel(m), getStoneboundLevel(m), "", (m.getRGBA()[0] << 16) | (m.getRGBA()[1] << 8) | (m.getRGBA()[2]));
-			TConstructRegistry.addBowMaterial(matID, m.mDurability, (int) (m.mToolQuality * 10F), ((float) m.mToolQuality) - 0.5F);
-			TConstructRegistry.addArrowMaterial(matID, (float) (((double) m.getMass()) / 10F), 0.2F, 99F);
+			TConstructRegistry.addBowMaterial(matID, (int) (m.mToolQuality * 10F), ((float) m.mToolQuality) - 0.5F);
+			TConstructRegistry.addArrowMaterial(matID, (float) (((double) m.getMass()) / 10F), 0.2F);
 			matIDs.put(m, matID);
 		}
 
@@ -64,7 +53,7 @@ public class TGregRegistry {
 		ItemTGregPart.matIDs = matIDs;
 	}
 
-	public static ToolCore pickaxe;
+	/*public static ToolCore pickaxe;
 	public static ToolCore shovel;
 	public static ToolCore hatchet;
 	public static ToolCore broadsword;
@@ -83,10 +72,10 @@ public class TGregRegistry {
 	public static ToolCore excavator;
 	public static ToolCore battleaxe;
 	public static ToolCore shortbow;
-	public static ToolCore arrow;
-	public static TGregBatteryModifier batteryModifier;
+	public static ToolCore arrow;*/
+	//public static TGregBatteryModifier batteryModifier;
 
-	public void registerTools() {
+	/*public void registerTools() {
 		TGregRegistry.pickaxe = new Pickaxe();
 		TGregRegistry.shovel = new Shovel();
 		TGregRegistry.hatchet = new Hatchet();
@@ -154,7 +143,7 @@ public class TGregRegistry {
 
 	private static void registerModifierRecipe(ItemStack stack1, ItemStack stack2) {
 		TGregRegistry.batteryModifier.batteries.put(stack1, stack2);
-	}
+	}*/
 
 	private List<Materials> stonebound1Mats = Arrays.asList(Materials.Titanium, Materials.Tungsten);
 	private List<Materials> spiny1Mats = Arrays.asList(Materials.Uranium, Materials.Uranium235);

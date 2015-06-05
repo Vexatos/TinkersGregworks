@@ -3,7 +3,7 @@ package vexatos.tgregworks.integration.recipe;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import tconstruct.library.tools.ToolCore;
-import tconstruct.tools.TinkerTools;
+import tconstruct.weaponry.TinkerWeaponry;
 import vexatos.tgregworks.item.ItemTGregPart;
 
 /**
@@ -11,7 +11,7 @@ import vexatos.tgregworks.item.ItemTGregPart;
  */
 public class TGregBowRecipe extends TGregToolRecipe {
 
-	private Item bowstring = TinkerTools.bowstring;
+	private Item bowstring = TinkerWeaponry.bowstring;
 
 	public TGregBowRecipe(ItemTGregPart head, ItemTGregPart handle, ToolCore tool) {
 		super(head, handle, tool);
@@ -29,39 +29,34 @@ public class TGregBowRecipe extends TGregToolRecipe {
 		super(head, bowstring, accessory, shortbow);
 	}
 
+	public TGregBowRecipe(ItemTGregPart head, ItemTGregPart handle, Item bowstring, ItemTGregPart extra, ToolCore shortbow) {
+		super(head, handle, bowstring, extra, shortbow);
+	}
+
+	public TGregBowRecipe(ItemTGregPart head, Item bowstring, ItemTGregPart accessory, ItemTGregPart extra, ToolCore shortbow) {
+		super(head, bowstring, accessory, extra, shortbow);
+	}
+
 	@Override
 	public boolean validHead(Item input) {
 		for(ItemTGregPart part : newHeadList) {
-			if((part == input) && isEqualType(part, input)) {
-				return true;
-			}
-			if(input == part.getType().counterpart) {
-				return true;
-			}
 			if(toolRod != null && part.getType().counterpart == toolRod && (input == Items.stick || input == Items.bone)) {
 				return true;
 			}
 		}
-		return false;
+		return super.validHead(input);
 	}
 
 	@Override
 	public boolean validHandle(Item input) {
+		return bowstring != null && handleList.contains(bowstring) && input == bowstring || super.validHandle(input);
+	}
 
-		for(ItemTGregPart part : newHandleList) {
-			if((part == input) && isEqualType(part, input)) {
-				return true;
-			}
-			if(input == part.getType().counterpart) {
-				return true;
-			}
-			if(bowstring != null && handleList.contains(bowstring) && input == bowstring) {
-				return true;
-			}
-			if(toolRod != null && part.getType().counterpart == toolRod && (input == Items.stick || input == Items.bone)) {
-				return true;
-			}
+	@Override
+	public boolean validAccessory(Item input) {
+		if(input == null) {
+			return accessoryList.size() < 1;
 		}
-		return false;
+		return bowstring != null && accessoryList.contains(bowstring) && input == bowstring || super.validAccessory(input);
 	}
 }

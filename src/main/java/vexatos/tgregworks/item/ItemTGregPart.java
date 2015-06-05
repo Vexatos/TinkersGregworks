@@ -27,7 +27,7 @@ public class ItemTGregPart extends CraftingItem implements IToolPart {
 	private PartTypes type;
 
 	public ItemTGregPart(PartTypes p) {
-		super(toolMaterialNames.toArray(new String[toolMaterialNames.size()]), buildTextureNames(p), "parts/", "tgregworks", TGregworks.tab);
+		super(toolMaterialNames.toArray(new String[toolMaterialNames.size()]), buildTextureNames(p), "parts/", "tinker", TGregworks.tab);
 		this.setHasSubtypes(true);
 		this.requiresMultipleRenderPasses();
 		this.setMaxDamage(0);
@@ -92,11 +92,11 @@ public class ItemTGregPart extends CraftingItem implements IToolPart {
 	@Override
 	public void getSubItems(Item b, CreativeTabs tab, List list) {
 		for(Materials m : TGregworks.registry.toolMaterials) {
-				ItemStack stack = new ItemStack(b, 1, 0);
-				NBTTagCompound data = TGregUtils.getTagCompound(stack);
-				data.setString("material", m.name());
-				stack.setTagCompound(data);
-				list.add(stack);
+			ItemStack stack = new ItemStack(b, 1, 0);
+			NBTTagCompound data = TGregUtils.getTagCompound(stack);
+			data.setString("material", m.name());
+			stack.setTagCompound(data);
+			list.add(stack);
 		}
 	}
 
