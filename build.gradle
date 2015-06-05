@@ -17,7 +17,13 @@ buildscript {
 
 apply plugin: 'forge'
 
-version = "1.7.10-0.0.1"
+file "build.properties" withReader {
+    def prop = new Properties()
+    prop.load(it)
+    ext.config = new ConfigSlurper().parse prop
+}
+
+version = "${config.minecraft.version}-${config.tgregworks.version}"
 group= "vexatos.tgregworks" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "Tinkers' Gregworks"
 
@@ -48,8 +54,25 @@ dependencies {
 }
 
 minecraft {
-    version = "1.7.10-10.13.3.1384-1.7.10"
+    version = "${config.minecraft.version}-${config.forge.version}"
     runDir = "eclipse"
+
+    replaceIn "vexatos/tgregworks/TGregworks.java"
+    replace "@VERSION@", "${config.tgregworks.version}"
+}
+
+sourceSets {
+    main {
+        output.resourcesDir = 'build/classes/main'
+    }
+}
+
+apply plugin: 'idea'
+idea {
+    module {
+        scopes.PROVIDED.plus += [configurations.provided]
+        outputDir = file('build/classes/main')
+    }
 }
 
 processResources
@@ -72,15 +95,32 @@ processResources
     }
 }
 
-apply plugin: 'idea'
-idea {
-    module {
-        scopes.PROVIDED.plus += [configurations.provided]
-        outputDir = file('build/classes/main')
-    }
-}
+
+//For Building
+
+def libDir = './build/libs'
 
 task deobfJar(type: Jar) {
-    from sourceSets.main.output
+    description = 'Creates a jar file containing the non-obfuscated class files'
     classifier = 'deobf'
+    destinationDir = file(libDir)
+    from sourceSets.main.output.classesDir
 }
+
+task apiZip(type: Zip) {
+    description = 'Creates a zip file containing the API source files only'
+    classifier = 'api'
+    destinationDir = file(libDir)
+    from sourceSets.main.allSource
+    include 'vexatos/**/api/**'
+}
+
+task makeJars << {
+    description = 'Creates the mod files'
+}
+
+makeJars.dependsOn clean, build, deobfJar, apiZip
+build.shouldRunAfter clean
+deobfJar.shouldRunAfter build
+apiZip.shouldRunAfter deobfJar
+
