@@ -58,7 +58,7 @@ public class TGregRegistry {
 				(((float) m.mToolQuality) - 0.5F) * getMultiplier(m, Config.BowFlightSpeed));
 			TConstructRegistry.addArrowMaterial(matID,
 				(float) ((((double) m.getMass()) / 10F) * getMultiplier(m, Config.ArrowMass)),
-				(float) TGregworks.config.get(Config.ArrowBreakChance, m.name(), 0.9F, null, 0, 10000).getDouble(0.9F));
+				(float) TGregworks.config.get(Config.ArrowBreakChance, m.name(), 0.9, null, 0, 10000).getDouble(0.9));
 			matIDs.put(m, matID);
 			materialIDMap.put(matID, m);
 		}

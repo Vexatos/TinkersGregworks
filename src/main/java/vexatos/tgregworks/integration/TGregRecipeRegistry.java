@@ -41,11 +41,11 @@ public class TGregRecipeRegistry {
 					ItemStack stack = GT_OreDictUnificator.get(OrePrefixes.ingot, m,
 						p.price % 2 != 0 ? (p.price / 2) + 1 : MathHelper.ceiling_double_int(p.price / 2D));
 					if(stack != null) {
-						GT_Values.RA.addExtruderRecipe(stack, p.pattern, input, 100 * p.price, 30);
+						GT_Values.RA.addExtruderRecipe(stack, p.pattern, input, Math.max(80, m.mDurability * p.price), m.mToolQuality < 3 ? 30 : 120);
 						//GregTech_API.sRecipeAdder.addAlloySmelterRecipe(getChunk(m, p.price), p.pattern, input, 80 * p.price, 30);
 						stack = getChunk(m, p.price);
 						if(stack != null) {
-							GT_Values.RA.addExtruderRecipe(stack, p.pattern, input, 120 * p.price, 30);
+							GT_Values.RA.addExtruderRecipe(stack, p.pattern, input, 80 + (m.mDurability * p.price), m.mToolQuality < 3 ? 30 : 120);
 						}
 					}
 				}
@@ -53,7 +53,7 @@ public class TGregRecipeRegistry {
 			ItemStack stack = getChunk(m, 2);
 			ItemStack ingotStack = GT_OreDictUnificator.get(OrePrefixes.ingot, m, 1);
 			if(stack != null && ingotStack != null) {
-				GT_Values.RA.addExtruderRecipe(ingotStack, new ItemStack(TGregworks.shardCast, 0, 0), stack, 160, 30);
+				GT_Values.RA.addExtruderRecipe(ingotStack, new ItemStack(TGregworks.shardCast, 0, 0), stack, Math.max(160, m.mDurability), m.mToolQuality < 3 ? 30 : 120);
 			}
 		}
 
