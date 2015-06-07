@@ -16,7 +16,6 @@ import vexatos.tgregworks.reference.PartTypes;
 import vexatos.tgregworks.util.TGregUtils;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -86,7 +85,6 @@ public class ItemTGregPart extends CraftingItem implements IToolPart {
 	}
 
 	public static ArrayList<String> toolMaterialNames = TGregworks.registry.toolMaterialNames;
-	public static HashMap<Materials, Integer> matIDs = TGregworks.registry.matIDs;
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -170,10 +168,6 @@ public class ItemTGregPart extends CraftingItem implements IToolPart {
 
 	@Override
 	public int getMaterialID(ItemStack stack) {
-		NBTTagCompound data = TGregUtils.getTagCompound(stack);
-		if(!data.hasKey("material")) {
-			return -1;
-		}
-		return matIDs.get(Materials.get(data.getString("material")));
+		return TGregUtils.getMaterialID(stack);
 	}
 }

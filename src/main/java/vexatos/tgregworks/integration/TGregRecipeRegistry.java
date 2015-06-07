@@ -1,9 +1,9 @@
 package vexatos.tgregworks.integration;
 
+import gregtech.api.enums.GT_Values;
 import gregtech.api.enums.Materials;
 import gregtech.api.enums.OrePrefixes;
 import gregtech.api.util.GT_OreDictUnificator;
-import gregtech.api.util.GT_Recipe;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MathHelper;
@@ -41,14 +41,40 @@ public class TGregRecipeRegistry {
 					ItemStack stack = GT_OreDictUnificator.get(OrePrefixes.ingot, m,
 						p.price % 2 != 0 ? (p.price / 2) + 1 : MathHelper.ceiling_double_int(p.price / 2D));
 					if(stack != null) {
-						GT_Recipe.GT_Recipe_Map.sAlloySmelterRecipes.add(new GT_Recipe(stack, p.pattern, 30, 80 * p.price, input));
+						GT_Values.RA.addExtruderRecipe(stack, p.pattern, input, 100 * p.price, 30);
 						//GregTech_API.sRecipeAdder.addAlloySmelterRecipe(getChunk(m, p.price), p.pattern, input, 80 * p.price, 30);
 						stack = getChunk(m, p.price);
 						if(stack != null) {
-							GT_Recipe.GT_Recipe_Map.sAlloySmelterRecipes.add(new GT_Recipe(stack, p.pattern, 30, 80 * p.price, input));
+							GT_Values.RA.addExtruderRecipe(stack, p.pattern, input, 120 * p.price, 30);
 						}
 					}
 				}
+			}
+			ItemStack stack = getChunk(m, 2);
+			ItemStack ingotStack = GT_OreDictUnificator.get(OrePrefixes.ingot, m, 1);
+			if(stack != null && ingotStack != null) {
+				GT_Values.RA.addExtruderRecipe(ingotStack, new ItemStack(TGregworks.shardCast, 0, 0), stack, 160, 30);
+			}
+		}
+
+		ItemStack brassstack = GT_OreDictUnificator.get(OrePrefixes.plate, Materials.Brass, 1);
+		if(TinkerTools.toolShard != null) {
+			/*ArrayList list = new ArrayList();
+			TinkerTools.toolShard.getSubItems(TinkerTools.toolShard, TinkerTools.toolShard.getCreativeTab(), list);
+			for(Object o : list) {
+				if(o instanceof ItemStack) {
+					GT_Recipe.GT_Recipe_Map.sAlloySmelterRecipes.add(new GT_Recipe(alustack, (ItemStack) o, 30, 800, new ItemStack(TGregworks.shardCast, 1, 0)));
+				}
+			}*/
+			if(TinkerTools.blankPattern != null) {
+				GT_Values.RA.addExtruderRecipe(new ItemStack(TinkerTools.blankPattern, 1, 1),
+					new ItemStack(TinkerTools.toolShard, 1, TinkerTools.MaterialID.Obsidian), new ItemStack(TGregworks.shardCast, 1, 0), 800, 30);
+				GT_Values.RA.addExtruderRecipe(new ItemStack(TinkerTools.blankPattern, 1, 2),
+					new ItemStack(TinkerTools.toolShard, 1, TinkerTools.MaterialID.Obsidian), new ItemStack(TGregworks.shardCast, 1, 0), 800, 30);
+			}
+			if(brassstack != null) {
+				GT_Values.RA.addExtruderRecipe(brassstack,
+					new ItemStack(TinkerTools.toolShard, 1, TinkerTools.MaterialID.Obsidian), new ItemStack(TGregworks.shardCast, 1, 0), 800, 30);
 			}
 		}
 	}

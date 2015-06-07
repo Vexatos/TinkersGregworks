@@ -4,8 +4,11 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.Materials;
 import tconstruct.library.TConstructRegistry;
+import tconstruct.library.crafting.ModifyBuilder;
 import vexatos.tgregworks.TGregworks;
+import vexatos.tgregworks.integration.modifiers.ModifierTGregRepair;
 import vexatos.tgregworks.item.ItemTGregPart;
+import vexatos.tgregworks.reference.Config;
 import vexatos.tgregworks.reference.PartTypes;
 
 import java.util.ArrayList;
@@ -23,6 +26,7 @@ public class TGregRegistry {
 	public ArrayList<Materials> toolMaterials = new ArrayList<Materials>();
 	public ArrayList<String> toolMaterialNames = new ArrayList<String>();
 	public HashMap<Materials, Integer> matIDs = new HashMap<Materials, Integer>();
+	public HashMap<Integer, Materials> materialIDMap = new HashMap<Integer, Materials>();
 
 	private int getLatestAvailableNumber() {
 		for(int i = latestAvailableNumber; true; i++) {
@@ -43,14 +47,27 @@ public class TGregRegistry {
 		for(Materials m : toolMaterials) {
 			toolMaterialNames.add(m.mDefaultLocalName);
 			int matID = getLatestAvailableNumber();
-			TConstructRegistry.addToolMaterial(matID, m.name(), m.mDefaultLocalName, m.mToolQuality, m.mDurability, (int) (m.mToolSpeed * 100F), (int) m.mToolQuality, (float) m.mToolQuality - 0.5F, getReinforcedLevel(m), getStoneboundLevel(m), "", (m.getRGBA()[0] << 16) | (m.getRGBA()[1] << 8) | (m.getRGBA()[2]));
-			TConstructRegistry.addBowMaterial(matID, (int) (m.mToolQuality * 10F), ((float) m.mToolQuality) - 0.5F);
-			TConstructRegistry.addArrowMaterial(matID, (float) (((double) m.getMass()) / 10F), 0.2F);
+			TConstructRegistry.addToolMaterial(matID, m.name(), m.mDefaultLocalName, m.mToolQuality,
+				(int) (m.mDurability * getMultiplier(m, Config.Durability)), // Durability
+				(int) (m.mToolSpeed * 100F * getMultiplier(m, Config.MiningSpeed)), // Mining speed
+				(int) (m.mToolQuality * getMultiplier(m, Config.Attack)), // Attack
+				(m.mToolQuality - 0.5F) * getMultiplier(m, Config.HandleModifier), // Handle Modifier
+				getReinforcedLevel(m), getStoneboundLevel(m), "", (m.getRGBA()[0] << 16) | (m.getRGBA()[1] << 8) | (m.getRGBA()[2]));
+			TConstructRegistry.addBowMaterial(matID,
+				(int) ((float) m.mToolQuality * 10F * getMultiplier(m, Config.BowDrawSpeed)),
+				(((float) m.mToolQuality) - 0.5F) * getMultiplier(m, Config.BowFlightSpeed));
+			TConstructRegistry.addArrowMaterial(matID,
+				(float) ((((double) m.getMass()) / 10F) * getMultiplier(m, Config.ArrowMass)),
+				(float) TGregworks.config.get(Config.ArrowBreakChance, m.name(), 0.9F, null, 0, 10000).getDouble(0.9F));
 			matIDs.put(m, matID);
+			materialIDMap.put(matID, m);
 		}
 
 		ItemTGregPart.toolMaterialNames = toolMaterialNames;
-		ItemTGregPart.matIDs = matIDs;
+	}
+
+	private float getMultiplier(Materials m, String key) {
+		return (float) TGregworks.config.get(key, m.name(), 1.0, null, 0, 10000).getDouble(1.0);
 	}
 
 	/*public static ToolCore pickaxe;
@@ -149,29 +166,17 @@ public class TGregRegistry {
 	private List<Materials> spiny1Mats = Arrays.asList(Materials.Uranium, Materials.Uranium235);
 
 	private float getStoneboundLevel(Materials m) {
-		if(stonebound1Mats.contains(m)) {
-			return 1;
-		}
-		if(spiny1Mats.contains(m)) {
-			return -1;
-		}
-		return 0;
+		return (float) TGregworks.config.get(Config.StoneboundLevel, m.name(),
+			stonebound1Mats.contains(m) ? 1 : spiny1Mats.contains(m) ? -1 : 0, null, -3, 3).getInt(stonebound1Mats.contains(m) ? 1 : spiny1Mats.contains(m) ? -1 : 0);
 	}
 
 	private List<Materials> reinforced1Mats = Arrays.asList(Materials.SteelMagnetic, Materials.BlackSteel, Materials.BlueSteel, Materials.Titanium, Materials.DamascusSteel, Materials.StainlessSteel, Materials.RedSteel, Materials.MeteoricSteel, Materials.TungstenSteel);
 	private List<Materials> reinforced2Mats = Arrays.asList(Materials.Osmium, Materials.Iridium);
 
 	private int getReinforcedLevel(Materials m) {
-		if(reinforced1Mats.contains(m)) {
-			return 1;
-		}
-		if(reinforced2Mats.contains(m)) {
-			return 2;
-		}
-		if(m == Materials.Osmiridium) {
-			return 3;
-		}
-		return 0;
+		return TGregworks.config.get(Config.ReinforcedLevel, m.name(),
+			reinforced1Mats.contains(m) ? 1 : reinforced2Mats.contains(m) ? 2 : m == Materials.Osmiridium ? 3 : 0, null, 0, 3)
+			.getInt(reinforced1Mats.contains(m) ? 1 : reinforced2Mats.contains(m) ? 2 : m == Materials.Osmiridium ? 3 : 0);
 	}
 
 	private boolean doesMaterialExist(Materials m) {
@@ -187,5 +192,9 @@ public class TGregRegistry {
 			toolParts.put(p, item);
 			GameRegistry.registerItem(item, "tGregToolPart" + item.getType().name());
 		}
+	}
+
+	public void registerModifiers() {
+		ModifyBuilder.registerModifier(new ModifierTGregRepair());
 	}
 }

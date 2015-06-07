@@ -53,7 +53,7 @@ public enum PartTypes {
 	public int price;
 	public int id;
 
-	private PartTypes(String partName, String textureName, int id, Item counterpart, Pattern pattern, int price) {
+	PartTypes(String partName, String textureName, int id, Item counterpart, Pattern pattern, int price) {
 		this.partName = partName;
 		this.textureName = textureName;
 		this.id = id;

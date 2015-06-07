@@ -6,7 +6,9 @@ import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.registry.GameRegistry;
 import gregtech.api.enums.Materials;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.MinecraftForge;
@@ -16,7 +18,9 @@ import org.apache.logging.log4j.Logger;
 import tconstruct.library.TConstructCreativeTab;
 import vexatos.tgregworks.integration.TGregRecipeRegistry;
 import vexatos.tgregworks.integration.TGregRegistry;
+import vexatos.tgregworks.integration.tictooltips.IntegrationTiCTooltips;
 import vexatos.tgregworks.proxy.CommonProxy;
+import vexatos.tgregworks.reference.Config;
 import vexatos.tgregworks.reference.Mods;
 import vexatos.tgregworks.reference.PartTypes;
 import vexatos.tgregworks.util.BuildingHandler;
@@ -26,11 +30,13 @@ import vexatos.tgregworks.util.TGregUtils;
  * @author Vexatos
  */
 @Mod(modid = Mods.TGregworks, name = Mods.TGregworks_NAME, version = "@VERSION@",
-	dependencies = "required-after:" + Mods.TConstruct + "@[1.7.10-1.8.5,);required-after:" + Mods.GregTech + "@[MC1710]")
+	dependencies = "required-after:" + Mods.TConstruct + "@[1.7.10-1.8.5,);"
+		+ "required-after:" + Mods.GregTech + "@[MC1710];"
+		+ "before:" + Mods.TiCTooltips + "@[1.2.4,)")
 public class TGregworks {
 
 	public static Logger log = LogManager.getLogger(Mods.TGregworks);
-	public Configuration config;
+	public static Configuration config;
 
 	@Mod.Instance(value = Mods.TGregworks)
 	public static TGregworks instance;
@@ -40,6 +46,10 @@ public class TGregworks {
 
 	public static TGregRegistry registry;
 	public static TGregRecipeRegistry recipes;
+
+	public static Item shardCast;
+
+	public static IntegrationTiCTooltips ticTooltips;
 
 	public static TConstructCreativeTab tab = new TConstructCreativeTab("tabTGregworks");
 
@@ -54,11 +64,26 @@ public class TGregworks {
 		config = new Configuration(event.getSuggestedConfigurationFile());
 		config.load();
 
-		config.save();
-
 		registry = new TGregRegistry();
 		registry.registerToolParts();
+		registry.registerModifiers();
 		recipes = new TGregRecipeRegistry();
+
+		config.setCategoryComment(Config.Durability, "Values between 0.0 and 10000.0 are allowed. Will be directly multiplied with the internally calculated value.");
+		config.setCategoryComment(Config.MiningSpeed, "Values between 0.0 and 10000.0 are allowed. Will be directly multiplied with the internally calculated value.");
+		config.setCategoryComment(Config.Attack, "Values between 0.0 and 10000.0 are allowed. Will be directly multiplied with the internally calculated value.");
+		config.setCategoryComment(Config.HandleModifier, "Values between 0.0 and 10000.0 are allowed. Will be directly multiplied with the internally calculated value.");
+		config.setCategoryComment(Config.StoneboundLevel, "Values between -3 and 3 are allowed. Positive Values give the Stonebound effect, negative values give Jagged. "
+			+ "Keep in mind that neither 'Stonebound' nor 'Jagged' will actually appear on the tool's item tooltip, due to technical limitations.");
+		config.setCategoryComment(Config.ReinforcedLevel, "Values between 0 and 3 are allowed. Gives the according level of Reinforced.");
+		config.setCategoryComment(Config.BowDrawSpeed, "Values between 0.0 and 10000.0 are allowed. Will be directly multiplied with the internally calculated value.");
+		config.setCategoryComment(Config.BowFlightSpeed, "Values between 0.0 and 10000.0 are allowed. Will be directly multiplied with the internally calculated value.");
+		config.setCategoryComment(Config.ArrowMass, "Values between 0.0 and 10000.0 are allowed. Will be directly multiplied with the internally calculated value.");
+		config.setCategoryComment(Config.ArrowBreakChance, "Values between 0.0 and 10000.0 are allowed. Determines the break chance of arrows.");
+
+		shardCast = new Item().setCreativeTab(tab).setUnlocalizedName("tgregworks.shardcast").setTextureName("tgregworks:cast_shard")
+			.setMaxDamage(0).setHasSubtypes(false).setMaxStackSize(1);
+		GameRegistry.registerItem(shardCast, "tgregworks.shardcast");
 
 		registry.registerItems();
 
@@ -81,10 +106,14 @@ public class TGregworks {
 		recipes.addRecipesForToolBuilder();
 		recipes.addGregTechPartRecipes();
 		proxy.registerRenderers();
+		config.save();
 	}
 
 	@Mod.EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
-
+		if(Loader.isModLoaded(Mods.TiCTooltips)) {
+			ticTooltips = new IntegrationTiCTooltips();
+			ticTooltips.postInit();
+		}
 	}
 }

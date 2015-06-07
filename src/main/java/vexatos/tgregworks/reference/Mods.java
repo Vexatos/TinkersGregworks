@@ -10,5 +10,7 @@ public class Mods {
 
 	public static final String GregTech = "gregtech";
 	public static final String TConstruct = "TConstruct";
+
+	public static final String TiCTooltips = "TiCTooltips";
 }
 

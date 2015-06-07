@@ -1,7 +1,9 @@
 package vexatos.tgregworks.util;
 
+import gregtech.api.enums.Materials;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import vexatos.tgregworks.TGregworks;
 
 /**
  * @author Vexatos
@@ -27,5 +29,13 @@ public class TGregUtils {
 
 	public static NBTTagCompound getCompoundTag(ItemStack stack, String key) {
 		return getCompoundTag(getTagCompound(stack), key);
+	}
+
+	public static int getMaterialID(ItemStack stack) {
+		NBTTagCompound data = getTagCompound(stack);
+		if(!data.hasKey("material")) {
+			return -1;
+		}
+		return TGregworks.registry.matIDs.get(Materials.get(data.getString("material")));
 	}
 }
