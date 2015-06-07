@@ -45,22 +45,24 @@ public class TGregRegistry {
 			}
 		}
 		for(Materials m : toolMaterials) {
-			toolMaterialNames.add(m.mDefaultLocalName);
-			int matID = getLatestAvailableNumber();
-			TConstructRegistry.addToolMaterial(matID, m.name(), m.mDefaultLocalName, m.mToolQuality,
-				(int) (m.mDurability * getMultiplier(m, Config.Durability)), // Durability
-				(int) (m.mToolSpeed * 100F * getMultiplier(m, Config.MiningSpeed)), // Mining speed
-				(int) (m.mToolQuality * getMultiplier(m, Config.Attack)), // Attack
-				(m.mToolQuality - 0.5F) * getMultiplier(m, Config.HandleModifier), // Handle Modifier
-				getReinforcedLevel(m), getStoneboundLevel(m), "", (m.getRGBA()[0] << 16) | (m.getRGBA()[1] << 8) | (m.getRGBA()[2]));
-			TConstructRegistry.addBowMaterial(matID,
-				(int) ((float) m.mToolQuality * 10F * getMultiplier(m, Config.BowDrawSpeed)),
-				(((float) m.mToolQuality) - 0.5F) * getMultiplier(m, Config.BowFlightSpeed));
-			TConstructRegistry.addArrowMaterial(matID,
-				(float) ((((double) m.getMass()) / 10F) * getMultiplier(m, Config.ArrowMass)),
-				(float) TGregworks.config.get(Config.ArrowBreakChance, m.name(), 0.9, null, 0, 10000).getDouble(0.9));
-			matIDs.put(m, matID);
-			materialIDMap.put(matID, m);
+			if(TGregworks.config.get("enable", m.name(), true).getBoolean(true)) {
+				toolMaterialNames.add(m.mDefaultLocalName);
+				int matID = getLatestAvailableNumber();
+				TConstructRegistry.addToolMaterial(matID, m.name(), m.mDefaultLocalName, m.mToolQuality,
+					(int) (m.mDurability * getMultiplier(m, Config.Durability)), // Durability
+					(int) (m.mToolSpeed * 100F * getMultiplier(m, Config.MiningSpeed)), // Mining speed
+					(int) (m.mToolQuality * getMultiplier(m, Config.Attack)), // Attack
+					(m.mToolQuality - 0.5F) * getMultiplier(m, Config.HandleModifier), // Handle Modifier
+					getReinforcedLevel(m), getStoneboundLevel(m), "", (m.getRGBA()[0] << 16) | (m.getRGBA()[1] << 8) | (m.getRGBA()[2]));
+				TConstructRegistry.addBowMaterial(matID,
+					(int) ((float) m.mToolQuality * 10F * getMultiplier(m, Config.BowDrawSpeed)),
+					(((float) m.mToolQuality) - 0.5F) * getMultiplier(m, Config.BowFlightSpeed));
+				TConstructRegistry.addArrowMaterial(matID,
+					(float) ((((double) m.getMass()) / 10F) * getMultiplier(m, Config.ArrowMass)),
+					(float) TGregworks.config.get(Config.ArrowBreakChance, m.name(), 0.9, null, 0, 10000).getDouble(0.9));
+				matIDs.put(m, matID);
+				materialIDMap.put(matID, m);
+			}
 		}
 
 		ItemTGregPart.toolMaterialNames = toolMaterialNames;
