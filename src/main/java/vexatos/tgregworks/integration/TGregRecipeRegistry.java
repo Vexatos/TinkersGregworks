@@ -1,12 +1,15 @@
 package vexatos.tgregworks.integration;
 
+import cpw.mods.fml.common.registry.GameRegistry;
 import gregtech.api.enums.GT_Values;
 import gregtech.api.enums.Materials;
 import gregtech.api.enums.OrePrefixes;
+import gregtech.api.enums.ToolDictNames;
 import gregtech.api.util.GT_OreDictUnificator;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MathHelper;
+import net.minecraftforge.oredict.ShapedOreRecipe;
 import tconstruct.TConstruct;
 import tconstruct.library.crafting.ToolBuilder;
 import tconstruct.library.tools.ToolCore;
@@ -17,6 +20,7 @@ import vexatos.tgregworks.integration.recipe.TGregAmmoRecipe;
 import vexatos.tgregworks.integration.recipe.TGregBowRecipe;
 import vexatos.tgregworks.integration.recipe.TGregToolRecipe;
 import vexatos.tgregworks.item.ItemTGregPart;
+import vexatos.tgregworks.reference.Config;
 import vexatos.tgregworks.reference.PartTypes;
 import vexatos.tgregworks.util.TGregUtils;
 
@@ -57,8 +61,9 @@ public class TGregRecipeRegistry {
 			}
 		}
 
-		ItemStack brassstack = GT_OreDictUnificator.get(OrePrefixes.plate, Materials.Brass, 1);
-		if(TinkerTools.toolShard != null) {
+		if(TGregworks.config.get(Config.Recipes, "tinkersconstructcastrecipe", true, "Enable the Tinkers' Construct style Shard Cast recipe").getBoolean(true)) {
+			ItemStack brassstack = GT_OreDictUnificator.get(OrePrefixes.plate, Materials.Brass, 1);
+			if(TinkerTools.toolShard != null) {
 			/*ArrayList list = new ArrayList();
 			TinkerTools.toolShard.getSubItems(TinkerTools.toolShard, TinkerTools.toolShard.getCreativeTab(), list);
 			for(Object o : list) {
@@ -66,16 +71,26 @@ public class TGregRecipeRegistry {
 					GT_Recipe.GT_Recipe_Map.sAlloySmelterRecipes.add(new GT_Recipe(alustack, (ItemStack) o, 30, 800, new ItemStack(TGregworks.shardCast, 1, 0)));
 				}
 			}*/
-			if(TinkerTools.blankPattern != null) {
-				GT_Values.RA.addExtruderRecipe(new ItemStack(TinkerTools.blankPattern, 1, 1),
-					new ItemStack(TinkerTools.toolShard, 1, TinkerTools.MaterialID.Obsidian), new ItemStack(TGregworks.shardCast, 1, 0), 800, 30);
-				GT_Values.RA.addExtruderRecipe(new ItemStack(TinkerTools.blankPattern, 1, 2),
-					new ItemStack(TinkerTools.toolShard, 1, TinkerTools.MaterialID.Obsidian), new ItemStack(TGregworks.shardCast, 1, 0), 800, 30);
+				if(TinkerTools.blankPattern != null) {
+					GT_Values.RA.addExtruderRecipe(new ItemStack(TinkerTools.blankPattern, 1, 1),
+						new ItemStack(TinkerTools.toolShard, 1, TinkerTools.MaterialID.Obsidian), new ItemStack(TGregworks.shardCast, 1, 0), 800, 30);
+					GT_Values.RA.addExtruderRecipe(new ItemStack(TinkerTools.blankPattern, 1, 2),
+						new ItemStack(TinkerTools.toolShard, 1, TinkerTools.MaterialID.Obsidian), new ItemStack(TGregworks.shardCast, 1, 0), 800, 30);
+				}
+				if(brassstack != null) {
+					GT_Values.RA.addExtruderRecipe(brassstack,
+						new ItemStack(TinkerTools.toolShard, 1, TinkerTools.MaterialID.Obsidian), new ItemStack(TGregworks.shardCast, 1, 0), 800, 30);
+				}
 			}
-			if(brassstack != null) {
-				GT_Values.RA.addExtruderRecipe(brassstack,
-					new ItemStack(TinkerTools.toolShard, 1, TinkerTools.MaterialID.Obsidian), new ItemStack(TGregworks.shardCast, 1, 0), 800, 30);
-			}
+		}
+		if(TGregworks.config.get(Config.Recipes, "gregtechcastrecipe", true, "Enable the GregTech style Shard Cast recipe").getBoolean(true)) {
+			GameRegistry.addRecipe(new ShapedOreRecipe(
+				new ItemStack(TGregworks.shardCast, 1, 0),
+				" CH",
+				" PF",
+				"   ",
+				'C', ToolDictNames.craftingToolHardHammer.name(), 'H', ToolDictNames.craftingToolKnife.name(), 'F', ToolDictNames.craftingToolFile.name(), 'P', "plateBrass"
+			));
 		}
 	}
 

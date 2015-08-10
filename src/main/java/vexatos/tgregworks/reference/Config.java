@@ -5,6 +5,7 @@ package vexatos.tgregworks.reference;
  */
 public class Config {
 	public static final String Materials = "materials";
+	public static final String Recipes = "recipe";
 
 	public static final String
 		Durability = Materials + ".durability",
