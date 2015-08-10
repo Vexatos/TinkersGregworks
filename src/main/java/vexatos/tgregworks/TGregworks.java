@@ -30,7 +30,7 @@ import vexatos.tgregworks.util.TGregUtils;
  * @author Vexatos
  */
 @Mod(modid = Mods.TGregworks, name = Mods.TGregworks_NAME, version = "@VERSION@",
-	dependencies = "required-after:" + Mods.TConstruct + "@[1.7.10-1.8.5,);"
+	dependencies = "required-after:" + Mods.TConstruct + "@[1.7.10-1.8.6b.build977,);"
 		+ "required-after:" + Mods.GregTech + "@[MC1710];"
 		+ "before:" + Mods.TiCTooltips + "@[1.2.4,)")
 public class TGregworks {

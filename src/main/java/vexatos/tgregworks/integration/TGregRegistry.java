@@ -29,12 +29,13 @@ public class TGregRegistry {
 	public HashMap<Integer, Materials> materialIDMap = new HashMap<Integer, Materials>();
 
 	private int getLatestAvailableNumber() {
-		for(int i = latestAvailableNumber; true; i++) {
+		for(int i = latestAvailableNumber; i < Integer.MAX_VALUE; i++) {
 			if(!TConstructRegistry.toolMaterials.containsKey(i)) {
 				latestAvailableNumber = i + 1;
 				return i;
 			}
 		}
+		throw new RuntimeException("TConstruct tool material registry ran out of IDs!");
 	}
 
 	public void registerToolParts() {
