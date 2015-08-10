@@ -4,24 +4,42 @@ package vexatos.tgregworks.reference;
  * @author Vexatos
  */
 public class Config {
-	public static final String Materials = "materials";
-	public static final String Recipes = "recipe";
+	public static class Category {
+
+		public static final String
+			Materials = "materials",
+			Enable = "enable",
+			Recipes = "recipe",
+			Global = "global";
+	}
 
 	public static final String
-		Durability = Materials + ".durability",
-		MiningSpeed = Materials + ".miningspeed",
-		Attack = Materials + ".attack",
-		HandleModifier = Materials + ".handlemodifier";
+		Durability = "durability",
+		MiningSpeed = "miningspeed",
+		Attack = "attack",
+		HandleModifier = "handlemodifier";
 
 	public static final String
-		StoneboundLevel = Materials + ".stoneboundlevel",
-		ReinforcedLevel = Materials + ".reinforcedlevel";
+		StoneboundLevel = Category.Materials + ".stoneboundlevel",
+		ReinforcedLevel = Category.Materials + ".reinforcedlevel";
 
 	public static final String
-		BowDrawSpeed = Materials + ".bowdrawspeed",
-		BowFlightSpeed = Materials + ".bowflightspeed";
+		BowDrawSpeed = "bowdrawspeed",
+		BowFlightSpeed = "bowflightspeed";
 
 	public static final String
-		ArrowMass = Materials + ".arrowmass",
-		ArrowBreakChance = Materials + ".arrowfragility";
+		ArrowMass = "arrowmass",
+		ArrowBreakChance = "arrowfragility";
+
+	public static String onMaterial(String key) {
+		return concat(Category.Materials, key);
+	}
+
+	public static String concat(String first, String... keys) {
+		String result = first;
+		for(String key : keys) {
+			result += "." + key;
+		}
+		return result;
+	}
 }

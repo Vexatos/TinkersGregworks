@@ -69,17 +69,18 @@ public class TGregworks {
 		registry.registerModifiers();
 		recipes = new TGregRecipeRegistry();
 
-		config.setCategoryComment(Config.Durability, "Values between 0.0 and 10000.0 are allowed. Will be directly multiplied with the internally calculated value.");
-		config.setCategoryComment(Config.MiningSpeed, "Values between 0.0 and 10000.0 are allowed. Will be directly multiplied with the internally calculated value.");
-		config.setCategoryComment(Config.Attack, "Values between 0.0 and 10000.0 are allowed. Will be directly multiplied with the internally calculated value.");
-		config.setCategoryComment(Config.HandleModifier, "Values between 0.0 and 10000.0 are allowed. Will be directly multiplied with the internally calculated value.");
+		config.setCategoryComment(Config.Category.Global, "Values between 0.0 and 10000.0 are allowed. Will be directly multiplied with the internally calculated value. Applies to all materials.");
+		config.setCategoryComment(Config.onMaterial(Config.Durability), "Values between 0.0 and 10000.0 are allowed. Will be directly multiplied with the internally calculated value.");
+		config.setCategoryComment(Config.onMaterial(Config.MiningSpeed), "Values between 0.0 and 10000.0 are allowed. Will be directly multiplied with the internally calculated value.");
+		config.setCategoryComment(Config.onMaterial(Config.Attack), "Values between 0.0 and 10000.0 are allowed. Will be directly multiplied with the internally calculated value.");
+		config.setCategoryComment(Config.onMaterial(Config.HandleModifier), "Values between 0.0 and 10000.0 are allowed. Will be directly multiplied with the internally calculated value.");
 		config.setCategoryComment(Config.StoneboundLevel, "Values between -3 and 3 are allowed. Positive Values give the Stonebound effect, negative values give Jagged. "
 			+ "Keep in mind that neither 'Stonebound' nor 'Jagged' will actually appear on the tool's item tooltip, due to technical limitations.");
 		config.setCategoryComment(Config.ReinforcedLevel, "Values between 0 and 3 are allowed. Gives the according level of Reinforced.");
-		config.setCategoryComment(Config.BowDrawSpeed, "Values between 0.0 and 10000.0 are allowed. Will be directly multiplied with the internally calculated value.");
-		config.setCategoryComment(Config.BowFlightSpeed, "Values between 0.0 and 10000.0 are allowed. Will be directly multiplied with the internally calculated value.");
-		config.setCategoryComment(Config.ArrowMass, "Values between 0.0 and 10000.0 are allowed. Will be directly multiplied with the internally calculated value.");
-		config.setCategoryComment(Config.ArrowBreakChance, "Values between 0.0 and 10000.0 are allowed. Determines the break chance of arrows.");
+		config.setCategoryComment(Config.onMaterial(Config.BowDrawSpeed), "Values between 0.0 and 10000.0 are allowed. Will be directly multiplied with the internally calculated value.");
+		config.setCategoryComment(Config.onMaterial(Config.BowFlightSpeed), "Values between 0.0 and 10000.0 are allowed. Will be directly multiplied with the internally calculated value.");
+		config.setCategoryComment(Config.onMaterial(Config.ArrowMass), "Values between 0.0 and 10000.0 are allowed. Will be directly multiplied with the internally calculated value.");
+		config.setCategoryComment(Config.onMaterial(Config.ArrowBreakChance), "Values between 0.0 and 10000.0 are allowed. Determines the break chance of arrows.");
 
 		shardCast = new Item().setCreativeTab(tab).setUnlocalizedName("tgregworks.shardcast").setTextureName("tgregworks:cast_shard")
 			.setMaxDamage(0).setHasSubtypes(false).setMaxStackSize(1);

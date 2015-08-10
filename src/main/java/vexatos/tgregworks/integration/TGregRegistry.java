@@ -45,21 +45,21 @@ public class TGregRegistry {
 			}
 		}
 		for(Materials m : toolMaterials) {
-			if(TGregworks.config.get("enable", m.name(), true).getBoolean(true)) {
+			if(TGregworks.config.get(Config.Category.Enable, m.name(), true).getBoolean(true)) {
 				toolMaterialNames.add(m.mDefaultLocalName);
 				int matID = getLatestAvailableNumber();
 				TConstructRegistry.addToolMaterial(matID, m.name(), m.mDefaultLocalName, m.mToolQuality,
-					(int) (m.mDurability * getMultiplier(m, Config.Durability)), // Durability
-					(int) (m.mToolSpeed * 100F * getMultiplier(m, Config.MiningSpeed)), // Mining speed
-					(int) (m.mToolQuality * getMultiplier(m, Config.Attack)), // Attack
-					(m.mToolQuality - 0.5F) * getMultiplier(m, Config.HandleModifier), // Handle Modifier
+					(int) (m.mDurability * getGlobalMultiplier(Config.Durability) * getMultiplier(m, Config.Durability)), // Durability
+					(int) (m.mToolSpeed * 100F * getGlobalMultiplier(Config.MiningSpeed) * getMultiplier(m, Config.MiningSpeed)), // Mining speed
+					(int) (m.mToolQuality * getGlobalMultiplier(Config.Attack) * getMultiplier(m, Config.Attack)), // Attack
+					(m.mToolQuality - 0.5F) * getGlobalMultiplier(Config.HandleModifier) * getMultiplier(m, Config.HandleModifier), // Handle Modifier
 					getReinforcedLevel(m), getStoneboundLevel(m), "", (m.getRGBA()[0] << 16) | (m.getRGBA()[1] << 8) | (m.getRGBA()[2]));
 				TConstructRegistry.addBowMaterial(matID,
-					(int) ((float) m.mToolQuality * 10F * getMultiplier(m, Config.BowDrawSpeed)),
-					(((float) m.mToolQuality) - 0.5F) * getMultiplier(m, Config.BowFlightSpeed));
+					(int) ((float) m.mToolQuality * 10F * getGlobalMultiplier(Config.BowDrawSpeed) * getMultiplier(m, Config.BowDrawSpeed)),
+					(((float) m.mToolQuality) - 0.5F) * getGlobalMultiplier(Config.BowFlightSpeed) * getMultiplier(m, Config.BowFlightSpeed));
 				TConstructRegistry.addArrowMaterial(matID,
-					(float) ((((double) m.getMass()) / 10F) * getMultiplier(m, Config.ArrowMass)),
-					(float) TGregworks.config.get(Config.ArrowBreakChance, m.name(), 0.9, null, 0, 10000).getDouble(0.9));
+					(float) ((((double) m.getMass()) / 10F) * getGlobalMultiplier(Config.ArrowMass) * getMultiplier(m, Config.ArrowMass)),
+					getGlobalMultiplier(Config.ArrowBreakChance, 0.9) * getMultiplier(m, Config.ArrowBreakChance));
 				matIDs.put(m, matID);
 				materialIDMap.put(matID, m);
 			}
@@ -69,7 +69,22 @@ public class TGregRegistry {
 	}
 
 	private float getMultiplier(Materials m, String key) {
-		return (float) TGregworks.config.get(key, m.name(), 1.0, null, 0, 10000).getDouble(1.0);
+		return (float) TGregworks.config.get(Config.onMaterial(key), m.name(), 1.0, null, 0, 10000).getDouble(1.0);
+	}
+
+	private final HashMap<String, Float> globalMultipliers = new HashMap<String, Float>();
+
+	private float getGlobalMultiplier(String key) {
+		return getGlobalMultiplier(key, 1.0);
+	}
+
+	private float getGlobalMultiplier(String key, double def) {
+		Float multiplier = globalMultipliers.get(key);
+		if(multiplier == null) {
+			multiplier = (float) TGregworks.config.get(Config.Category.Global, key, def, null, 0, 10000).getDouble(def);
+			globalMultipliers.put(key, multiplier);
+		}
+		return multiplier;
 	}
 
 	/*public static ToolCore pickaxe;

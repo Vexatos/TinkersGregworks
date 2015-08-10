@@ -61,7 +61,7 @@ public class TGregRecipeRegistry {
 			}
 		}
 
-		if(TGregworks.config.get(Config.Recipes, "tinkersconstructcastrecipe", true, "Enable the Tinkers' Construct style Shard Cast recipe").getBoolean(true)) {
+		if(TGregworks.config.get(Config.concat(Config.Category.Enable, Config.Category.Recipes), "tinkersconstructcastrecipe", true, "Enable the Shard Cast recipe using Tinkers' Construct shards").getBoolean(true)) {
 			ItemStack brassstack = GT_OreDictUnificator.get(OrePrefixes.plate, Materials.Brass, 1);
 			if(TinkerTools.toolShard != null) {
 			/*ArrayList list = new ArrayList();
@@ -83,7 +83,7 @@ public class TGregRecipeRegistry {
 				}
 			}
 		}
-		if(TGregworks.config.get(Config.Recipes, "gregtechcastrecipe", true, "Enable the GregTech style Shard Cast recipe").getBoolean(true)) {
+		if(TGregworks.config.get(Config.concat(Config.Category.Enable, Config.Category.Recipes), "gregtechcastrecipe", true, "Enable the GregTech style Shard Cast recipe").getBoolean(true)) {
 			GameRegistry.addRecipe(new ShapedOreRecipe(
 				new ItemStack(TGregworks.shardCast, 1, 0),
 				" CH",
