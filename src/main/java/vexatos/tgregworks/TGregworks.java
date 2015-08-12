@@ -104,6 +104,7 @@ public class TGregworks {
 	@Mod.EventHandler
 	public void init(FMLInitializationEvent event) {
 		proxy.addToolRenderMappings();
+		registry.registerFluids();
 		recipes.addRecipesForToolBuilder();
 		recipes.addGregTechPartRecipes();
 		proxy.registerRenderers();
@@ -112,6 +113,7 @@ public class TGregworks {
 
 	@Mod.EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
+		recipes.registerBoltCasting();
 		if(Loader.isModLoaded(Mods.TiCTooltips)) {
 			ticTooltips = new IntegrationTiCTooltips();
 			ticTooltips.postInit();

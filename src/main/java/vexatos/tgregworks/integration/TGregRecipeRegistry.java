@@ -9,22 +9,29 @@ import gregtech.api.util.GT_OreDictUnificator;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MathHelper;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import tconstruct.TConstruct;
+import tconstruct.library.TConstructRegistry;
+import tconstruct.library.crafting.CastingRecipe;
+import tconstruct.library.crafting.FluidType;
+import tconstruct.library.crafting.LiquidCasting;
 import tconstruct.library.crafting.ToolBuilder;
+import tconstruct.library.tools.DualMaterialToolPart;
 import tconstruct.library.tools.ToolCore;
+import tconstruct.smeltery.TinkerSmeltery;
 import tconstruct.tools.TinkerTools;
+import tconstruct.util.config.PHConstruct;
 import tconstruct.weaponry.TinkerWeaponry;
 import vexatos.tgregworks.TGregworks;
-import vexatos.tgregworks.integration.recipe.TGregAmmoRecipe;
-import vexatos.tgregworks.integration.recipe.TGregBowRecipe;
-import vexatos.tgregworks.integration.recipe.TGregToolRecipe;
+import vexatos.tgregworks.integration.recipe.*;
 import vexatos.tgregworks.item.ItemTGregPart;
 import vexatos.tgregworks.reference.Config;
 import vexatos.tgregworks.reference.PartTypes;
 import vexatos.tgregworks.util.TGregUtils;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author SlimeKnights, Vexatos
@@ -94,11 +101,51 @@ public class TGregRecipeRegistry {
 		}
 	}
 
+	public void registerBoltCasting() {
+		if(!TConstruct.pulsar.isPulseLoaded("Tinkers' Weaponry")) {
+			return;
+		}
+		if(PHConstruct.alternativeBoltRecipe) {
+			GameRegistry.addRecipe(new TGregAlternateBoltRecipe());
+		}
+		if(!TConstruct.pulsar.isPulseLoaded("Tinkers' Smeltery")) {
+			return;
+		}
+		LiquidCasting tb = TConstructRegistry.getTableCasting();
+
+		// any fluid that is a toolpart material can be used
+		for(Map.Entry<String, FluidType> entry : FluidType.fluidTypes.entrySet()) {
+			// is tool material?
+			if(!entry.getValue().isToolpart) {
+				continue;
+			}
+
+			int matID;
+			FluidStack liquid = new FluidStack(entry.getValue().fluid, TConstruct.ingotLiquidValue);
+			if(entry.getValue() instanceof TGregFluidType) {
+				matID = ((TGregFluidType) entry.getValue()).matID;
+			} else {
+				// get a casting recipe for it D:
+				CastingRecipe recipe = tb.getCastingRecipe(liquid, new ItemStack(TinkerSmeltery.metalPattern, 1, 2)); // pickaxe
+
+				if(recipe == null) {
+					continue;
+				} else {
+					// material id for the pickaxe head == material id for the fluid! such hack. wow.
+					matID = recipe.getResult().getItemDamage();
+				}
+			}
+			// register our casting stuff
+			for(Map.Entry<Materials, Integer> matEntry : TGregworks.registry.matIDs.entrySet()) {
+				ItemStack rod = TGregUtils.newItemStack(matEntry.getKey(), PartTypes.ToolRod, 1);
+
+				tb.addCastingRecipe(DualMaterialToolPart.createDualMaterial(TinkerWeaponry.partBolt, matEntry.getValue(), matID), liquid, rod, true, 150);
+			}
+		}
+	}
+
 	private ItemStack getChunk(Materials m, int amount) {
-		ItemStack stack = new ItemStack(TGregworks.registry.toolParts.get(PartTypes.Chunk), amount, 0);
-		NBTTagCompound data = TGregUtils.getTagCompound(stack);
-		data.setString("material", m.name());
-		return stack;
+		return TGregUtils.newItemStack(m, PartTypes.Chunk, amount);
 	}
 
 	public void addRecipesForToolBuilder() {

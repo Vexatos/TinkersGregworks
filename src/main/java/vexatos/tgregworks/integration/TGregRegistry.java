@@ -4,9 +4,11 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.Materials;
 import tconstruct.library.TConstructRegistry;
+import tconstruct.library.crafting.FluidType;
 import tconstruct.library.crafting.ModifyBuilder;
 import vexatos.tgregworks.TGregworks;
 import vexatos.tgregworks.integration.modifiers.ModifierTGregRepair;
+import vexatos.tgregworks.integration.recipe.TGregFluidType;
 import vexatos.tgregworks.item.ItemTGregPart;
 import vexatos.tgregworks.reference.Config;
 import vexatos.tgregworks.reference.PartTypes;
@@ -67,6 +69,16 @@ public class TGregRegistry {
 		}
 
 		ItemTGregPart.toolMaterialNames = toolMaterialNames;
+	}
+
+	public void registerFluids() {
+		for(Materials m : toolMaterials) {
+			if(m.mStandardMoltenFluid != null) {
+				FluidType.registerFluidType(m.mStandardMoltenFluid.getName(),
+					new TGregFluidType(m.mStandardMoltenFluid.getBlock(), 0, m.mStandardMoltenFluid.getTemperature(),
+						m.mStandardMoltenFluid, true, matIDs.get(m)));
+			}
+		}
 	}
 
 	private float getMultiplier(Materials m, String key) {
