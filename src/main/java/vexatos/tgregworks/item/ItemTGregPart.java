@@ -28,7 +28,6 @@ public class ItemTGregPart extends CraftingItem implements IToolPart {
 	public ItemTGregPart(PartTypes p) {
 		super(toolMaterialNames.toArray(new String[toolMaterialNames.size()]), buildTextureNames(p), "parts/", "tinker", TGregworks.tab);
 		this.setHasSubtypes(true);
-		this.requiresMultipleRenderPasses();
 		this.setMaxDamage(0);
 		this.type = p;
 	}
