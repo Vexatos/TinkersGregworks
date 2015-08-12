@@ -41,9 +41,8 @@ public class TGregRegistry {
 	}
 
 	public TGregRegistry() {
-		latestAvailableNumber = TGregworks.config.get(Config.Category.General, "materialIDRangeStart", 1500,
-			"The lowest ID for TGregworks materials. Only material IDs higher than this will be used, and only if the ID has not been registered before. Other mods might not check if the material ID is already in use and thus crash, if the crash occurs with a TGregworks material, changing this number may fix it.",
-			300, 15000).getInt(1500);
+		latestAvailableNumber = TGregworks.config.getInt("materialIDRangeStart", Config.Category.General, 1500, 300, 15000,
+			"The lowest ID for TGregworks materials. Only material IDs higher than this will be used, and only if the ID has not been registered before. Other mods might not check if the material ID is already in use and thus crash, if the crash occurs with a TGregworks material, changing this number may fix it.");
 	}
 
 	public void registerToolParts() {
