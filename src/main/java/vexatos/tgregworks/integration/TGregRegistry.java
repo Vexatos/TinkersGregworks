@@ -23,7 +23,7 @@ import java.util.List;
  */
 public class TGregRegistry {
 
-	private int latestAvailableNumber = 300;
+	private int latestAvailableNumber = 1500;
 
 	public ArrayList<Materials> toolMaterials = new ArrayList<Materials>();
 	public ArrayList<String> toolMaterialNames = new ArrayList<String>();
@@ -31,13 +31,19 @@ public class TGregRegistry {
 	public HashMap<Integer, Materials> materialIDMap = new HashMap<Integer, Materials>();
 
 	private int getLatestAvailableNumber() {
-		for(int i = latestAvailableNumber; i < Integer.MAX_VALUE; i++) {
+		for(int i = latestAvailableNumber; i < 16383; i++) {
 			if(!TConstructRegistry.toolMaterials.containsKey(i)) {
 				latestAvailableNumber = i + 1;
 				return i;
 			}
 		}
 		throw new RuntimeException("TConstruct tool material registry ran out of IDs!");
+	}
+
+	public TGregRegistry() {
+		latestAvailableNumber = TGregworks.config.get(Config.Category.General, "materialIDRangeStart", 1500,
+			"The lowest ID for TGregworks materials. Only material IDs higher than this will be used, and only if the ID has not been registered before. Other mods might not check if the material ID is already in use and thus crash, if the crash occurs with a TGregworks material, changing this number may fix it.",
+			300, 15000).getInt(1500);
 	}
 
 	public void registerToolParts() {

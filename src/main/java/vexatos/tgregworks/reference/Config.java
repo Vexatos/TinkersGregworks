@@ -10,7 +10,8 @@ public class Config {
 			Materials = "materials",
 			Enable = "enable",
 			Recipes = "recipe",
-			Global = "global";
+			Global = "global",
+			General = "general";
 	}
 
 	public static final String
