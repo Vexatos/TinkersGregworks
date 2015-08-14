@@ -1,4 +1,4 @@
-package vexatos.tgregworks.integration.recipe;
+package vexatos.tgregworks.integration.recipe.tconstruct;
 
 import net.minecraft.item.Item;
 import tconstruct.library.tools.DynamicToolPart;

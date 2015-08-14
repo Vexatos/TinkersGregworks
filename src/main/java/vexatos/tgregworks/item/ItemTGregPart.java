@@ -6,10 +6,14 @@ import gregtech.api.enums.Materials;
 import mantle.items.abstracts.CraftingItem;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IIcon;
+import net.minecraft.world.World;
 import tconstruct.library.util.IToolPart;
 import vexatos.tgregworks.TGregworks;
 import vexatos.tgregworks.reference.PartTypes;
@@ -45,11 +49,17 @@ public class ItemTGregPart extends CraftingItem implements IToolPart {
 		} else {
 			matName = Materials.get(data.getString("material")).mDefaultLocalName;
 		}
+
+		matName = matName + " " + type.partName;
 		//String material = StatCollector.translateToLocal("tgregworks.parttype." + matName);
 		//String name = StatCollector.translateToLocal("tgregworks.toolpart." + PartTypes.getFromID(stack.getItemDamage()) + "." + matName);
 		//name = name.replaceAll("%%material", material);
 
-		return matName + " " + type.partName;
+		if(stack.getItemDamage() == 0) {
+			matName = matName + " (Deprecated)";
+		}
+
+		return matName;
 	}
 
 	@Override
@@ -63,6 +73,11 @@ public class ItemTGregPart extends CraftingItem implements IToolPart {
 		}
 		//return StatCollector.translateToLocal("tgregworks.toolpart." + PartTypes.getFromID(stack.getItemDamage()) + "." + matName);
 		return matName;
+	}
+
+	@Override
+	public String getUnlocalizedName() {
+		return type.partName;
 	}
 
 	private static String[] buildTextureNames(PartTypes p) {
@@ -89,7 +104,7 @@ public class ItemTGregPart extends CraftingItem implements IToolPart {
 	@Override
 	public void getSubItems(Item b, CreativeTabs tab, List list) {
 		for(Materials m : TGregworks.registry.toolMaterials) {
-			ItemStack stack = new ItemStack(b, 1, 0);
+			ItemStack stack = new ItemStack(b, 1, TGregworks.registry.toolMaterials.indexOf(m) + 1);
 			NBTTagCompound data = TGregUtils.getTagCompound(stack);
 			data.setString("material", m.name());
 			stack.setTagCompound(data);
@@ -100,19 +115,19 @@ public class ItemTGregPart extends CraftingItem implements IToolPart {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public IIcon getIcon(ItemStack stack, int pass) {
-		int meta = getDamage(stack);
+		//int meta = getDamage(stack);
 		//NBTTagCompound data = getTagCompound(stack);
 		//if(!data.hasKey("material")) {
 		//	return icons[meta];
 		//}
 		//Materials m = Materials.get(data.getString("material"));
-		return icons[meta];
+		return icons[0];
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
 	public IIcon getIconFromDamage(int meta) {
-		return icons[meta];
+		return icons[0];
 	}
 
 	@Override
@@ -126,6 +141,27 @@ public class ItemTGregPart extends CraftingItem implements IToolPart {
 		int[] rgba = toIntArray(getRGBa(stack));
 		colour = (rgba[0] << 16) | (rgba[1] << 8) | (rgba[2]);
 		return colour;
+	}
+
+	@Override
+	public void onUpdate(ItemStack stack, World world, Entity entity, int par4, boolean par5) {
+		NBTTagCompound data = TGregUtils.getTagCompound(stack);
+		if(!data.hasKey("material")) {
+			return;
+		}
+		Materials m = Materials.get(data.getString("material"));
+		if(m != null) {
+			stack.setItemDamage(TGregworks.registry.toolMaterials.indexOf(m) + 1);
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public void addInformation(ItemStack stack, EntityPlayer player, List tooltip, boolean par4) {
+		super.addInformation(stack, player, tooltip, par4);
+		if(stack.getItemDamage() == 0) {
+			tooltip.add(EnumChatFormatting.GRAY.toString() + EnumChatFormatting.ITALIC.toString() + "Put this into your inventory to update it.");
+		}
 	}
 
 	private int[] toIntArray(short[] r) {

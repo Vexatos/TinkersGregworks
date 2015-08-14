@@ -8,7 +8,7 @@ import tconstruct.library.crafting.FluidType;
 import tconstruct.library.crafting.ModifyBuilder;
 import vexatos.tgregworks.TGregworks;
 import vexatos.tgregworks.integration.modifiers.ModifierTGregRepair;
-import vexatos.tgregworks.integration.recipe.TGregFluidType;
+import vexatos.tgregworks.integration.recipe.tconstruct.TGregFluidType;
 import vexatos.tgregworks.item.ItemTGregPart;
 import vexatos.tgregworks.reference.Config;
 import vexatos.tgregworks.reference.PartTypes;

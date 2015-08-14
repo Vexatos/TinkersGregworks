@@ -7,7 +7,6 @@ import gregtech.api.enums.OrePrefixes;
 import gregtech.api.enums.ToolDictNames;
 import gregtech.api.util.GT_OreDictUnificator;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MathHelper;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.ShapedOreRecipe;
@@ -19,12 +18,13 @@ import tconstruct.library.crafting.LiquidCasting;
 import tconstruct.library.crafting.ToolBuilder;
 import tconstruct.library.tools.DualMaterialToolPart;
 import tconstruct.library.tools.ToolCore;
+import tconstruct.library.util.IToolPart;
 import tconstruct.smeltery.TinkerSmeltery;
 import tconstruct.tools.TinkerTools;
 import tconstruct.util.config.PHConstruct;
 import tconstruct.weaponry.TinkerWeaponry;
 import vexatos.tgregworks.TGregworks;
-import vexatos.tgregworks.integration.recipe.*;
+import vexatos.tgregworks.integration.recipe.tconstruct.*;
 import vexatos.tgregworks.item.ItemTGregPart;
 import vexatos.tgregworks.reference.Config;
 import vexatos.tgregworks.reference.PartTypes;
@@ -43,20 +43,18 @@ public class TGregRecipeRegistry {
 	public void addGregTechPartRecipes() {
 		for(Materials m : TGregworks.registry.toolMaterials) {
 			for(PartTypes p : PartTypes.values()) {
-				ItemStack input = new ItemStack(TGregworks.registry.toolParts.get(p));
-				NBTTagCompound data = TGregUtils.getTagCompound(input);
-				data.setString("material", m.name());
-				input.setTagCompound(data);
+				ItemStack input = TGregUtils.newItemStack(m, p, 1);
 				if(p.pattern != null) {
 					//GregTech_API.sRecipeAdder.addAlloySmelterRecipe(GT_OreDictUnificator.get(OrePrefixes.ingot, m, p.price), p.pattern, input, 80 * p.price, 30);
 					ItemStack stack = GT_OreDictUnificator.get(OrePrefixes.ingot, m,
 						p.price % 2 != 0 ? (p.price / 2) + 1 : MathHelper.ceiling_double_int(p.price / 2D));
 					if(stack != null) {
-						GT_Values.RA.addExtruderRecipe(stack, p.pattern, input, Math.max(80, m.mDurability * p.price), m.mToolQuality < 3 ? 30 : 120);
+						GT_Values.RA.addExtruderRecipe(stack.copy(), p.pattern.copy(), input.copy(), Math.max(80, m.mDurability * p.price), m.mToolQuality < 3 ? 30 : 120);
 						//GregTech_API.sRecipeAdder.addAlloySmelterRecipe(getChunk(m, p.price), p.pattern, input, 80 * p.price, 30);
 						stack = getChunk(m, p.price);
 						if(stack != null) {
-							GT_Values.RA.addExtruderRecipe(stack, p.pattern, input, 80 + (m.mDurability * p.price), m.mToolQuality < 3 ? 30 : 120);
+							GT_Values.RA.addExtruderRecipe(stack.copy(), p.pattern.copy(), input.copy(), 80 + (m.mDurability * p.price), m.mToolQuality < 3 ? 30 : 120);
+							GT_Values.RA.addAlloySmelterRecipe(input.copy(), new ItemStack(TGregworks.shardCast, 0, 0), stack.copy(), 80 + (m.mDurability * p.price), m.mToolQuality < 3 ? 30 : 120);
 						}
 					}
 				}
@@ -101,6 +99,10 @@ public class TGregRecipeRegistry {
 		}
 	}
 
+	private ItemStack getChunk(Materials m, int amount) {
+		return TGregUtils.newItemStack(m, PartTypes.Chunk, amount);
+	}
+
 	public void registerBoltCasting() {
 		if(!TConstruct.pulsar.isPulseLoaded("Tinkers' Weaponry")) {
 			return;
@@ -141,11 +143,14 @@ public class TGregRecipeRegistry {
 
 				tb.addCastingRecipe(DualMaterialToolPart.createDualMaterial(TinkerWeaponry.partBolt, matEntry.getValue(), matID), liquid, rod, true, 150);
 			}
+			for(Integer id : TConstructRegistry.toolMaterials.keySet()) {
+				ItemStack rod = new ItemStack(TinkerTools.toolRod, 1, id);
+				if(((IToolPart) TinkerTools.toolRod).getMaterialID(rod) == -1) {
+					continue;
+				}
+				tb.addCastingRecipe(DualMaterialToolPart.createDualMaterial(TinkerWeaponry.partBolt, id, matID), liquid, rod, true, 150);
+			}
 		}
-	}
-
-	private ItemStack getChunk(Materials m, int amount) {
-		return TGregUtils.newItemStack(m, PartTypes.Chunk, amount);
 	}
 
 	public void addRecipesForToolBuilder() {

@@ -40,10 +40,11 @@ public class TGregUtils {
 		return TGregworks.registry.matIDs.get(Materials.get(data.getString("material")));
 	}
 
-	public static ItemStack newItemStack(Materials m, PartTypes p, int amount){
-		ItemStack stack = new ItemStack(TGregworks.registry.toolParts.get(p), amount, 0);
+	public static ItemStack newItemStack(Materials m, PartTypes p, int amount) {
+		ItemStack stack = new ItemStack(TGregworks.registry.toolParts.get(p), amount, TGregworks.registry.toolMaterials.indexOf(m) + 1);
 		NBTTagCompound data = TGregUtils.getTagCompound(stack);
 		data.setString("material", m.name());
+		stack.setTagCompound(data);
 		return stack;
 	}
 }

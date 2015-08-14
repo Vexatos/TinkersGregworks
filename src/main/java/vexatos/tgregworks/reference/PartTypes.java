@@ -26,7 +26,7 @@ public enum PartTypes {
 	MediumGuard		(		"Hand Guard",			"_medium_guard",		10,	TinkerTools.handGuard,			mediumguard,	1	),
 	Crossbar		(		"Crossbar",				"_crossbar",			11,	TinkerTools.crossbar,			crossbar,		1	),
 	KnifeBlade		(		"Knife Blade",			"_knife_blade",			12,	TinkerTools.knifeBlade,			knifeblade,		1	),
-	FullGuard		(		"Full Guard",			"_full_guard",			13,	TinkerTools.fullGuard,			fullguard,		2	),
+	FullGuard		(		"Full Guard",			"_full_guard",			13,	TinkerTools.fullGuard,			fullguard,		6	),
 
 	FrypanHead		(		"Pan",					"_frypan_head",			14,	TinkerTools.frypanHead,			frypan,			2	),
 	SignHead		(		"Sign Head",			"_battlesign_head",		15,	TinkerTools.signHead,			sign,			2	),
@@ -40,7 +40,7 @@ public enum PartTypes {
 
 	Chunk			(		"Shard",				"_chunk",				22,	TinkerTools.toolShard,			null,			1	),
 
-	ArrowHead		(		"Arrow Head",			"_arrowhead",			23,	TinkerWeaponry.arrowhead,		arrowhead,		1	),
+	ArrowHead		(		"Arrow Head",			"_arrowhead",			23,	TinkerWeaponry.arrowhead,		arrowhead,		2	),
 	Shuriken		(		"Shuriken",				"_shuriken",			24, TinkerWeaponry.partShuriken,	shuriken,		1	),
 	CrossbowLimb	(		"Crossbow Limb",		"_crossbow_limb",		25, TinkerWeaponry.partCrossbowLimb,crossbowlimb,	8	),
 	CrossbowBody	(		"Crossbow Body",		"_crossbow_body",		26, TinkerWeaponry.partCrossbowBody,crossbowbody,	10	),
