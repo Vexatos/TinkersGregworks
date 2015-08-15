@@ -9,7 +9,7 @@ import tconstruct.weaponry.TinkerWeaponry;
  */
 public interface Pattern {
 
-	public static enum MetalPatterns implements Pattern {
+	enum MetalPatterns implements Pattern {
 		ingot,
 		rod,
 		pickaxe,
@@ -43,7 +43,7 @@ public interface Pattern {
 		}
 	}
 
-	public static enum WeaponryPatterns implements Pattern {
+	enum WeaponryPatterns implements Pattern {
 		shuriken,
 		crossbowlimb,
 		crossbowbody,
@@ -54,10 +54,10 @@ public interface Pattern {
 		}
 	}
 
-	public Item getPatternItem();
+	Item getPatternItem();
 
-	public String name();
+	String name();
 
-	public int ordinal();
+	int ordinal();
 
 }

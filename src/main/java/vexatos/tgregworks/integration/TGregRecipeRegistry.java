@@ -28,6 +28,7 @@ import vexatos.tgregworks.integration.recipe.tconstruct.*;
 import vexatos.tgregworks.item.ItemTGregPart;
 import vexatos.tgregworks.reference.Config;
 import vexatos.tgregworks.reference.PartTypes;
+import vexatos.tgregworks.reference.Pattern.MetalPatterns;
 import vexatos.tgregworks.util.TGregUtils;
 
 import java.util.HashMap;
@@ -41,6 +42,10 @@ public class TGregRecipeRegistry {
 	private HashMap<PartTypes, ItemTGregPart> partMap = new HashMap<PartTypes, ItemTGregPart>();
 
 	public void addGregTechPartRecipes() {
+		final boolean addReverseSmelting = TGregworks.config.get(Config.concat(Config.Category.Enable, Config.Category.Recipes), "reverseSmelting",
+			true, "Enable smelting tool parts in an alloy smelter to get shards back").getBoolean(true);
+		final boolean addShardToIngotSmelting = TGregworks.config.get(Config.concat(Config.Category.Enable, Config.Category.Recipes), "shardToIngotSmelting",
+			true, "Enable smelting two shards into one ingot in an alloy smelter").getBoolean(true);
 		for(Materials m : TGregworks.registry.toolMaterials) {
 			for(PartTypes p : PartTypes.values()) {
 				ItemStack input = TGregUtils.newItemStack(m, p, 1);
@@ -54,7 +59,10 @@ public class TGregRecipeRegistry {
 						stack = getChunk(m, p.price);
 						if(stack != null) {
 							GT_Values.RA.addExtruderRecipe(stack.copy(), p.pattern.copy(), input.copy(), 80 + (m.mDurability * p.price), m.mToolQuality < 3 ? 30 : 120);
-							GT_Values.RA.addAlloySmelterRecipe(input.copy(), new ItemStack(TGregworks.shardCast, 0, 0), stack.copy(), 80 + (m.mDurability * p.price), m.mToolQuality < 3 ? 30 : 120);
+							if(addReverseSmelting) {
+								GT_Values.RA.addAlloySmelterRecipe(input.copy(), new ItemStack(TGregworks.shardCast, 0, 0), stack.copy(), 80 + (m.mDurability * p.price),
+									m.mToolQuality < 3 ? 30 : 120);
+							}
 						}
 					}
 				}
@@ -63,6 +71,10 @@ public class TGregRecipeRegistry {
 			ItemStack ingotStack = GT_OreDictUnificator.get(OrePrefixes.ingot, m, 1);
 			if(stack != null && ingotStack != null) {
 				GT_Values.RA.addExtruderRecipe(ingotStack, new ItemStack(TGregworks.shardCast, 0, 0), stack, Math.max(160, m.mDurability), m.mToolQuality < 3 ? 30 : 120);
+				if(addShardToIngotSmelting) {
+					GT_Values.RA.addAlloySmelterRecipe(stack.copy(), new ItemStack(MetalPatterns.ingot.getPatternItem(), 0, MetalPatterns.ingot.ordinal()),
+						ingotStack.copy(), Math.max(160, m.mDurability), m.mToolQuality < 3 ? 30 : 120);
+				}
 			}
 		}
 
