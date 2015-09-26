@@ -1,7 +1,7 @@
 Tinkers' Gregworks
 ==================
 
-This is an Addon for the Minecraft mods Tinkers' Construct and GregTech. it is entirely made for fun, and nothing else.
+This is an Addon for the Minecraft mods Tinkers' Construct and GregTech. It is entirely made for fun, and nothing else.
 
 ###What does it do?
 
