@@ -5,12 +5,16 @@ package vexatos.tgregworks.reference;
  * @author Vexatos
  */
 public class Mods {
-	public static final String TGregworks = "TGregworks";
-	public static final String TGregworks_NAME = "Tinkers' Gregworks";
+	public static final String
+		TGregworks = "TGregworks",
+		TGregworks_NAME = "Tinkers' Gregworks";
 
-	public static final String GregTech = "gregtech";
-	public static final String TConstruct = "TConstruct";
+	public static final String
+		GregTech = "gregtech",
+		TConstruct = "TConstruct";
 
-	public static final String TiCTooltips = "TiCTooltips";
+	public static final String
+		TiCTooltips = "TiCTooltips"/*,
+		TinkersTailor = "TinkersTailor"*/;
 }
 

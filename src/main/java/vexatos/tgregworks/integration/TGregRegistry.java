@@ -3,15 +3,17 @@ package vexatos.tgregworks.integration;
 import cpw.mods.fml.common.registry.GameRegistry;
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.Materials;
+import net.minecraft.item.ItemStack;
 import tconstruct.library.TConstructRegistry;
 import tconstruct.library.crafting.FluidType;
-import tconstruct.library.crafting.ModifyBuilder;
+import tconstruct.library.crafting.PatternBuilder;
+import tconstruct.library.tools.ToolMaterial;
 import vexatos.tgregworks.TGregworks;
-import vexatos.tgregworks.integration.modifiers.ModifierTGregRepair;
 import vexatos.tgregworks.integration.recipe.tconstruct.TGregFluidType;
 import vexatos.tgregworks.item.ItemTGregPart;
 import vexatos.tgregworks.reference.Config;
 import vexatos.tgregworks.reference.PartTypes;
+import vexatos.tgregworks.util.TGregUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -68,6 +70,18 @@ public class TGregRegistry {
 				TConstructRegistry.addArrowMaterial(matID,
 					(float) ((((double) m.getMass()) / 10F) * getGlobalMultiplier(Config.ArrowMass) * getMultiplier(m, Config.ArrowMass)),
 					getGlobalMultiplier(Config.ArrowBreakChance, 0.9) * getMultiplier(m, Config.ArrowBreakChance));
+				ToolMaterial mat = TConstructRegistry.getMaterial(matID);
+				if(mat != null) {
+					ItemStack shard = TGregUtils.newItemStack(m, PartTypes.Chunk, 1);
+					if(PatternBuilder.instance.materialSets.containsKey(mat.materialName)) {
+						PatternBuilder.instance.registerMaterial(shard, 1, mat.materialName);
+					} else {
+						ItemStack rod = TGregUtils.newItemStack(m, PartTypes.ToolRod, 1);
+
+						// register the material
+						PatternBuilder.instance.registerFullMaterial(shard, 1, mat.materialName, shard, rod, matID);
+					}
+				}
 				matIDs.put(m, matID);
 				materialIDMap.put(matID, m);
 			}
@@ -76,12 +90,16 @@ public class TGregRegistry {
 		ItemTGregPart.toolMaterialNames = toolMaterialNames;
 	}
 
+	public HashMap<Materials, TGregFluidType> toolMaterialFluidTypes = new HashMap<Materials, TGregFluidType>();
+
 	public void registerFluids() {
 		for(Materials m : toolMaterials) {
 			if(m.mStandardMoltenFluid != null) {
-				FluidType.registerFluidType(m.mStandardMoltenFluid.getName(),
-					new TGregFluidType(m.mStandardMoltenFluid.getBlock(), 0, m.mStandardMoltenFluid.getTemperature(),
-						m.mStandardMoltenFluid, true, matIDs.get(m)));
+				TGregFluidType fluidType = new TGregFluidType(m, m.mStandardMoltenFluid.getBlock(), 0, m.mStandardMoltenFluid.getTemperature(),
+					m.mStandardMoltenFluid, true, matIDs.get(m));
+
+				toolMaterialFluidTypes.put(m, fluidType);
+				FluidType.registerFluidType(m.mStandardMoltenFluid.getName(), fluidType);
 			}
 		}
 	}
@@ -222,7 +240,7 @@ public class TGregRegistry {
 	public HashMap<PartTypes, ItemTGregPart> toolParts = new HashMap<PartTypes, ItemTGregPart>();
 
 	public void registerItems() {
-		for(PartTypes p : PartTypes.values()) {
+		for(PartTypes p : PartTypes.VALUES) {
 			ItemTGregPart item = new ItemTGregPart(p);
 			toolParts.put(p, item);
 			GameRegistry.registerItem(item, "tGregToolPart" + item.getType().name());
@@ -230,6 +248,6 @@ public class TGregRegistry {
 	}
 
 	public void registerModifiers() {
-		ModifyBuilder.registerModifier(new ModifierTGregRepair());
+		//ModifyBuilder.registerModifier(new ModifierTGregRepair());
 	}
 }

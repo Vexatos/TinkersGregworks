@@ -50,6 +50,7 @@ public class TGregworks {
 	public static Item shardCast;
 
 	public static IntegrationTiCTooltips ticTooltips;
+	//public static IntegrationTinkersTailor tinkersTailor;
 
 	public static TConstructCreativeTab tab = new TConstructCreativeTab("tabTGregworks");
 
@@ -65,6 +66,7 @@ public class TGregworks {
 		config.load();
 
 		registry = new TGregRegistry();
+		registry.registerItems();
 		registry.registerToolParts();
 		registry.registerModifiers();
 		recipes = new TGregRecipeRegistry();
@@ -85,8 +87,6 @@ public class TGregworks {
 		shardCast = new Item().setCreativeTab(tab).setUnlocalizedName("tgregworks.shardcast").setTextureName("tgregworks:cast_shard")
 			.setMaxDamage(0).setHasSubtypes(false).setMaxStackSize(1);
 		GameRegistry.registerItem(shardCast, "tgregworks.shardcast");
-
-		registry.registerItems();
 
 		{
 			ItemStack stack = new ItemStack(registry.toolParts.get(PartTypes.LargeSwordBlade));
@@ -113,7 +113,11 @@ public class TGregworks {
 
 	@Mod.EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
-		recipes.registerBoltCasting();
+		recipes.registerBoltRecipes();
+		/*if(Loader.isModLoaded(Mods.TinkersTailor)) {
+			tinkersTailor = new IntegrationTinkersTailor();
+			tinkersTailor.registerArmorPartRecipes();
+		}*/
 		if(Loader.isModLoaded(Mods.TiCTooltips)) {
 			ticTooltips = new IntegrationTiCTooltips();
 			ticTooltips.postInit();

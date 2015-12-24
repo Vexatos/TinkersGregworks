@@ -31,6 +31,7 @@ import vexatos.tgregworks.reference.PartTypes;
 import vexatos.tgregworks.reference.Pattern.MetalPatterns;
 import vexatos.tgregworks.util.TGregUtils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -41,26 +42,31 @@ public class TGregRecipeRegistry {
 
 	private HashMap<PartTypes, ItemTGregPart> partMap = new HashMap<PartTypes, ItemTGregPart>();
 
+	public boolean addReverseSmelting = false;
+	public boolean addShardToIngotSmelting = false;
+
 	public void addGregTechPartRecipes() {
-		final boolean addReverseSmelting = TGregworks.config.get(Config.concat(Config.Category.Enable, Config.Category.Recipes), "reverseSmelting",
+		addReverseSmelting = TGregworks.config.get(Config.concat(Config.Category.Enable, Config.Category.Recipes), "reverseSmelting",
 			true, "Enable smelting tool parts in an alloy smelter to get shards back").getBoolean(true);
-		final boolean addShardToIngotSmelting = TGregworks.config.get(Config.concat(Config.Category.Enable, Config.Category.Recipes), "shardToIngotSmelting",
+		addShardToIngotSmelting = TGregworks.config.get(Config.concat(Config.Category.Enable, Config.Category.Recipes), "shardToIngotSmelting",
 			true, "Enable smelting two shards into one ingot in an alloy smelter").getBoolean(true);
 		for(Materials m : TGregworks.registry.toolMaterials) {
-			for(PartTypes p : PartTypes.values()) {
+			for(PartTypes p : PartTypes.VALUES) {
 				ItemStack input = TGregUtils.newItemStack(m, p, 1);
-				if(p.pattern != null) {
+				ItemStack pattern = p.getPatternItem();
+				if(pattern != null) {
+					int price = p.getPrice();
 					//GregTech_API.sRecipeAdder.addAlloySmelterRecipe(GT_OreDictUnificator.get(OrePrefixes.ingot, m, p.price), p.pattern, input, 80 * p.price, 30);
 					ItemStack stack = GT_OreDictUnificator.get(OrePrefixes.ingot, m,
-						p.price % 2 != 0 ? (p.price / 2) + 1 : MathHelper.ceiling_double_int(p.price / 2D));
+						price % 2 != 0 ? (price / 2) + 1 : MathHelper.ceiling_double_int(price / 2D));
 					if(stack != null) {
-						GT_Values.RA.addExtruderRecipe(stack.copy(), p.pattern.copy(), input.copy(), Math.max(80, m.mDurability * p.price), m.mToolQuality < 3 ? 30 : 120);
+						GT_Values.RA.addExtruderRecipe(stack.copy(), pattern.copy(), input.copy(), Math.max(80, m.mDurability * price), m.mToolQuality < 3 ? 30 : 120);
 						//GregTech_API.sRecipeAdder.addAlloySmelterRecipe(getChunk(m, p.price), p.pattern, input, 80 * p.price, 30);
-						stack = getChunk(m, p.price);
+						stack = getChunk(m, price);
 						if(stack != null) {
-							GT_Values.RA.addExtruderRecipe(stack.copy(), p.pattern.copy(), input.copy(), 80 + (m.mDurability * p.price), m.mToolQuality < 3 ? 30 : 120);
+							GT_Values.RA.addExtruderRecipe(stack.copy(), pattern.copy(), input.copy(), 80 + (m.mDurability * price), m.mToolQuality < 3 ? 30 : 120);
 							if(addReverseSmelting) {
-								GT_Values.RA.addAlloySmelterRecipe(input.copy(), new ItemStack(TGregworks.shardCast, 0, 0), stack.copy(), 80 + (m.mDurability * p.price),
+								GT_Values.RA.addAlloySmelterRecipe(input.copy(), new ItemStack(TGregworks.shardCast, 0, 0), stack.copy(), 80 + (m.mDurability * price),
 									m.mToolQuality < 3 ? 30 : 120);
 							}
 						}
@@ -115,7 +121,7 @@ public class TGregRecipeRegistry {
 		return TGregUtils.newItemStack(m, PartTypes.Chunk, amount);
 	}
 
-	public void registerBoltCasting() {
+	public void registerBoltRecipes() {
 		if(!TConstruct.pulsar.isPulseLoaded("Tinkers' Weaponry")) {
 			return;
 		}
@@ -138,6 +144,17 @@ public class TGregRecipeRegistry {
 			FluidStack liquid = new FluidStack(entry.getValue().fluid, TConstruct.ingotLiquidValue);
 			if(entry.getValue() instanceof TGregFluidType) {
 				matID = ((TGregFluidType) entry.getValue()).matID;
+				for(Integer id : TConstructRegistry.toolMaterials.keySet()) {
+					ItemStack rod = new ItemStack(TinkerTools.toolRod, 1, id);
+					if(((IToolPart) TinkerTools.toolRod).getMaterialID(rod) == -1) {
+						continue;
+					}
+					Materials m = ((TGregFluidType) entry.getValue()).material;
+					//tb.addCastingRecipe(DualMaterialToolPart.createDualMaterial(TinkerWeaponry.partBolt, id, matID), liquid, rod, true, 150);
+					GT_Values.RA.addFluidSolidifierRecipe(rod, liquid.copy(),
+						DualMaterialToolPart.createDualMaterial(TinkerWeaponry.partBolt, id, matID),
+						80 + m.mDurability * 2, m.mToolQuality < 3 ? 30 : 120);
+				}
 			} else {
 				// get a casting recipe for it D:
 				CastingRecipe recipe = tb.getCastingRecipe(liquid, new ItemStack(TinkerSmeltery.metalPattern, 1, 2)); // pickaxe
@@ -151,23 +168,30 @@ public class TGregRecipeRegistry {
 			}
 			// register our casting stuff
 			for(Map.Entry<Materials, Integer> matEntry : TGregworks.registry.matIDs.entrySet()) {
-				ItemStack rod = TGregUtils.newItemStack(matEntry.getKey(), PartTypes.ToolRod, 1);
+				Materials m = matEntry.getKey();
+				ItemStack rod = TGregUtils.newItemStack(m, PartTypes.ToolRod, 1);
 
-				tb.addCastingRecipe(DualMaterialToolPart.createDualMaterial(TinkerWeaponry.partBolt, matEntry.getValue(), matID), liquid, rod, true, 150);
-			}
-			for(Integer id : TConstructRegistry.toolMaterials.keySet()) {
-				ItemStack rod = new ItemStack(TinkerTools.toolRod, 1, id);
-				if(((IToolPart) TinkerTools.toolRod).getMaterialID(rod) == -1) {
-					continue;
-				}
-				tb.addCastingRecipe(DualMaterialToolPart.createDualMaterial(TinkerWeaponry.partBolt, id, matID), liquid, rod, true, 150);
+				//tb.addCastingRecipe(DualMaterialToolPart.createDualMaterial(TinkerWeaponry.partBolt, matEntry.getValue(), matID), liquid, rod, true, 150);
+				GT_Values.RA.addFluidSolidifierRecipe(rod, liquid.copy(),
+					DualMaterialToolPart.createDualMaterial(TinkerWeaponry.partBolt, matEntry.getValue(), matID),
+					80 + (m.mDurability * 2), m.mToolQuality < 3 ? 30 : 120);
 			}
 		}
+		// Remove broken dynamically added recipes.
+		ArrayList<CastingRecipe> castingRecipes = TConstructRegistry.getTableCasting().getCastingRecipes();
+		ArrayList<CastingRecipe> toRemove = new ArrayList<CastingRecipe>();
+		for(CastingRecipe cr : castingRecipes) {
+			if(cr != null && cr.cast != null && cr.cast.getItem() == TinkerTools.toolRod
+				&& TGregworks.registry.materialIDMap.containsKey(((IToolPart)TinkerTools.toolRod).getMaterialID(cr.cast))) {
+				toRemove.add(cr);
+			}
+		}
+		castingRecipes.removeAll(toRemove);
 	}
 
 	public void addRecipesForToolBuilder() {
 
-		for(PartTypes p : PartTypes.values()) {
+		for(PartTypes p : PartTypes.VALUES) {
 			partMap.put(p, TGregworks.registry.toolParts.get(p));
 		}
 

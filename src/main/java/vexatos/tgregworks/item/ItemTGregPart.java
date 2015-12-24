@@ -50,7 +50,7 @@ public class ItemTGregPart extends CraftingItem implements IToolPart {
 			matName = Materials.get(data.getString("material")).mDefaultLocalName;
 		}
 
-		matName = matName + " " + type.partName;
+		matName = matName + " " + type.getPartName();
 		//String material = StatCollector.translateToLocal("tgregworks.parttype." + matName);
 		//String name = StatCollector.translateToLocal("tgregworks.toolpart." + PartTypes.getFromID(stack.getItemDamage()) + "." + matName);
 		//name = name.replaceAll("%%material", material);
@@ -77,12 +77,12 @@ public class ItemTGregPart extends CraftingItem implements IToolPart {
 
 	@Override
 	public String getUnlocalizedName() {
-		return type.partName;
+		return type.getPartName();
 	}
 
 	private static String[] buildTextureNames(PartTypes p) {
 		String[] names = new String[1];
-		names[0] = p.textureName;
+		names[0] = p.getTextureName();
 		return names;
 	}
 

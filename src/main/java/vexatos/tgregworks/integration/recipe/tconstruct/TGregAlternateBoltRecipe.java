@@ -75,7 +75,7 @@ public class TGregAlternateBoltRecipe implements IRecipe {
 		if(input instanceof ItemTGregPart) {
 			return part == ((ItemTGregPart) input).getType();
 		}
-		return input == part.counterpart;
+		return input == part.getCounterpart();
 	}
 
 	@Override

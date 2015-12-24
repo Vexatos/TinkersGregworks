@@ -40,7 +40,7 @@ public class TGregBowRecipe extends TGregToolRecipe {
 	@Override
 	public boolean validHead(Item input) {
 		for(ItemTGregPart part : newHeadList) {
-			if(toolRod != null && part.getType().counterpart == toolRod && (input == Items.stick || input == Items.bone)) {
+			if(toolRod != null && part.getType().getCounterpart() == toolRod && (input == Items.stick || input == Items.bone)) {
 				return true;
 			}
 		}

@@ -130,7 +130,7 @@ public class TGregToolRecipe extends ToolRecipe {
 			if((part == input) && isEqualType(part, input)) {
 				return true;
 			}
-			if(input == part.getType().counterpart) {
+			if(input == part.getType().getCounterpart()) {
 				return true;
 			}
 		}
@@ -143,10 +143,10 @@ public class TGregToolRecipe extends ToolRecipe {
 			if((part == input) && isEqualType(part, input)) {
 				return true;
 			}
-			if(input == part.getType().counterpart) {
+			if(input == part.getType().getCounterpart()) {
 				return true;
 			}
-			if(toolRod != null && part.getType().counterpart == toolRod && (input == Items.stick || input == Items.bone)) {
+			if(toolRod != null && part.getType().getCounterpart() == toolRod && (input == Items.stick || input == Items.bone)) {
 				return true;
 			}
 		}
@@ -165,10 +165,10 @@ public class TGregToolRecipe extends ToolRecipe {
 			if((part == input) && isEqualType(part, input)) {
 				return true;
 			}
-			if(input == part.getType().counterpart) {
+			if(input == part.getType().getCounterpart()) {
 				return true;
 			}
-			if(toolRod != null && part.getType().counterpart == toolRod && (input == Items.stick || input == Items.bone)) {
+			if(toolRod != null && part.getType().getCounterpart() == toolRod && (input == Items.stick || input == Items.bone)) {
 				return true;
 			}
 		}
@@ -184,10 +184,10 @@ public class TGregToolRecipe extends ToolRecipe {
 			if((part == input) && isEqualType(part, input)) {
 				return true;
 			}
-			if(input == part.getType().counterpart) {
+			if(input == part.getType().getCounterpart()) {
 				return true;
 			}
-			if(toolRod != null && part.getType().counterpart == toolRod && (input == Items.stick || input == Items.bone)) {
+			if(toolRod != null && part.getType().getCounterpart() == toolRod && (input == Items.stick || input == Items.bone)) {
 				return true;
 			}
 		}
@@ -198,6 +198,6 @@ public class TGregToolRecipe extends ToolRecipe {
 		if(input instanceof ItemTGregPart) {
 			return part.getType() == ((ItemTGregPart) input).getType();
 		}
-		return input == part.getType().counterpart;
+		return input == part.getType().getCounterpart();
 	}
 }

@@ -12,6 +12,7 @@ import static vexatos.tgregworks.reference.Pattern.WeaponryPatterns.*;
  * @author Vexatos
  */
 public enum PartTypes {
+	//@formatter:off
 	PickaxeHead		(		"Pickaxe Head",			"_pickaxe_head",		0,	TinkerTools.pickaxeHead,		pickaxe,		2	),
 	ShovelHead		(		"Shovel Head",			"_shovel_head",			1,	TinkerTools.shovelHead,			shovel,			2	),
 	AxeHead			(		"Axe Head",				"_axe_head",			2,	TinkerTools.hatchetHead,		axe,			2	),
@@ -45,20 +46,46 @@ public enum PartTypes {
 	CrossbowLimb	(		"Crossbow Limb",		"_crossbow_limb",		25, TinkerWeaponry.partCrossbowLimb,crossbowlimb,	8	),
 	CrossbowBody	(		"Crossbow Body",		"_crossbow_body",		26, TinkerWeaponry.partCrossbowBody,crossbowbody,	10	),
 	BowLimb			(		"Bow Limb",				"_bow_limb",			27, TinkerWeaponry.partBowLimb,		bowlimb,		3	);
+	//@formatter:on
+	public static final PartTypes[] VALUES = values();
 
-	public String textureName;
-	public String partName;
-	public Item counterpart;
-	public ItemStack pattern;
-	public int price;
-	public int id;
+	private String textureName;
+	private String partName;
+	private Item counterpart;
+	private Pattern pattern;
+	private int price;
+	private int id;
 
 	PartTypes(String partName, String textureName, int id, Item counterpart, Pattern pattern, int price) {
 		this.partName = partName;
 		this.textureName = textureName;
 		this.id = id;
 		this.counterpart = counterpart;
-		this.pattern = pattern != null ? new ItemStack(pattern.getPatternItem(), 0, pattern.ordinal()) : null;
+		this.pattern = pattern;
 		this.price = price;
+	}
+
+	public String getTextureName() {
+		return this.textureName;
+	}
+
+	public String getPartName() {
+		return this.partName;
+	}
+
+	public ItemStack getPatternItem() {
+		return pattern != null ? new ItemStack(pattern.getPatternItem(), 0, pattern.ordinal()) : null;
+	}
+
+	public Item getCounterpart() {
+		return this.counterpart;
+	}
+
+	public int getPrice() {
+		return this.price;
+	}
+
+	public int getID() {
+		return this.id;
 	}
 }
