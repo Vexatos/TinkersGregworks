@@ -49,42 +49,41 @@ public class TGregRegistry {
 
 	public void registerToolParts() {
 		TGregworks.log.info("Registering TGregworks tool parts.");
+		List<Materials> gtMaterials = Arrays.asList(GregTech_API.sGeneratedMaterials);
 		for(Materials m : Materials.values()) {
-			if(((m.mTypes & 64) == 64) && !doesMaterialExist(m) && Arrays.asList(GregTech_API.sGeneratedMaterials).contains(m)) {
+			if(((m.mTypes & 64) == 64) && !doesMaterialExist(m) && gtMaterials.contains(m) && TGregworks.config.get(Config.Category.Enable, m.name(), true).getBoolean(true)) {
 				toolMaterials.add(m);
 			}
 		}
 		for(Materials m : toolMaterials) {
-			if(TGregworks.config.get(Config.Category.Enable, m.name(), true).getBoolean(true)) {
-				toolMaterialNames.add(m.mDefaultLocalName);
-				int matID = getLatestAvailableNumber();
-				TConstructRegistry.addToolMaterial(matID, m.name(), m.mDefaultLocalName, m.mToolQuality,
-					(int) (m.mDurability * getGlobalMultiplier(Config.Durability) * getMultiplier(m, Config.Durability)), // Durability
-					(int) (m.mToolSpeed * 100F * getGlobalMultiplier(Config.MiningSpeed) * getMultiplier(m, Config.MiningSpeed)), // Mining speed
-					(int) (m.mToolQuality * getGlobalMultiplier(Config.Attack) * getMultiplier(m, Config.Attack)), // Attack
-					(m.mToolQuality - 0.5F) * getGlobalMultiplier(Config.HandleModifier) * getMultiplier(m, Config.HandleModifier), // Handle Modifier
-					getReinforcedLevel(m), getStoneboundLevel(m), "", (m.getRGBA()[0] << 16) | (m.getRGBA()[1] << 8) | (m.getRGBA()[2]));
-				TConstructRegistry.addBowMaterial(matID,
-					(int) ((float) m.mToolQuality * 10F * getGlobalMultiplier(Config.BowDrawSpeed) * getMultiplier(m, Config.BowDrawSpeed)),
-					(((float) m.mToolQuality) - 0.5F) * getGlobalMultiplier(Config.BowFlightSpeed) * getMultiplier(m, Config.BowFlightSpeed));
-				TConstructRegistry.addArrowMaterial(matID,
-					(float) ((((double) m.getMass()) / 10F) * getGlobalMultiplier(Config.ArrowMass) * getMultiplier(m, Config.ArrowMass)),
-					getGlobalMultiplier(Config.ArrowBreakChance, 0.9) * getMultiplier(m, Config.ArrowBreakChance));
-				ToolMaterial mat = TConstructRegistry.getMaterial(matID);
-				if(mat != null) {
-					ItemStack shard = TGregUtils.newItemStack(m, PartTypes.Chunk, 1);
-					if(PatternBuilder.instance.materialSets.containsKey(mat.materialName)) {
-						PatternBuilder.instance.registerMaterial(shard, 1, mat.materialName);
-					} else {
-						ItemStack rod = TGregUtils.newItemStack(m, PartTypes.ToolRod, 1);
+			toolMaterialNames.add(m.mDefaultLocalName);
+			int matID = getLatestAvailableNumber();
+			TConstructRegistry.addToolMaterial(matID, m.name(), m.mDefaultLocalName, m.mToolQuality,
+				(int) (m.mDurability * getGlobalMultiplier(Config.Durability) * getMultiplier(m, Config.Durability)), // Durability
+				(int) (m.mToolSpeed * 100F * getGlobalMultiplier(Config.MiningSpeed) * getMultiplier(m, Config.MiningSpeed)), // Mining speed
+				(int) (m.mToolQuality * getGlobalMultiplier(Config.Attack) * getMultiplier(m, Config.Attack)), // Attack
+				(m.mToolQuality - 0.5F) * getGlobalMultiplier(Config.HandleModifier) * getMultiplier(m, Config.HandleModifier), // Handle Modifier
+				getReinforcedLevel(m), getStoneboundLevel(m), "", (m.getRGBA()[0] << 16) | (m.getRGBA()[1] << 8) | (m.getRGBA()[2]));
+			TConstructRegistry.addBowMaterial(matID,
+				(int) ((float) m.mToolQuality * 10F * getGlobalMultiplier(Config.BowDrawSpeed) * getMultiplier(m, Config.BowDrawSpeed)),
+				(((float) m.mToolQuality) - 0.5F) * getGlobalMultiplier(Config.BowFlightSpeed) * getMultiplier(m, Config.BowFlightSpeed));
+			TConstructRegistry.addArrowMaterial(matID,
+				(float) ((((double) m.getMass()) / 10F) * getGlobalMultiplier(Config.ArrowMass) * getMultiplier(m, Config.ArrowMass)),
+				getGlobalMultiplier(Config.ArrowBreakChance, 0.9) * getMultiplier(m, Config.ArrowBreakChance));
+			ToolMaterial mat = TConstructRegistry.getMaterial(matID);
+			if(mat != null) {
+				ItemStack shard = TGregUtils.newItemStack(m, PartTypes.Chunk, 1);
+				if(PatternBuilder.instance.materialSets.containsKey(mat.materialName)) {
+					PatternBuilder.instance.registerMaterial(shard, 1, mat.materialName);
+				} else {
+					ItemStack rod = TGregUtils.newItemStack(m, PartTypes.ToolRod, 1);
 
-						// register the material
-						PatternBuilder.instance.registerFullMaterial(shard, 1, mat.materialName, shard, rod, matID);
-					}
+					// register the material
+					PatternBuilder.instance.registerFullMaterial(shard, 1, mat.materialName, shard, rod, matID);
 				}
-				matIDs.put(m, matID);
-				materialIDMap.put(matID, m);
 			}
+			matIDs.put(m, matID);
+			materialIDMap.put(matID, m);
 		}
 
 		ItemTGregPart.toolMaterialNames = toolMaterialNames;
