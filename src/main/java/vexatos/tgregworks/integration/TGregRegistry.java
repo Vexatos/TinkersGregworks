@@ -26,6 +26,7 @@ import java.util.List;
 public class TGregRegistry {
 
 	private int latestAvailableNumber = 1500;
+	private boolean addMaterialsAnyway = false;
 
 	public ArrayList<Materials> toolMaterials = new ArrayList<Materials>();
 	public ArrayList<String> toolMaterialNames = new ArrayList<String>();
@@ -45,6 +46,7 @@ public class TGregRegistry {
 	public TGregRegistry() {
 		latestAvailableNumber = TGregworks.config.getInt("materialIDRangeStart", Config.Category.General, 1500, 300, 15000,
 			"The lowest ID for TGregworks materials. Only material IDs higher than this will be used, and only if the ID has not been registered before. Other mods might not check if the material ID is already in use and thus crash, if the crash occurs with a TGregworks material, changing this number may fix it.");
+		addMaterialsAnyway = TGregworks.config.getBoolean("addMaterialsAnyway", Config.Category.General, false, "Register Materials even if a material with the same name already exists. May override any material with the same name added by other mods.");
 	}
 
 	public void registerToolParts() {
@@ -232,7 +234,7 @@ public class TGregRegistry {
 	}
 
 	private boolean doesMaterialExist(Materials m) {
-		return TConstructRegistry.toolMaterialStrings.containsKey(m.name());
+		return !addMaterialsAnyway || TConstructRegistry.toolMaterialStrings.containsKey(m.name());
 		// && Arrays.asList(GregTech_API.sGeneratedMaterials).contains(m);
 	}
 
