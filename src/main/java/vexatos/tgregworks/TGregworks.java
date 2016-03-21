@@ -110,14 +110,14 @@ public class TGregworks {
 
 	@Mod.EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
+		recipes.addRecipesForToolBuilder();
+		recipes.addGregTechPartRecipes();
+		recipes.registerRepairMaterials();
 		recipes.registerBoltRecipes();
 		/*if(Loader.isModLoaded(Mods.TinkersTailor)) {
 			tinkersTailor = new IntegrationTinkersTailor();
 			tinkersTailor.registerArmorPartRecipes();
 		}*/
-		recipes.addRecipesForToolBuilder();
-		recipes.addGregTechPartRecipes();
-		recipes.registerRepairMaterials();
 		if(Loader.isModLoaded(Mods.TiCTooltips)) {
 			ticTooltips = new IntegrationTiCTooltips();
 			ticTooltips.postInit();
