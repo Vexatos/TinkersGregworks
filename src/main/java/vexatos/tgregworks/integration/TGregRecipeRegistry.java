@@ -64,7 +64,7 @@ public class TGregRecipeRegistry {
 		addSolidifierRecipes = TGregworks.config.get(Config.concat(Config.Category.Enable, Config.Category.Recipes), "solidifierRecipes",
 			false, "Enable tool part recipes in the fluid solidifier").getBoolean(false);
 		energyMultiplier = (float) TGregworks.config.get(Config.concat(Config.Category.General), "energyUsageMultiplier",
-			1D, "Energy usage multiplier for the extruder and solidifier. Base EU/t is either 30 or 120", 0D, 10000D).getDouble(1D);
+			1D, "Energy usage multiplier for the extruder and solidifier. Base EU/t is either 30 or 120", 0D, 4500D).getDouble(1D);
 
 		//Make sure eu/t isn't 0 or the higher end materials eu/t does not exceed ultimate voltage
 		if(energyMultiplier < 0 || (120 * energyMultiplier) > 524288) {
