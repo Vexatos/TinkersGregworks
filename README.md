@@ -7,7 +7,7 @@ This is an Addon for the Minecraft mods Tinkers' Construct and GregTech. It is e
 
 The mod adds tool parts for every GregTech material that is valid as a GregTech tool. That means, if you can make a GregTech tool out of a material, you can also make TConstruct tool parts out of it (provided you have TGregworks installed).
 
-All tool parts are made in a GregTech Extruder instead of the Part Builder.
+All tool parts are made in a GregTech Extruder instead of the Part Builder. Alternatively, they can be made in a Fluid Solidifier if the corresponding config option is enabled.
 
 You can extrude any ingot into two shards (which work the same as TConstruct shards/chunks) and use those instead of ingots for extruding (which may save you half an ingot's worth of material).
 
