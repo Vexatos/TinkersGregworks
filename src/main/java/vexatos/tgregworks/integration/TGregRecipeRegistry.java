@@ -12,12 +12,10 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import tconstruct.TConstruct;
 import tconstruct.library.TConstructRegistry;
-import tconstruct.library.crafting.CastingRecipe;
-import tconstruct.library.crafting.FluidType;
-import tconstruct.library.crafting.LiquidCasting;
-import tconstruct.library.crafting.ToolBuilder;
+import tconstruct.library.crafting.*;
 import tconstruct.library.tools.DualMaterialToolPart;
 import tconstruct.library.tools.ToolCore;
+import tconstruct.library.tools.ToolMaterial;
 import tconstruct.library.util.IToolPart;
 import tconstruct.smeltery.TinkerSmeltery;
 import tconstruct.tools.TinkerTools;
@@ -48,6 +46,8 @@ public class TGregRecipeRegistry {
 	public boolean addShardToToolPart = false;
 	public boolean addExtruderRecipes = false;
 	public boolean addSolidifierRecipes = false;
+	public boolean addShardRepair = true;
+	public boolean addIngotRepair = false;
 	public float energyMultiplier = 0F;
 
 	public void addGregTechPartRecipes() {
@@ -55,16 +55,16 @@ public class TGregRecipeRegistry {
 			true, "Enable smelting tool parts in an alloy smelter to get shards back").getBoolean(true);
 		addShardToIngotSmelting = TGregworks.config.get(Config.concat(Config.Category.Enable, Config.Category.Recipes), "shardToIngotSmelting",
 			true, "Enable smelting two shards into one ingot in an alloy smelter").getBoolean(true);
-		addIngotToShard = TGregworks.config.get(Config.concat(Config.Category.Enable, Config.Category.Recipes), "shardToToolPart",
+		addIngotToShard = TGregworks.config.get(Config.concat(Config.Category.Enable, Config.Category.Recipes), "ingotToShardRecipe",
 			true, "Enable creating shards from ingots in the extruder (if extruder is enabled)").getBoolean(true);
-		addShardToToolPart = TGregworks.config.get(Config.concat(Config.Category.Enable, Config.Category.Recipes), "shardToToolPart",
+		addShardToToolPart = TGregworks.config.get(Config.concat(Config.Category.Enable, Config.Category.Recipes), "shardToToolPartRecipe",
 			true, "Enable creating tool parts from shards in the extruder (if extruder is enabled)").getBoolean(true);
 		addExtruderRecipes = TGregworks.config.get(Config.concat(Config.Category.Enable, Config.Category.Recipes), "extruderRecipes",
 			true, "Enable tool part recipes in the extruder").getBoolean(true);
 		addSolidifierRecipes = TGregworks.config.get(Config.concat(Config.Category.Enable, Config.Category.Recipes), "solidifierRecipes",
 			false, "Enable tool part recipes in the fluid solidifier").getBoolean(false);
-		energyMultiplier = (float) TGregworks.config.get(Config.concat(Config.Category.General), "energyUsageMultiplier",
-			1D, "Energy usage multiplier for the extruder and solidifier. Base EU/t is either 30 or 120", 0D, 4500D).getDouble(1D);
+		energyMultiplier = TGregworks.config.getFloat("energyUsageMultiplier", Config.concat(Config.Category.General),
+			1F, 0F, 4500F, "Energy usage multiplier for the extruder and solidifier. Base EU/t is either 30 or 120");
 
 		//Make sure eu/t isn't 0 or the higher end materials eu/t does not exceed ultimate voltage
 		if(energyMultiplier < 0 || (120 * energyMultiplier) > 524288) {
@@ -161,6 +161,45 @@ public class TGregRecipeRegistry {
 
 	private ItemStack getChunk(Materials m, int amount) {
 		return TGregUtils.newItemStack(m, PartTypes.Chunk, amount);
+	}
+
+	public void registerRepairMaterials() {
+		addShardRepair = TGregworks.config.getBoolean("addShardRepair", Config.concat(Config.Category.Enable, Config.Category.Recipes), true, "Allow repairing TGregworks tools with shards");
+		addIngotRepair = TGregworks.config.getBoolean("addIngotRepair", Config.concat(Config.Category.Enable, Config.Category.Recipes), false, "Allow repairing TGregworks tools with ingots");
+		for(Materials m : TGregworks.registry.toolMaterials) {
+			Integer matID = TGregworks.registry.matIDs.get(m);
+			if(matID != null) {
+				ToolMaterial mat = TConstructRegistry.getMaterial(matID);
+				if(mat != null) {
+					if(addShardRepair) {
+						ItemStack shard = TGregUtils.newItemStack(m, PartTypes.Chunk, 1);
+						if(PatternBuilder.instance.materialSets.containsKey(mat.materialName)) {
+							PatternBuilder.instance.registerMaterial(shard, 1, mat.materialName);
+						} else {
+							ItemStack rod = TGregUtils.newItemStack(m, PartTypes.ToolRod, 1);
+
+							// register the material
+							PatternBuilder.instance.registerFullMaterial(shard, 1, mat.materialName, shard, rod, matID);
+						}
+					}
+					if(addIngotRepair) {
+						ArrayList<ItemStack> ingots = GT_OreDictUnificator.getOres(OrePrefixes.ingot, m);
+						for(ItemStack ingot : ingots) {
+							if(ingot != null && ingot.getItem() != null) {
+								if(PatternBuilder.instance.materialSets.containsKey(mat.materialName)) {
+									PatternBuilder.instance.registerMaterial(ingot, 1, mat.materialName);
+								} else {
+									ItemStack rod = TGregUtils.newItemStack(m, PartTypes.ToolRod, 1);
+
+									// register the material
+									PatternBuilder.instance.registerFullMaterial(ingot, 2, mat.materialName, ingot, rod, matID);
+								}
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 
 	public void registerBoltRecipes() {

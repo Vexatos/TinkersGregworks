@@ -3,6 +3,8 @@ package vexatos.tgregworks.integration;
 import cpw.mods.fml.common.registry.GameRegistry;
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.Materials;
+import gregtech.api.enums.OrePrefixes;
+import gregtech.api.util.GT_OreDictUnificator;
 import net.minecraft.item.ItemStack;
 import tconstruct.library.TConstructRegistry;
 import tconstruct.library.crafting.FluidType;
@@ -72,18 +74,6 @@ public class TGregRegistry {
 			TConstructRegistry.addArrowMaterial(matID,
 				(float) ((((double) m.getMass()) / 10F) * getGlobalMultiplier(Config.ArrowMass) * getMultiplier(m, Config.ArrowMass)),
 				getGlobalMultiplier(Config.ArrowBreakChance, 0.9) * getMultiplier(m, Config.ArrowBreakChance));
-			ToolMaterial mat = TConstructRegistry.getMaterial(matID);
-			if(mat != null) {
-				ItemStack shard = TGregUtils.newItemStack(m, PartTypes.Chunk, 1);
-				if(PatternBuilder.instance.materialSets.containsKey(mat.materialName)) {
-					PatternBuilder.instance.registerMaterial(shard, 1, mat.materialName);
-				} else {
-					ItemStack rod = TGregUtils.newItemStack(m, PartTypes.ToolRod, 1);
-
-					// register the material
-					PatternBuilder.instance.registerFullMaterial(shard, 1, mat.materialName, shard, rod, matID);
-				}
-			}
 			matIDs.put(m, matID);
 			materialIDMap.put(matID, m);
 		}

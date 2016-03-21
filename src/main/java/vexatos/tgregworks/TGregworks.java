@@ -105,10 +105,7 @@ public class TGregworks {
 	public void init(FMLInitializationEvent event) {
 		proxy.addToolRenderMappings();
 		registry.registerFluids();
-		recipes.addRecipesForToolBuilder();
-		recipes.addGregTechPartRecipes();
 		proxy.registerRenderers();
-		config.save();
 	}
 
 	@Mod.EventHandler
@@ -118,9 +115,13 @@ public class TGregworks {
 			tinkersTailor = new IntegrationTinkersTailor();
 			tinkersTailor.registerArmorPartRecipes();
 		}*/
+		recipes.addRecipesForToolBuilder();
+		recipes.addGregTechPartRecipes();
+		recipes.registerRepairMaterials();
 		if(Loader.isModLoaded(Mods.TiCTooltips)) {
 			ticTooltips = new IntegrationTiCTooltips();
 			ticTooltips.postInit();
 		}
+		config.save();
 	}
 }

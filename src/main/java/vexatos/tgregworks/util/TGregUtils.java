@@ -37,7 +37,8 @@ public class TGregUtils {
 		if(!data.hasKey("material")) {
 			return -1;
 		}
-		return TGregworks.registry.matIDs.get(Materials.get(data.getString("material")));
+		Integer matID = TGregworks.registry.matIDs.get(Materials.get(data.getString("material")));
+		return matID != null ? matID : 0;
 	}
 
 	public static ItemStack newItemStack(Materials m, PartTypes p, int amount) {
