@@ -61,7 +61,7 @@ public class TGregRecipeRegistry {
 		addExtruderRecipes = TGregworks.config.get(Config.concat(Config.Category.Enable, Config.Category.Recipes), "extruderRecipes",
 			true, "Enable tool part recipes in the extruder").getBoolean(true);
 		addSolidifierRecipes = TGregworks.config.get(Config.concat(Config.Category.Enable, Config.Category.Recipes), "solidifierRecipes",
-				true, "Enable tool part recipes in the solidifier").getBoolean(true);
+				false, "Enable tool part recipes in the solidifier").getBoolean(true);
 		for(Materials m : TGregworks.registry.toolMaterials) {
 			for(PartTypes p : PartTypes.VALUES) {
 				ItemStack input = TGregUtils.newItemStack(m, p, 1);
