@@ -67,7 +67,8 @@ public class TGregRecipeRegistry {
 			1D, "Energy usage multiplier for the extruder and solidifier. Base EU/t is either 30 or 120", 0D, 10000D).getDouble(1D);
 
 		//Make sure eu/t isn't 0 or the higher end materials eu/t does not exceed ultimate voltage
-		if(energyMultiplier < 1 || (120 * energyMultiplier) > 524288) {
+		if(energyMultiplier < 0 || (120 * energyMultiplier) > 524288) {
+			TGregworks.log.error("Invalid energy multiplier found in config: " + energyMultiplier + ". Reverting back to 1.");
 			energyMultiplier = 1;
 		}
 		for(Materials m : TGregworks.registry.toolMaterials) {
