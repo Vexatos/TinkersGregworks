@@ -48,6 +48,7 @@ public class TGregRecipeRegistry {
 	public boolean addSolidifierRecipes = false;
 	public boolean addShardRepair = true;
 	public boolean addIngotRepair = false;
+	public boolean addGemToolPartRecipes = true;
 	public float energyMultiplier = 0F;
 
 	public void addGregTechPartRecipes() {
@@ -63,6 +64,8 @@ public class TGregRecipeRegistry {
 			true, "Enable tool part recipes in the extruder").getBoolean(true);
 		addSolidifierRecipes = TGregworks.config.get(Config.concat(Config.Category.Enable, Config.Category.Recipes), "solidifierRecipes",
 			false, "Enable tool part recipes in the fluid solidifier").getBoolean(false);
+		addGemToolPartRecipes = TGregworks.config.get(Config.concat(Config.Category.Enable, Config.Category.Recipes), "gemToolPartRecipes",
+			true, "Enable recipes for tool parts made of gems").getBoolean(true);
 		energyMultiplier = TGregworks.config.getFloat("energyUsageMultiplier", Config.concat(Config.Category.General),
 			1F, 0F, 4500F, "Energy usage multiplier for the extruder and solidifier. Base EU/t is either 30 or 120");
 
@@ -81,6 +84,10 @@ public class TGregRecipeRegistry {
 					//GregTech_API.sRecipeAdder.addAlloySmelterRecipe(GT_OreDictUnificator.get(OrePrefixes.ingot, m, p.price), p.pattern, input, 80 * p.price, 30);
 					ItemStack stack = GT_OreDictUnificator.get(OrePrefixes.ingot, m,
 						price % 2 != 0 ? (price / 2) + 1 : MathHelper.ceiling_double_int(price / 2D));
+					if(addGemToolPartRecipes && stack == null) {
+						stack = GT_OreDictUnificator.get(OrePrefixes.gem, m,
+							price % 2 != 0 ? (price / 2) + 1 : MathHelper.ceiling_double_int(price / 2D));
+					}
 					if(stack != null) {
 						if(addExtruderRecipes) {
 							GT_Values.RA.addExtruderRecipe(stack.copy(), pattern.copy(), input.copy(), Math.max(80, m.mDurability * price),
@@ -110,6 +117,9 @@ public class TGregRecipeRegistry {
 			}
 			ItemStack stack = getChunk(m, 2);
 			ItemStack ingotStack = GT_OreDictUnificator.get(OrePrefixes.ingot, m, 1);
+			if(addGemToolPartRecipes && ingotStack == null) {
+				ingotStack = GT_OreDictUnificator.get(OrePrefixes.gem, m, 1);
+			}
 			if(stack != null && ingotStack != null) {
 				if(addExtruderRecipes && addIngotToShard) {
 					GT_Values.RA.addExtruderRecipe(ingotStack, new ItemStack(TGregworks.shardCast, 0, 0), stack, Math.max(160, m.mDurability),
@@ -184,6 +194,9 @@ public class TGregRecipeRegistry {
 					}
 					if(addIngotRepair) {
 						ArrayList<ItemStack> ingots = GT_OreDictUnificator.getOres(OrePrefixes.ingot, m);
+						if(addGemToolPartRecipes && ingots.isEmpty()) {
+							ingots.addAll(GT_OreDictUnificator.getOres(OrePrefixes.gem, m));
+						}
 						for(ItemStack ingot : ingots) {
 							if(ingot != null && ingot.getItem() != null) {
 								if(PatternBuilder.instance.materialSets.containsKey(mat.materialName)) {
