@@ -44,12 +44,24 @@ public class TGregRecipeRegistry {
 
 	public boolean addReverseSmelting = false;
 	public boolean addShardToIngotSmelting = false;
+	public boolean addIngotToShard = false;
+	public boolean addShardToToolPart = false;
+	public boolean addExtruderRecipes = false;
+	public boolean addSolidifierRecipes = false;
 
 	public void addGregTechPartRecipes() {
 		addReverseSmelting = TGregworks.config.get(Config.concat(Config.Category.Enable, Config.Category.Recipes), "reverseSmelting",
 			true, "Enable smelting tool parts in an alloy smelter to get shards back").getBoolean(true);
 		addShardToIngotSmelting = TGregworks.config.get(Config.concat(Config.Category.Enable, Config.Category.Recipes), "shardToIngotSmelting",
 			true, "Enable smelting two shards into one ingot in an alloy smelter").getBoolean(true);
+		addIngotToShard = TGregworks.config.get(Config.concat(Config.Category.Enable, Config.Category.Recipes), "shardToToolPart",
+				true, "Enable shard to ingot recipes in the extruder (if extruder is enabled)").getBoolean(true);
+		addShardToToolPart = TGregworks.config.get(Config.concat(Config.Category.Enable, Config.Category.Recipes), "shardToToolPart",
+				true, "Enable shard to tool part recipes in the extruder (if extruder is enabled)").getBoolean(true);
+		addExtruderRecipes = TGregworks.config.get(Config.concat(Config.Category.Enable, Config.Category.Recipes), "extruderRecipes",
+			true, "Enable tool part recipes in the extruder").getBoolean(true);
+		addSolidifierRecipes = TGregworks.config.get(Config.concat(Config.Category.Enable, Config.Category.Recipes), "solidifierRecipes",
+				true, "Enable tool part recipes in the solidifier").getBoolean(true);
 		for(Materials m : TGregworks.registry.toolMaterials) {
 			for(PartTypes p : PartTypes.VALUES) {
 				ItemStack input = TGregUtils.newItemStack(m, p, 1);
@@ -60,11 +72,18 @@ public class TGregRecipeRegistry {
 					ItemStack stack = GT_OreDictUnificator.get(OrePrefixes.ingot, m,
 						price % 2 != 0 ? (price / 2) + 1 : MathHelper.ceiling_double_int(price / 2D));
 					if(stack != null) {
-						GT_Values.RA.addExtruderRecipe(stack.copy(), pattern.copy(), input.copy(), Math.max(80, m.mDurability * price), m.mToolQuality < 3 ? 30 : 120);
-						//GregTech_API.sRecipeAdder.addAlloySmelterRecipe(getChunk(m, p.price), p.pattern, input, 80 * p.price, 30);
+						if(addExtruderRecipes) {
+							GT_Values.RA.addExtruderRecipe(stack.copy(), pattern.copy(), input.copy(), Math.max(80, m.mDurability * price), m.mToolQuality < 3 ? 30 : 120);
+						}
+						if(addSolidifierRecipes) {
+							GT_Values.RA.addFluidSolidifierRecipe(pattern.copy(), m.getMolten(144 * p.getPrice()), input.copy(), Math.max(80, m.mDurability * price), m.mToolQuality < 3 ? 30 : 120);
+							//GregTech_API.sRecipeAdder.addAlloySmelterRecipe(getChunk(m, p.price), p.pattern, input, 80 * p.price, 30);
+						}
 						stack = getChunk(m, price);
 						if(stack != null) {
-							GT_Values.RA.addExtruderRecipe(stack.copy(), pattern.copy(), input.copy(), 80 + (m.mDurability * price), m.mToolQuality < 3 ? 30 : 120);
+							if(addExtruderRecipes && addShardToToolPart) {
+								GT_Values.RA.addExtruderRecipe(stack.copy(), pattern.copy(), input.copy(), 80 + (m.mDurability * price), m.mToolQuality < 3 ? 30 : 120);
+							}
 							if(addReverseSmelting) {
 								GT_Values.RA.addAlloySmelterRecipe(input.copy(), new ItemStack(TGregworks.shardCast, 0, 0), stack.copy(), 80 + (m.mDurability * price),
 									m.mToolQuality < 3 ? 30 : 120);
@@ -76,7 +95,9 @@ public class TGregRecipeRegistry {
 			ItemStack stack = getChunk(m, 2);
 			ItemStack ingotStack = GT_OreDictUnificator.get(OrePrefixes.ingot, m, 1);
 			if(stack != null && ingotStack != null) {
-				GT_Values.RA.addExtruderRecipe(ingotStack, new ItemStack(TGregworks.shardCast, 0, 0), stack, Math.max(160, m.mDurability), m.mToolQuality < 3 ? 30 : 120);
+				if(addIngotToShard && addExtruderRecipes) {
+					GT_Values.RA.addExtruderRecipe(ingotStack, new ItemStack(TGregworks.shardCast, 0, 0), stack, Math.max(160, m.mDurability), m.mToolQuality < 3 ? 30 : 120);
+				}
 				if(addShardToIngotSmelting) {
 					GT_Values.RA.addAlloySmelterRecipe(stack.copy(), new ItemStack(MetalPatterns.ingot.getPatternItem(), 0, MetalPatterns.ingot.ordinal()),
 						ingotStack.copy(), Math.max(160, m.mDurability), m.mToolQuality < 3 ? 30 : 120);
