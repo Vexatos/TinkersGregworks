@@ -94,7 +94,7 @@ public class TGregRecipeRegistry {
 								powerRequired);
 						}
 						if(addSolidifierRecipes) {
-							FluidStack molten = m.getMolten(144 * p.getPrice());
+							FluidStack molten = m.getMolten((GT_Values.L / 2) * p.getPrice());
 							if(molten != null && molten.getFluid() != null) {
 								GT_Values.RA.addFluidSolidifierRecipe(pattern.copy(), molten, input.copy(), Math.max(80, m.mDurability * price),
 									powerRequired);
