@@ -218,7 +218,7 @@ public class TGregRegistry {
 	}
 
 	private boolean doesMaterialExist(Materials m) {
-		return !addMaterialsAnyway || TConstructRegistry.toolMaterialStrings.containsKey(m.name());
+		return !addMaterialsAnyway && TConstructRegistry.toolMaterialStrings.containsKey(m.name());
 		// && Arrays.asList(GregTech_API.sGeneratedMaterials).contains(m);
 	}
 
