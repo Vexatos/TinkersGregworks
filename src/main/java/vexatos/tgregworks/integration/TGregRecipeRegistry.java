@@ -49,6 +49,8 @@ public class TGregRecipeRegistry {
 	public boolean addShardRepair = true;
 	public boolean addIngotRepair = false;
 	public boolean addGemToolPartRecipes = true;
+	public boolean useNonGTFluidsForBolts = true;
+	public boolean useNonGTToolRodsForBolts = true;
 	public float energyMultiplier = 0F;
 
 	public void addGregTechPartRecipes() {
@@ -66,6 +68,10 @@ public class TGregRecipeRegistry {
 			false, "Enable tool part recipes in the fluid solidifier").getBoolean(false);
 		addGemToolPartRecipes = TGregworks.config.get(Config.concat(Config.Category.Enable, Config.Category.Recipes), "gemToolPartRecipes",
 			true, "Enable recipes for tool parts made of gems").getBoolean(true);
+		useNonGTFluidsForBolts = TGregworks.config.getBoolean("useNonGTFluidsForBolts", Config.concat(Config.Category.Enable, Config.Category.Recipes), true,
+			"Register Fluid Solidifier recipes for bolts with non-GT fluids.");
+		useNonGTToolRodsForBolts = TGregworks.config.getBoolean("useNonGTToolRodsForBolts", Config.concat(Config.Category.Enable, Config.Category.Recipes), true,
+			"Register Fluid Solidifier recipes for bolts with tool rods from non-GT materials.");
 		energyMultiplier = TGregworks.config.getFloat("energyUsageMultiplier", Config.concat(Config.Category.General),
 			1F, 0F, 4500F, "Energy usage multiplier for the extruder and solidifier. Base EU/t is either 30 or 120");
 
@@ -228,27 +234,14 @@ public class TGregRecipeRegistry {
 		LiquidCasting tb = TConstructRegistry.getTableCasting();
 
 		// any fluid that is a toolpart material can be used
-		for(Map.Entry<String, FluidType> entry : FluidType.fluidTypes.entrySet()) {
-			// is tool material?
-			if(!entry.getValue().isToolpart) {
+		for(Map.Entry<String, FluidType> fluidEntry : FluidType.fluidTypes.entrySet()) {
+			if(!fluidEntry.getValue().isToolpart) {
 				continue;
 			}
-
-			int matID;
-			FluidStack liquid = new FluidStack(entry.getValue().fluid, TConstruct.ingotLiquidValue);
-			if(entry.getValue() instanceof TGregFluidType) {
-				matID = ((TGregFluidType) entry.getValue()).matID;
-				for(Integer id : TConstructRegistry.toolMaterials.keySet()) {
-					ItemStack rod = new ItemStack(TinkerTools.toolRod, 1, id);
-					if(((IToolPart) TinkerTools.toolRod).getMaterialID(rod) == -1) {
-						continue;
-					}
-					Materials m = ((TGregFluidType) entry.getValue()).material;
-					//tb.addCastingRecipe(DualMaterialToolPart.createDualMaterial(TinkerWeaponry.partBolt, id, matID), liquid, rod, true, 150);
-					GT_Values.RA.addFluidSolidifierRecipe(rod, liquid.copy(),
-						DualMaterialToolPart.createDualMaterial(TinkerWeaponry.partBolt, id, matID),
-						80 + m.mDurability * 2, getPowerRequired(m));
-				}
+			FluidStack liquid = new FluidStack(fluidEntry.getValue().fluid, TConstruct.ingotLiquidValue);
+			int arrowheadMaterialID;
+			if(fluidEntry.getValue() instanceof TGregFluidType) {
+				arrowheadMaterialID = ((TGregFluidType) fluidEntry.getValue()).matID;
 			} else {
 				// get a casting recipe for it D:
 				CastingRecipe recipe = tb.getCastingRecipe(liquid, new ItemStack(TinkerSmeltery.metalPattern, 1, 2)); // pickaxe
@@ -256,21 +249,30 @@ public class TGregRecipeRegistry {
 				if(recipe == null) {
 					continue;
 				} else {
-					// material id for the pickaxe head == material id for the fluid! such hack. wow.
-					matID = recipe.getResult().getItemDamage();
+					arrowheadMaterialID = recipe.getResult().getItemDamage();
 				}
 			}
-			// register our casting stuff
-			for(Map.Entry<Materials, Integer> matEntry : TGregworks.registry.matIDs.entrySet()) {
-				Materials m = matEntry.getKey();
-				ItemStack rod = TGregUtils.newItemStack(m, PartTypes.ToolRod, 1);
-
-				//tb.addCastingRecipe(DualMaterialToolPart.createDualMaterial(TinkerWeaponry.partBolt, matEntry.getValue(), matID), liquid, rod, true, 150);
-				GT_Values.RA.addFluidSolidifierRecipe(rod, liquid.copy(),
-					DualMaterialToolPart.createDualMaterial(TinkerWeaponry.partBolt, matEntry.getValue(), matID),
-					80 + (m.mDurability * 2), getPowerRequired(m));
+			for(Integer toolRodMaterialID : TConstructRegistry.toolMaterials.keySet()) {
+				ItemStack toolRod;
+				if(TGregworks.registry.materialIDMap.containsKey(toolRodMaterialID)) {
+					toolRod = TGregUtils.newItemStack(TGregworks.registry.materialIDMap.get(toolRodMaterialID), PartTypes.ToolRod, 1);
+				} else {
+					toolRod = new ItemStack(TinkerTools.toolRod, 1, toolRodMaterialID);
+					if(((IToolPart) TinkerTools.toolRod).getMaterialID(toolRod) == -1) {
+						continue;
+					}
+				}
+				if(!TGregworks.registry.materialIDMap.containsKey(toolRodMaterialID) &&
+					!(fluidEntry.getValue() instanceof TGregFluidType)) {
+					continue;
+				}
+				if((useNonGTToolRodsForBolts || TGregworks.registry.materialIDMap.containsKey(toolRodMaterialID)) &&
+					(useNonGTFluidsForBolts || fluidEntry.getValue() instanceof TGregFluidType)) {
+					this.addBoltRecipe(toolRod, liquid.copy(), toolRodMaterialID, arrowheadMaterialID);
+				}
 			}
 		}
+
 		// Remove broken dynamically added recipes.
 		ArrayList<CastingRecipe> castingRecipes = TConstructRegistry.getTableCasting().getCastingRecipes();
 		ArrayList<CastingRecipe> toRemove = new ArrayList<CastingRecipe>();
@@ -281,6 +283,24 @@ public class TGregRecipeRegistry {
 			}
 		}
 		castingRecipes.removeAll(toRemove);
+	}
+
+	private int getPowerRequired(ToolMaterial toolMaterial) {
+		return Math.round(toolMaterial.harvestLevel < 3 ? (30 * energyMultiplier) : (120 * energyMultiplier));
+	}
+
+	private void addBoltRecipe(ItemStack toolRod, FluidStack fluid, int toolRodMaterialID, int arrowheadMaterialID) {
+		ToolMaterial toolRodMaterial = TConstructRegistry.toolMaterials.get(toolRodMaterialID);
+		ToolMaterial arrowheadMaterial = TConstructRegistry.toolMaterials.get(arrowheadMaterialID);
+		if(toolRodMaterial != null && arrowheadMaterial != null) {
+			GT_Values.RA.addFluidSolidifierRecipe(
+				toolRod,
+				fluid,
+				DualMaterialToolPart.createDualMaterial(TinkerWeaponry.partBolt, toolRodMaterialID, arrowheadMaterialID),
+				80 + (toolRodMaterial.durability + arrowheadMaterial.durability) * 2,
+				Math.max(getPowerRequired(toolRodMaterial), getPowerRequired(arrowheadMaterial))
+			);
+		}
 	}
 
 	public void addRecipesForToolBuilder() {
