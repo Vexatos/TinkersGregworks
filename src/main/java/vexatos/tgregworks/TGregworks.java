@@ -11,7 +11,6 @@ import gregtech.api.enums.Materials;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -23,7 +22,6 @@ import vexatos.tgregworks.proxy.CommonProxy;
 import vexatos.tgregworks.reference.Config;
 import vexatos.tgregworks.reference.Mods;
 import vexatos.tgregworks.reference.PartTypes;
-import vexatos.tgregworks.util.BuildingHandler;
 import vexatos.tgregworks.util.TGregUtils;
 
 /**
@@ -97,8 +95,6 @@ public class TGregworks {
 		}
 
 		//registry.registerTools();
-
-		MinecraftForge.EVENT_BUS.register(new BuildingHandler());
 	}
 
 	@Mod.EventHandler
