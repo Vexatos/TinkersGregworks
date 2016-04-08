@@ -8,6 +8,7 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
 import gregtech.api.enums.Materials;
+import iguanaman.iguanatweakstconstruct.IguanaTweaksTConstruct;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -17,6 +18,7 @@ import org.apache.logging.log4j.Logger;
 import tconstruct.library.TConstructCreativeTab;
 import vexatos.tgregworks.integration.TGregRecipeRegistry;
 import vexatos.tgregworks.integration.TGregRegistry;
+import vexatos.tgregworks.integration.iguanatweakstconstruct.IntegrationITT;
 import vexatos.tgregworks.integration.tictooltips.IntegrationTiCTooltips;
 import vexatos.tgregworks.proxy.CommonProxy;
 import vexatos.tgregworks.reference.Config;
@@ -48,6 +50,7 @@ public class TGregworks {
 	public static Item shardCast;
 
 	public static IntegrationTiCTooltips ticTooltips;
+	public static IntegrationITT iguanatweakstconstruct;
 	//public static IntegrationTinkersTailor tinkersTailor;
 
 	public static TConstructCreativeTab tab = new TConstructCreativeTab("tabTGregworks");
@@ -102,6 +105,10 @@ public class TGregworks {
 		proxy.addToolRenderMappings();
 		registry.registerFluids();
 		proxy.registerRenderers();
+
+		if(Loader.isModLoaded(Mods.IguanaTweaksTConstruct)){
+			(iguanatweakstconstruct = new IntegrationITT()).init();
+		}
 	}
 
 	@Mod.EventHandler

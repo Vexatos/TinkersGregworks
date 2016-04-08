@@ -14,7 +14,8 @@ public class Mods {
 		TConstruct = "TConstruct";
 
 	public static final String
-		TiCTooltips = "TiCTooltips"/*,
+		TiCTooltips = "TiCTooltips",
+		IguanaTweaksTConstruct = "IguanaTweaksTConstruct"/*,
 		TinkersTailor = "TinkersTailor"*/;
 }
 
