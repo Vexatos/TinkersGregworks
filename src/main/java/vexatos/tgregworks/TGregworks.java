@@ -8,7 +8,6 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
 import gregtech.api.enums.Materials;
-import iguanaman.iguanatweakstconstruct.IguanaTweaksTConstruct;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -16,9 +15,12 @@ import net.minecraftforge.common.config.Configuration;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import tconstruct.library.TConstructCreativeTab;
+import tconstruct.library.crafting.ModifyBuilder;
 import vexatos.tgregworks.integration.TGregRecipeRegistry;
 import vexatos.tgregworks.integration.TGregRegistry;
+import vexatos.tgregworks.integration.TGregRepairRegistry;
 import vexatos.tgregworks.integration.iguanatweakstconstruct.IntegrationITT;
+import vexatos.tgregworks.integration.modifiers.ModTGregRepair;
 import vexatos.tgregworks.integration.tictooltips.IntegrationTiCTooltips;
 import vexatos.tgregworks.proxy.CommonProxy;
 import vexatos.tgregworks.reference.Config;
@@ -46,6 +48,7 @@ public class TGregworks {
 
 	public static TGregRegistry registry;
 	public static TGregRecipeRegistry recipes;
+	public static TGregRepairRegistry repair;
 
 	public static Item shardCast;
 
@@ -71,6 +74,7 @@ public class TGregworks {
 		registry.registerToolParts();
 		registry.registerModifiers();
 		recipes = new TGregRecipeRegistry();
+		repair = new TGregRepairRegistry();
 
 		config.setCategoryComment(Config.Category.Global, "Values between 0.0 and 10000.0 are allowed. Will be directly multiplied with the internally calculated value. Applies to all materials.");
 		config.setCategoryComment(Config.onMaterial(Config.Durability), "Values between 0.0 and 10000.0 are allowed. Will be directly multiplied with the internally calculated value.");
@@ -106,7 +110,7 @@ public class TGregworks {
 		registry.registerFluids();
 		proxy.registerRenderers();
 
-		if(Loader.isModLoaded(Mods.IguanaTweaksTConstruct)){
+		if(Loader.isModLoaded(Mods.IguanaTweaksTConstruct)) {
 			(iguanatweakstconstruct = new IntegrationITT()).init();
 		}
 	}
@@ -124,6 +128,12 @@ public class TGregworks {
 		if(Loader.isModLoaded(Mods.TiCTooltips)) {
 			ticTooltips = new IntegrationTiCTooltips();
 			ticTooltips.postInit();
+		}
+
+		if(Loader.isModLoaded(Mods.IguanaTweaksTConstruct)) {
+			iguanatweakstconstruct.postInit();
+		} else {
+			ModifyBuilder.registerModifier(new ModTGregRepair());
 		}
 		config.save();
 	}

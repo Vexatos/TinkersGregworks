@@ -197,11 +197,15 @@ public class TGregRecipeRegistry {
 							// register the material
 							PatternBuilder.instance.registerFullMaterial(shard, 1, mat.materialName, shard, rod, matID);
 						}
+						TGregworks.repair.registerShardRepairMaterial(m, 1);
 					}
 					if(addIngotRepair) {
 						ArrayList<ItemStack> ingots = GT_OreDictUnificator.getOres(OrePrefixes.ingot, m);
-						if(addGemToolPartRecipes && ingots.isEmpty()) {
+						if(!ingots.isEmpty()) {
+							TGregworks.repair.registerOreDictRepairMaterial(m, OrePrefixes.ingot.get(m).toString(), 2);
+						} else if(addGemToolPartRecipes) {
 							ingots.addAll(GT_OreDictUnificator.getOres(OrePrefixes.gem, m));
+							TGregworks.repair.registerOreDictRepairMaterial(m, OrePrefixes.gem.get(m).toString(), 2);
 						}
 						for(ItemStack ingot : ingots) {
 							if(ingot != null && ingot.getItem() != null) {
