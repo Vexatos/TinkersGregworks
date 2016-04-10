@@ -52,7 +52,7 @@ public class TGregRegistry {
 	public void registerToolParts() {
 		TGregworks.log.info("Registering TGregworks tool parts.");
 		for(OreDictMaterial m : OreDictMaterial.MATERIAL_ARRAY) {
-			if(m.contains(TD.Properties.HAS_TOOL_STATS) && !doesMaterialExist(m) && TGregworks.config.get(Config.Category.Enable, m.mNameInternal, true).getBoolean(true)) {
+			if(m != null && m.contains(TD.Properties.HAS_TOOL_STATS) && !doesMaterialExist(m) && TGregworks.config.get(Config.Category.Enable, m.mNameInternal, true).getBoolean(true)) {
 				toolMaterials.add(m);
 			}
 		}

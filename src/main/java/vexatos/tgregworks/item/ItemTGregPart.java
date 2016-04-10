@@ -2,7 +2,10 @@ package vexatos.tgregworks.item;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import gregapi.data.CS;
 import gregapi.data.MT;
+import gregapi.oredict.IOreDictItemDataOverrideItem;
+import gregapi.oredict.OreDictItemData;
 import gregapi.oredict.OreDictMaterial;
 import mantle.items.abstracts.CraftingItem;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -26,7 +29,7 @@ import java.util.List;
 /**
  * @author Vexatos
  */
-public class ItemTGregPart extends CraftingItem implements IToolPart {
+public class ItemTGregPart extends CraftingItem implements IToolPart, IOreDictItemDataOverrideItem {
 
 	private PartTypes type;
 
@@ -205,5 +208,16 @@ public class ItemTGregPart extends CraftingItem implements IToolPart {
 	@Override
 	public int getMaterialID(ItemStack stack) {
 		return TGregUtils.getMaterialID(stack);
+	}
+
+	@Override
+	public OreDictItemData getOreDictItemData(ItemStack stack) {
+		NBTTagCompound data = TGregUtils.getTagCompound(stack);
+		if(!data.hasKey("material")) {
+			return null;
+		} else {
+			OreDictMaterial mat = OreDictMaterial.get(data.getString("material"));
+			return new OreDictItemData(mat, (CS.U / 2) * this.type.getPrice());
+		}
 	}
 }

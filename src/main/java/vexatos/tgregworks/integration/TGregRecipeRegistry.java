@@ -1,20 +1,23 @@
 package vexatos.tgregworks.integration;
 
 import cpw.mods.fml.common.registry.GameRegistry;
-import gregapi.data.CS;
 import gregapi.data.MT;
 import gregapi.data.OP;
 import gregapi.old.ToolDictNames;
 import gregapi.oredict.OreDictManager;
 import gregapi.oredict.OreDictMaterial;
+import gregapi.recipes.Recipe.RecipeMap;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import tconstruct.TConstruct;
 import tconstruct.library.TConstructRegistry;
-import tconstruct.library.crafting.*;
-import tconstruct.library.tools.DualMaterialToolPart;
+import tconstruct.library.crafting.CastingRecipe;
+import tconstruct.library.crafting.FluidType;
+import tconstruct.library.crafting.LiquidCasting;
+import tconstruct.library.crafting.PatternBuilder;
+import tconstruct.library.crafting.ToolBuilder;
 import tconstruct.library.tools.ToolCore;
 import tconstruct.library.tools.ToolMaterial;
 import tconstruct.library.util.IToolPart;
@@ -23,16 +26,21 @@ import tconstruct.tools.TinkerTools;
 import tconstruct.util.config.PHConstruct;
 import tconstruct.weaponry.TinkerWeaponry;
 import vexatos.tgregworks.TGregworks;
-import vexatos.tgregworks.integration.recipe.tconstruct.*;
+import vexatos.tgregworks.integration.recipe.tconstruct.TGregAlternateBoltRecipe;
+import vexatos.tgregworks.integration.recipe.tconstruct.TGregAmmoRecipe;
+import vexatos.tgregworks.integration.recipe.tconstruct.TGregBowRecipe;
+import vexatos.tgregworks.integration.recipe.tconstruct.TGregFluidType;
+import vexatos.tgregworks.integration.recipe.tconstruct.TGregToolRecipe;
 import vexatos.tgregworks.item.ItemTGregPart;
 import vexatos.tgregworks.reference.Config;
 import vexatos.tgregworks.reference.PartTypes;
-import vexatos.tgregworks.reference.Pattern.MetalPatterns;
 import vexatos.tgregworks.util.TGregUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import static gregapi.data.CS.T;
 
 /**
  * @author SlimeKnights, Vexatos
@@ -41,12 +49,12 @@ public class TGregRecipeRegistry {
 
 	private HashMap<PartTypes, ItemTGregPart> partMap = new HashMap<PartTypes, ItemTGregPart>();
 
-	public boolean addReverseSmelting = false;
+	//public boolean addReverseSmelting = false;
 	public boolean addShardToIngotSmelting = false;
 	public boolean addIngotToShard = false;
 	public boolean addShardToToolPart = false;
 	public boolean addExtruderRecipes = false;
-	public boolean addSolidifierRecipes = false;
+	//public boolean addSolidifierRecipes = false; TODO Fluid Solidifier Recipes
 	public boolean addShardRepair = true;
 	public boolean addIngotRepair = false;
 	public boolean addGemToolPartRecipes = true;
@@ -55,18 +63,18 @@ public class TGregRecipeRegistry {
 	public float energyMultiplier = 0F;
 
 	public void addGregTechPartRecipes() {
-		addReverseSmelting = TGregworks.config.get(Config.concat(Config.Category.Enable, Config.Category.Recipes), "reverseSmelting",
-			true, "Enable smelting tool parts in an alloy smelter to get shards back").getBoolean(true);
+		/*addReverseSmelting = TGregworks.config.get(Config.concat(Config.Category.Enable, Config.Category.Recipes), "reverseSmelting",
+			true, "Enable smelting tool parts in an alloy smelter to get shards back").getBoolean(true);*/
 		addShardToIngotSmelting = TGregworks.config.get(Config.concat(Config.Category.Enable, Config.Category.Recipes), "shardToIngotSmelting",
 			true, "Enable smelting two shards into one ingot in an alloy smelter").getBoolean(true);
 		addIngotToShard = TGregworks.config.get(Config.concat(Config.Category.Enable, Config.Category.Recipes), "ingotToShardRecipe",
 			true, "Enable creating shards from ingots in the extruder (if extruder is enabled)").getBoolean(true);
-		addShardToToolPart = TGregworks.config.get(Config.concat(Config.Category.Enable, Config.Category.Recipes), "shardToToolPartRecipe",
-			true, "Enable creating tool parts from shards in the extruder (if extruder is enabled)").getBoolean(true);
+		/*addShardToToolPart = TGregworks.config.get(Config.concat(Config.Category.Enable, Config.Category.Recipes), "shardToToolPartRecipe",
+			true, "Enable creating tool parts from shards in the extruder (if extruder is enabled)").getBoolean(true);*/
 		addExtruderRecipes = TGregworks.config.get(Config.concat(Config.Category.Enable, Config.Category.Recipes), "extruderRecipes",
 			true, "Enable tool part recipes in the extruder").getBoolean(true);
-		addSolidifierRecipes = TGregworks.config.get(Config.concat(Config.Category.Enable, Config.Category.Recipes), "solidifierRecipes",
-			false, "Enable tool part recipes in the fluid solidifier").getBoolean(false);
+		/*addSolidifierRecipes = TGregworks.config.get(Config.concat(Config.Category.Enable, Config.Category.Recipes), "solidifierRecipes", TODO Fluid Solidifier Recipes
+			false, "Enable tool part recipes in the fluid solidifier").getBoolean(false);*/
 		addGemToolPartRecipes = TGregworks.config.get(Config.concat(Config.Category.Enable, Config.Category.Recipes), "gemToolPartRecipes",
 			true, "Enable recipes for tool parts made of gems").getBoolean(true);
 		useNonGTFluidsForBolts = TGregworks.config.getBoolean("useNonGTFluidsForBolts", Config.concat(Config.Category.Enable, Config.Category.Recipes), true,
@@ -97,27 +105,27 @@ public class TGregRecipeRegistry {
 					}
 					if(stack != null) {
 						if(addExtruderRecipes) {
-							GT_Values.RA.addExtruderRecipe(stack.copy(), pattern.copy(), input.copy(), Math.max(80, m.mToolDurability * price),
-								powerRequired);
+							RecipeMap.sExtruderRecipes.addRecipe2(T, powerRequired, Math.max(80, m.mToolDurability * price),
+								stack.copy(), pattern.copy(), input.copy());
 						}
-						if(addSolidifierRecipes) {
+						/*if(addSolidifierRecipes) {
 							FluidStack molten = m.liquid((CS.U / 2) * p.getPrice(), false);
 							if(molten != null && molten.getFluid() != null) {
-								GT_Values.RA.addFluidSolidifierRecipe(pattern.copy(), molten, input.copy(), Math.max(80, m.mToolDurability * price),
-									powerRequired);
+								RA.addFluidSolidifierRecipe(pattern.copy(), molten, input.copy(), Math.max(80, m.mToolDurability * price),
+									powerRequired); TODO Fluid Solidifier recipe
 							}
 							//GregTech_API.sRecipeAdder.addAlloySmelterRecipe(getChunk(m, p.price), p.pattern, input, 80 * p.price, 30);
-						}
+						}*/
 						stack = getChunk(m, price);
 						if(stack != null) {
 							if(addExtruderRecipes && addShardToToolPart) {
-								GT_Values.RA.addExtruderRecipe(stack.copy(), pattern.copy(), input.copy(), 80 + (m.mToolDurability * price),
-									powerRequired);
+								RecipeMap.sExtruderRecipes.addRecipe2(T, powerRequired, 80 + (m.mToolDurability * price),
+									stack.copy(), pattern.copy(), input.copy());
 							}
-							if(addReverseSmelting) {
-								GT_Values.RA.addAlloySmelterRecipe(input.copy(), new ItemStack(TGregworks.shardCast, 0, 0), stack.copy(), 80 + (m.mToolDurability * price),
+							/*if(addReverseSmelting) { Handled by GT 6 recycling
+								RA.addAlloySmelterRecipe(input.copy(), new ItemStack(TGregworks.shardCast, 0, 0), stack.copy(), 80 + (m.mToolDurability * price),
 									powerRequired);
-							}
+							}*/
 						}
 					}
 				}
@@ -129,13 +137,13 @@ public class TGregRecipeRegistry {
 			}
 			if(stack != null && ingotStack != null) {
 				if(addExtruderRecipes && addIngotToShard) {
-					GT_Values.RA.addExtruderRecipe(ingotStack, new ItemStack(TGregworks.shardCast, 0, 0), stack, Math.max(160, m.mToolDurability),
-						powerRequired);
+					RecipeMap.sExtruderRecipes.addRecipe2(T, powerRequired, Math.max(160, m.mToolDurability),
+						ingotStack, new ItemStack(TGregworks.shardCast, 0, 0), stack);
 				}
-				if(addShardToIngotSmelting) {
-					GT_Values.RA.addAlloySmelterRecipe(stack.copy(), new ItemStack(MetalPatterns.ingot.getPatternItem(), 0, MetalPatterns.ingot.ordinal()),
-						ingotStack.copy(), Math.max(160, m.mToolDurability), powerRequired);
-				}
+				/*if(addShardToIngotSmelting) { Handled by GT 6 recycling
+					RecipeMap.sAlloySmelterRecipes.addRecipe2(T, powerRequired, Math.max(160, m.mToolDurability),
+						stack.copy(), new ItemStack(MetalPatterns.ingot.getPatternItem(), 0, MetalPatterns.ingot.ordinal()), ingotStack.copy());
+				}*/
 			}
 		}
 
@@ -150,14 +158,14 @@ public class TGregRecipeRegistry {
 				}
 			}*/
 				if(TinkerTools.blankPattern != null) {
-					GT_Values.RA.addExtruderRecipe(new ItemStack(TinkerTools.blankPattern, 1, 1),
-						new ItemStack(TinkerTools.toolShard, 1, TinkerTools.MaterialID.Obsidian), new ItemStack(TGregworks.shardCast, 1, 0), 800, Math.round(30 * energyMultiplier));
-					GT_Values.RA.addExtruderRecipe(new ItemStack(TinkerTools.blankPattern, 1, 2),
-						new ItemStack(TinkerTools.toolShard, 1, TinkerTools.MaterialID.Obsidian), new ItemStack(TGregworks.shardCast, 1, 0), 800, Math.round(30 * energyMultiplier));
+					RecipeMap.sExtruderRecipes.addRecipe2(T, Math.round(30 * energyMultiplier), 800, new ItemStack(TinkerTools.blankPattern, 1, 1),
+						new ItemStack(TinkerTools.toolShard, 1, TinkerTools.MaterialID.Obsidian), new ItemStack(TGregworks.shardCast, 1, 0));
+					RecipeMap.sExtruderRecipes.addRecipe2(T, Math.round(30 * energyMultiplier), 800, new ItemStack(TinkerTools.blankPattern, 1, 2),
+						new ItemStack(TinkerTools.toolShard, 1, TinkerTools.MaterialID.Obsidian), new ItemStack(TGregworks.shardCast, 1, 0));
 				}
 				if(brassstack != null) {
-					GT_Values.RA.addExtruderRecipe(brassstack,
-						new ItemStack(TinkerTools.toolShard, 1, TinkerTools.MaterialID.Obsidian), new ItemStack(TGregworks.shardCast, 1, 0), 800, Math.round(30 * energyMultiplier));
+					RecipeMap.sExtruderRecipes.addRecipe2(T, Math.round(30 * energyMultiplier), 800, brassstack,
+						new ItemStack(TinkerTools.toolShard, 1, TinkerTools.MaterialID.Obsidian), new ItemStack(TGregworks.shardCast, 1, 0));
 				}
 			}
 		}
@@ -298,13 +306,13 @@ public class TGregRecipeRegistry {
 		ToolMaterial toolRodMaterial = TConstructRegistry.toolMaterials.get(toolRodMaterialID);
 		ToolMaterial arrowheadMaterial = TConstructRegistry.toolMaterials.get(arrowheadMaterialID);
 		if(toolRodMaterial != null && arrowheadMaterial != null) {
-			GT_Values.RA.addFluidSolidifierRecipe(
+			/*RA.addFluidSolidifierRecipe( TODO Fluid solidifier recipes
 				toolRod,
 				fluid,
 				DualMaterialToolPart.createDualMaterial(TinkerWeaponry.partBolt, toolRodMaterialID, arrowheadMaterialID),
 				80 + (toolRodMaterial.durability + arrowheadMaterial.durability) * 2,
 				Math.max(getPowerRequired(toolRodMaterial), getPowerRequired(arrowheadMaterial))
-			);
+			);*/
 		}
 	}
 
