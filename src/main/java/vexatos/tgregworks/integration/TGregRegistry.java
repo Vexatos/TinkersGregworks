@@ -1,8 +1,12 @@
 package vexatos.tgregworks.integration;
 
 import cpw.mods.fml.common.registry.GameRegistry;
-import gregtech.api.GregTech_API;
-import gregtech.api.enums.Materials;
+import gregapi.data.CS;
+import gregapi.data.MT;
+import gregapi.data.TD;
+import gregapi.oredict.OreDictMaterial;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
 import tconstruct.library.TConstructRegistry;
 import tconstruct.library.crafting.FluidType;
 import vexatos.tgregworks.TGregworks;
@@ -24,10 +28,10 @@ public class TGregRegistry {
 	private int latestAvailableNumber = 1500;
 	private boolean addMaterialsAnyway = false;
 
-	public ArrayList<Materials> toolMaterials = new ArrayList<Materials>();
+	public ArrayList<OreDictMaterial> toolMaterials = new ArrayList<OreDictMaterial>();
 	public ArrayList<String> toolMaterialNames = new ArrayList<String>();
-	public HashMap<Materials, Integer> matIDs = new HashMap<Materials, Integer>();
-	public HashMap<Integer, Materials> materialIDMap = new HashMap<Integer, Materials>();
+	public HashMap<OreDictMaterial, Integer> matIDs = new HashMap<OreDictMaterial, Integer>();
+	public HashMap<Integer, OreDictMaterial> materialIDMap = new HashMap<Integer, OreDictMaterial>();
 
 	private int getLatestAvailableNumber() {
 		for(int i = latestAvailableNumber; i < 16383; i++) {
@@ -47,21 +51,20 @@ public class TGregRegistry {
 
 	public void registerToolParts() {
 		TGregworks.log.info("Registering TGregworks tool parts.");
-		List<Materials> gtMaterials = Arrays.asList(GregTech_API.sGeneratedMaterials);
-		for(Materials m : Materials.values()) {
-			if(((m.mTypes & 64) == 64) && !doesMaterialExist(m) && gtMaterials.contains(m) && TGregworks.config.get(Config.Category.Enable, m.name(), true).getBoolean(true)) {
+		for(OreDictMaterial m : OreDictMaterial.MATERIAL_ARRAY) {
+			if(m.contains(TD.Properties.HAS_TOOL_STATS) && !doesMaterialExist(m) && TGregworks.config.get(Config.Category.Enable, m.mNameInternal, true).getBoolean(true)) {
 				toolMaterials.add(m);
 			}
 		}
-		for(Materials m : toolMaterials) {
-			toolMaterialNames.add(m.mDefaultLocalName);
+		for(OreDictMaterial m : toolMaterials) {
+			toolMaterialNames.add(m.mNameLocal);
 			int matID = getLatestAvailableNumber();
-			TConstructRegistry.addToolMaterial(matID, m.name(), m.mDefaultLocalName, m.mToolQuality,
-				(int) (m.mDurability * getGlobalMultiplier(Config.Durability) * getMultiplier(m, Config.Durability)), // Durability
+			TConstructRegistry.addToolMaterial(matID, m.mNameInternal, m.mNameLocal, m.mToolQuality,
+				(int) (m.mToolDurability * getGlobalMultiplier(Config.Durability) * getMultiplier(m, Config.Durability)), // Durability
 				(int) (m.mToolSpeed * 100F * getGlobalMultiplier(Config.MiningSpeed) * getMultiplier(m, Config.MiningSpeed)), // Mining speed
 				(int) (m.mToolQuality * getGlobalMultiplier(Config.Attack) * getMultiplier(m, Config.Attack)), // Attack
 				(m.mToolQuality - 0.5F) * getGlobalMultiplier(Config.HandleModifier) * getMultiplier(m, Config.HandleModifier), // Handle Modifier
-				getReinforcedLevel(m), getStoneboundLevel(m), "", (m.getRGBA()[0] << 16) | (m.getRGBA()[1] << 8) | (m.getRGBA()[2]));
+				getReinforcedLevel(m), getStoneboundLevel(m), "", (m.mRGBaSolid[0] << 16) | (m.mRGBaSolid[1] << 8) | (m.mRGBaSolid[2]));
 			TConstructRegistry.addBowMaterial(matID,
 				(int) ((float) m.mToolQuality * 10F * getGlobalMultiplier(Config.BowDrawSpeed) * getMultiplier(m, Config.BowDrawSpeed)),
 				(((float) m.mToolQuality) - 0.5F) * getGlobalMultiplier(Config.BowFlightSpeed) * getMultiplier(m, Config.BowFlightSpeed));
@@ -75,22 +78,24 @@ public class TGregRegistry {
 		ItemTGregPart.toolMaterialNames = toolMaterialNames;
 	}
 
-	public HashMap<Materials, TGregFluidType> toolMaterialFluidTypes = new HashMap<Materials, TGregFluidType>();
+	public HashMap<OreDictMaterial, TGregFluidType> toolMaterialFluidTypes = new HashMap<OreDictMaterial, TGregFluidType>();
 
 	public void registerFluids() {
-		for(Materials m : toolMaterials) {
-			if(m.mStandardMoltenFluid != null) {
-				TGregFluidType fluidType = new TGregFluidType(m, m.mStandardMoltenFluid.getBlock(), 0, m.mStandardMoltenFluid.getTemperature(),
-					m.mStandardMoltenFluid, true, matIDs.get(m));
+		for(OreDictMaterial m : toolMaterials) {
+			FluidStack fluidstack = m.liquid(CS.U, false);
+			if(fluidstack != null && fluidstack.getFluid() != null) {
+				Fluid fluid = fluidstack.getFluid();
+				TGregFluidType fluidType = new TGregFluidType(m, fluid.getBlock(), 0, fluid.getTemperature(),
+					fluid, true, matIDs.get(m));
 
 				toolMaterialFluidTypes.put(m, fluidType);
-				FluidType.registerFluidType(m.mStandardMoltenFluid.getName(), fluidType);
+				FluidType.registerFluidType(fluid.getName(), fluidType);
 			}
 		}
 	}
 
-	private float getMultiplier(Materials m, String key) {
-		return (float) TGregworks.config.get(Config.onMaterial(key), m.name(), 1.0, null, 0, 10000).getDouble(1.0);
+	private float getMultiplier(OreDictMaterial m, String key) {
+		return (float) TGregworks.config.get(Config.onMaterial(key), m.mNameInternal, 1.0, null, 0, 10000).getDouble(1.0);
 	}
 
 	private final HashMap<String, Float> globalMultipliers = new HashMap<String, Float>();
@@ -200,25 +205,25 @@ public class TGregRegistry {
 		TGregRegistry.batteryModifier.batteries.put(stack1, stack2);
 	}*/
 
-	private List<Materials> stonebound1Mats = Arrays.asList(Materials.Titanium, Materials.Tungsten);
-	private List<Materials> spiny1Mats = Arrays.asList(Materials.Uranium, Materials.Uranium235);
+	private List<OreDictMaterial> stonebound1Mats = Arrays.asList(MT.Titanium, MT.Tungsten);
+	private List<OreDictMaterial> spiny1Mats = Arrays.asList(MT.Uranium, MT.Uranium235);
 
-	private float getStoneboundLevel(Materials m) {
-		return (float) TGregworks.config.get(Config.StoneboundLevel, m.name(),
+	private float getStoneboundLevel(OreDictMaterial m) {
+		return (float) TGregworks.config.get(Config.StoneboundLevel, m.mNameInternal,
 			stonebound1Mats.contains(m) ? 1 : spiny1Mats.contains(m) ? -1 : 0, null, -3, 3).getInt(stonebound1Mats.contains(m) ? 1 : spiny1Mats.contains(m) ? -1 : 0);
 	}
 
-	private List<Materials> reinforced1Mats = Arrays.asList(Materials.SteelMagnetic, Materials.BlackSteel, Materials.BlueSteel, Materials.Titanium, Materials.DamascusSteel, Materials.StainlessSteel, Materials.RedSteel, Materials.MeteoricSteel, Materials.TungstenSteel);
-	private List<Materials> reinforced2Mats = Arrays.asList(Materials.Osmium, Materials.Iridium);
+	private List<OreDictMaterial> reinforced1Mats = Arrays.asList(MT.SteelMagnetic, MT.BlackSteel, MT.BlueSteel, MT.Titanium, MT.DamascusSteel, MT.StainlessSteel, MT.RedSteel, MT.MeteoricSteel, MT.TungstenSteel);
+	private List<OreDictMaterial> reinforced2Mats = Arrays.asList(MT.Osmium, MT.Iridium);
 
-	private int getReinforcedLevel(Materials m) {
-		return TGregworks.config.get(Config.ReinforcedLevel, m.name(),
-			reinforced1Mats.contains(m) ? 1 : reinforced2Mats.contains(m) ? 2 : m == Materials.Osmiridium ? 3 : 0, null, 0, 3)
-			.getInt(reinforced1Mats.contains(m) ? 1 : reinforced2Mats.contains(m) ? 2 : m == Materials.Osmiridium ? 3 : 0);
+	private int getReinforcedLevel(OreDictMaterial m) {
+		return TGregworks.config.get(Config.ReinforcedLevel, m.mNameInternal,
+			reinforced1Mats.contains(m) ? 1 : reinforced2Mats.contains(m) ? 2 : m == MT.Osmiridium ? 3 : 0, null, 0, 3)
+			.getInt(reinforced1Mats.contains(m) ? 1 : reinforced2Mats.contains(m) ? 2 : m == MT.Osmiridium ? 3 : 0);
 	}
 
-	private boolean doesMaterialExist(Materials m) {
-		return !addMaterialsAnyway && TConstructRegistry.toolMaterialStrings.containsKey(m.name());
+	private boolean doesMaterialExist(OreDictMaterial m) {
+		return !addMaterialsAnyway && TConstructRegistry.toolMaterialStrings.containsKey(m.mNameInternal);
 		// && Arrays.asList(GregTech_API.sGeneratedMaterials).contains(m);
 	}
 

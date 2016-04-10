@@ -2,7 +2,8 @@ package vexatos.tgregworks.item;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import gregtech.api.enums.Materials;
+import gregapi.data.MT;
+import gregapi.oredict.OreDictMaterial;
 import mantle.items.abstracts.CraftingItem;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
@@ -44,10 +45,10 @@ public class ItemTGregPart extends CraftingItem implements IToolPart {
 	public String getItemStackDisplayName(ItemStack stack) {
 		NBTTagCompound data = TGregUtils.getTagCompound(stack);
 		String matName;
-		if(!data.hasKey("material") || Materials.get(data.getString("material")) == Materials._NULL) {
+		if(!data.hasKey("material") || OreDictMaterial.get(data.getString("material")) == MT.NULL) {
 			matName = "Unknown";
 		} else {
-			matName = Materials.get(data.getString("material")).mDefaultLocalName;
+			matName = OreDictMaterial.get(data.getString("material")).mNameLocal;
 		}
 
 		matName = matName + " " + type.getPartName();
@@ -66,10 +67,10 @@ public class ItemTGregPart extends CraftingItem implements IToolPart {
 	public String getUnlocalizedName(ItemStack stack) {
 		NBTTagCompound data = TGregUtils.getTagCompound(stack);
 		String matName;
-		if(!data.hasKey("material") || Materials.get(data.getString("material")) == Materials._NULL) {
+		if(!data.hasKey("material") || OreDictMaterial.get(data.getString("material")) == MT.NULL) {
 			matName = "Unknown";
 		} else {
-			matName = Materials.get(data.getString("material")).mDefaultLocalName;
+			matName = OreDictMaterial.get(data.getString("material")).mNameLocal;
 		}
 		//return StatCollector.translateToLocal("tgregworks.toolpart." + PartTypes.getFromID(stack.getItemDamage()) + "." + matName);
 		return matName;
@@ -103,10 +104,10 @@ public class ItemTGregPart extends CraftingItem implements IToolPart {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void getSubItems(Item b, CreativeTabs tab, List list) {
-		for(Materials m : TGregworks.registry.toolMaterials) {
+		for(OreDictMaterial m : TGregworks.registry.toolMaterials) {
 			ItemStack stack = new ItemStack(b, 1, TGregworks.registry.toolMaterials.indexOf(m) + 1);
 			NBTTagCompound data = TGregUtils.getTagCompound(stack);
-			data.setString("material", m.name());
+			data.setString("material", m.mNameInternal);
 			stack.setTagCompound(data);
 			list.add(stack);
 		}
@@ -149,7 +150,7 @@ public class ItemTGregPart extends CraftingItem implements IToolPart {
 		if(!data.hasKey("material")) {
 			return;
 		}
-		Materials m = Materials.get(data.getString("material"));
+		OreDictMaterial m = OreDictMaterial.get(data.getString("material"));
 		if(m != null) {
 			stack.setItemDamage(TGregworks.registry.toolMaterials.indexOf(m) + 1);
 		}
@@ -178,21 +179,21 @@ public class ItemTGregPart extends CraftingItem implements IToolPart {
 	public static short[] getRGBa(ItemStack stack) {
 		NBTTagCompound data = TGregUtils.getTagCompound(stack);
 		if(!data.hasKey("material")) {
-			return Materials._NULL.mRGBa;
+			return MT.NULL.mRGBaSolid;
 		}
-		Materials m = Materials.get(data.getString("material"));
-		if(m == null || m == Materials._NULL) {
-			return Materials._NULL.mRGBa;
+		OreDictMaterial m = OreDictMaterial.get(data.getString("material"));
+		if(m == null || m == MT.NULL) {
+			return MT.NULL.mRGBaSolid;
 		}
 		for(byte i = 0; i < m.mRGBa.length; i++) {
-			if(m.mRGBa[i] > 255) {
-				m.mRGBa[i] = 255;
+			if(m.mRGBaSolid[i] > 255) {
+				m.mRGBaSolid[i] = 255;
 			}
-			if(m.mRGBa[i] < 0) {
-				m.mRGBa[i] = 0;
+			if(m.mRGBaSolid[i] < 0) {
+				m.mRGBaSolid[i] = 0;
 			}
 		}
-		return m.mRGBa;
+		return m.mRGBaSolid;
 	}
 
 	@Override

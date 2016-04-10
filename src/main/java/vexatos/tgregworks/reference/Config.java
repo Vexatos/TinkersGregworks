@@ -7,7 +7,7 @@ public class Config {
 	public static class Category {
 
 		public static final String
-			Materials = "materials",
+			OreDictMaterial = "materials",
 			Enable = "enable",
 			Recipes = "recipe",
 			Global = "global",
@@ -21,8 +21,8 @@ public class Config {
 		HandleModifier = "handlemodifier";
 
 	public static final String
-		StoneboundLevel = Category.Materials + ".stoneboundlevel",
-		ReinforcedLevel = Category.Materials + ".reinforcedlevel";
+		StoneboundLevel = Category.OreDictMaterial + ".stoneboundlevel",
+		ReinforcedLevel = Category.OreDictMaterial + ".reinforcedlevel";
 
 	public static final String
 		BowDrawSpeed = "bowdrawspeed",
@@ -33,7 +33,7 @@ public class Config {
 		ArrowBreakChance = "arrowfragility";
 
 	public static String onMaterial(String key) {
-		return concat(Category.Materials, key);
+		return concat(Category.OreDictMaterial, key);
 	}
 
 	public static String concat(String first, String... keys) {

@@ -1,6 +1,6 @@
 package vexatos.tgregworks.util;
 
-import gregtech.api.enums.Materials;
+import gregapi.oredict.OreDictMaterial;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import vexatos.tgregworks.TGregworks;
@@ -37,14 +37,14 @@ public class TGregUtils {
 		if(!data.hasKey("material")) {
 			return -1;
 		}
-		Integer matID = TGregworks.registry.matIDs.get(Materials.get(data.getString("material")));
+		Integer matID = TGregworks.registry.matIDs.get(OreDictMaterial.get(data.getString("material")));
 		return matID != null ? matID : 0;
 	}
 
-	public static ItemStack newItemStack(Materials m, PartTypes p, int amount) {
+	public static ItemStack newItemStack(OreDictMaterial m, PartTypes p, int amount) {
 		ItemStack stack = new ItemStack(TGregworks.registry.toolParts.get(p), amount, TGregworks.registry.toolMaterials.indexOf(m) + 1);
 		NBTTagCompound data = TGregUtils.getTagCompound(stack);
-		data.setString("material", m.name());
+		data.setString("material", m.mNameInternal);
 		stack.setTagCompound(data);
 		return stack;
 	}

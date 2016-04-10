@@ -7,7 +7,7 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
-import gregtech.api.enums.Materials;
+import gregapi.data.MT;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -96,7 +96,7 @@ public class TGregworks {
 		{
 			ItemStack stack = new ItemStack(registry.toolParts.get(PartTypes.LargeSwordBlade));
 			NBTTagCompound data = TGregUtils.getTagCompound(stack);
-			data.setString("material", Materials.Osmiridium.name());
+			data.setString("material", MT.Osmiridium.mNameInternal);
 			stack.setTagCompound(data);
 			TGregworks.tab.init(stack);
 		}

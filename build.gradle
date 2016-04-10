@@ -50,7 +50,7 @@ dependencies {
     //compile "codechicken:CodeChickenCore:1.7.10-1.0.2.9:dev"
     //compile "codechicken:NotEnoughItems:1.7.10-1.0.2.15:dev"
     //compile "tconstruct:TConstruct:1.7.10-1.6.0.build638:deobf"
-    provided "com.gregoriust.gregtech:gregtech_1.7.10:5.07.07:dev"
+    compile "com.gregoriust.gregtech:gregtech_1.7.10:6.01.07:dev"
 }
 
 minecraft {

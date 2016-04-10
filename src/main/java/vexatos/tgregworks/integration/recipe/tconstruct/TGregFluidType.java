@@ -1,6 +1,6 @@
 package vexatos.tgregworks.integration.recipe.tconstruct;
 
-import gregtech.api.enums.Materials;
+import gregapi.oredict.OreDictMaterial;
 import net.minecraft.block.Block;
 import net.minecraftforge.fluids.Fluid;
 import tconstruct.library.crafting.FluidType;
@@ -10,9 +10,9 @@ import tconstruct.library.crafting.FluidType;
  */
 public class TGregFluidType extends FluidType {
 	public final int matID;
-	public final Materials material;
+	public final OreDictMaterial material;
 
-	public TGregFluidType(Materials m, Block block, int meta, int baseTemperature, Fluid fluid, boolean isToolpart, int matID) {
+	public TGregFluidType(OreDictMaterial m, Block block, int meta, int baseTemperature, Fluid fluid, boolean isToolpart, int matID) {
 		super(block, meta, baseTemperature, fluid, isToolpart);
 		this.material = m;
 		this.matID = matID;

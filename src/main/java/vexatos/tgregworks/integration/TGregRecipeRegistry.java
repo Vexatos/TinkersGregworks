@@ -1,11 +1,12 @@
 package vexatos.tgregworks.integration;
 
 import cpw.mods.fml.common.registry.GameRegistry;
-import gregtech.api.enums.GT_Values;
-import gregtech.api.enums.Materials;
-import gregtech.api.enums.OrePrefixes;
-import gregtech.api.enums.ToolDictNames;
-import gregtech.api.util.GT_OreDictUnificator;
+import gregapi.data.CS;
+import gregapi.data.MT;
+import gregapi.data.OP;
+import gregapi.old.ToolDictNames;
+import gregapi.oredict.OreDictManager;
+import gregapi.oredict.OreDictMaterial;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
 import net.minecraftforge.fluids.FluidStack;
@@ -80,7 +81,7 @@ public class TGregRecipeRegistry {
 			TGregworks.log.error("Invalid energy multiplier found in config: " + energyMultiplier + ". Reverting back to 1.");
 			energyMultiplier = 1;
 		}
-		for(Materials m : TGregworks.registry.toolMaterials) {
+		for(OreDictMaterial m : TGregworks.registry.toolMaterials) {
 			final int powerRequired = getPowerRequired(m);
 			for(PartTypes p : PartTypes.VALUES) {
 				ItemStack input = TGregUtils.newItemStack(m, p, 1);
@@ -88,21 +89,21 @@ public class TGregRecipeRegistry {
 				if(pattern != null) {
 					int price = p.getPrice();
 					//GregTech_API.sRecipeAdder.addAlloySmelterRecipe(GT_OreDictUnificator.get(OrePrefixes.ingot, m, p.price), p.pattern, input, 80 * p.price, 30);
-					ItemStack stack = GT_OreDictUnificator.get(OrePrefixes.ingot, m,
+					ItemStack stack = OP.ingot.mat(m,
 						price % 2 != 0 ? (price / 2) + 1 : MathHelper.ceiling_double_int(price / 2D));
 					if(addGemToolPartRecipes && stack == null) {
-						stack = GT_OreDictUnificator.get(OrePrefixes.gem, m,
+						stack = OP.gem.mat(m,
 							price % 2 != 0 ? (price / 2) + 1 : MathHelper.ceiling_double_int(price / 2D));
 					}
 					if(stack != null) {
 						if(addExtruderRecipes) {
-							GT_Values.RA.addExtruderRecipe(stack.copy(), pattern.copy(), input.copy(), Math.max(80, m.mDurability * price),
+							GT_Values.RA.addExtruderRecipe(stack.copy(), pattern.copy(), input.copy(), Math.max(80, m.mToolDurability * price),
 								powerRequired);
 						}
 						if(addSolidifierRecipes) {
-							FluidStack molten = m.getMolten((GT_Values.L / 2) * p.getPrice());
+							FluidStack molten = m.liquid((CS.U / 2) * p.getPrice(), false);
 							if(molten != null && molten.getFluid() != null) {
-								GT_Values.RA.addFluidSolidifierRecipe(pattern.copy(), molten, input.copy(), Math.max(80, m.mDurability * price),
+								GT_Values.RA.addFluidSolidifierRecipe(pattern.copy(), molten, input.copy(), Math.max(80, m.mToolDurability * price),
 									powerRequired);
 							}
 							//GregTech_API.sRecipeAdder.addAlloySmelterRecipe(getChunk(m, p.price), p.pattern, input, 80 * p.price, 30);
@@ -110,11 +111,11 @@ public class TGregRecipeRegistry {
 						stack = getChunk(m, price);
 						if(stack != null) {
 							if(addExtruderRecipes && addShardToToolPart) {
-								GT_Values.RA.addExtruderRecipe(stack.copy(), pattern.copy(), input.copy(), 80 + (m.mDurability * price),
+								GT_Values.RA.addExtruderRecipe(stack.copy(), pattern.copy(), input.copy(), 80 + (m.mToolDurability * price),
 									powerRequired);
 							}
 							if(addReverseSmelting) {
-								GT_Values.RA.addAlloySmelterRecipe(input.copy(), new ItemStack(TGregworks.shardCast, 0, 0), stack.copy(), 80 + (m.mDurability * price),
+								GT_Values.RA.addAlloySmelterRecipe(input.copy(), new ItemStack(TGregworks.shardCast, 0, 0), stack.copy(), 80 + (m.mToolDurability * price),
 									powerRequired);
 							}
 						}
@@ -122,24 +123,24 @@ public class TGregRecipeRegistry {
 				}
 			}
 			ItemStack stack = getChunk(m, 2);
-			ItemStack ingotStack = GT_OreDictUnificator.get(OrePrefixes.ingot, m, 1);
+			ItemStack ingotStack = OP.ingot.mat(m, 1);
 			if(addGemToolPartRecipes && ingotStack == null) {
-				ingotStack = GT_OreDictUnificator.get(OrePrefixes.gem, m, 1);
+				ingotStack = OP.gem.mat(m, 1);
 			}
 			if(stack != null && ingotStack != null) {
 				if(addExtruderRecipes && addIngotToShard) {
-					GT_Values.RA.addExtruderRecipe(ingotStack, new ItemStack(TGregworks.shardCast, 0, 0), stack, Math.max(160, m.mDurability),
+					GT_Values.RA.addExtruderRecipe(ingotStack, new ItemStack(TGregworks.shardCast, 0, 0), stack, Math.max(160, m.mToolDurability),
 						powerRequired);
 				}
 				if(addShardToIngotSmelting) {
 					GT_Values.RA.addAlloySmelterRecipe(stack.copy(), new ItemStack(MetalPatterns.ingot.getPatternItem(), 0, MetalPatterns.ingot.ordinal()),
-						ingotStack.copy(), Math.max(160, m.mDurability), powerRequired);
+						ingotStack.copy(), Math.max(160, m.mToolDurability), powerRequired);
 				}
 			}
 		}
 
 		if(TGregworks.config.get(Config.concat(Config.Category.Enable, Config.Category.Recipes), "tinkersconstructcastrecipe", true, "Enable the Shard Cast recipe using Tinkers' Construct shards").getBoolean(true)) {
-			ItemStack brassstack = GT_OreDictUnificator.get(OrePrefixes.plate, Materials.Brass, 1);
+			ItemStack brassstack = OP.plate.mat(MT.Brass, 1);
 			if(TinkerTools.toolShard != null) {
 			/*ArrayList list = new ArrayList();
 			TinkerTools.toolShard.getSubItems(TinkerTools.toolShard, TinkerTools.toolShard.getCreativeTab(), list);
@@ -171,18 +172,18 @@ public class TGregRecipeRegistry {
 		}
 	}
 
-	private int getPowerRequired(Materials m) {
+	private int getPowerRequired(OreDictMaterial m) {
 		return Math.round(m.mToolQuality < 3 ? (30 * energyMultiplier) : (120 * energyMultiplier));
 	}
 
-	private ItemStack getChunk(Materials m, int amount) {
+	private ItemStack getChunk(OreDictMaterial m, int amount) {
 		return TGregUtils.newItemStack(m, PartTypes.Chunk, amount);
 	}
 
 	public void registerRepairMaterials() {
 		addShardRepair = TGregworks.config.getBoolean("addShardRepair", Config.concat(Config.Category.Enable, Config.Category.Recipes), true, "Allow repairing TGregworks tools with shards");
 		addIngotRepair = TGregworks.config.getBoolean("addIngotRepair", Config.concat(Config.Category.Enable, Config.Category.Recipes), false, "Allow repairing TGregworks tools with ingots");
-		for(Materials m : TGregworks.registry.toolMaterials) {
+		for(OreDictMaterial m : TGregworks.registry.toolMaterials) {
 			Integer matID = TGregworks.registry.matIDs.get(m);
 			if(matID != null) {
 				ToolMaterial mat = TConstructRegistry.getMaterial(matID);
@@ -200,12 +201,12 @@ public class TGregRecipeRegistry {
 						TGregworks.repair.registerShardRepairMaterial(m, 1);
 					}
 					if(addIngotRepair) {
-						ArrayList<ItemStack> ingots = GT_OreDictUnificator.getOres(OrePrefixes.ingot, m);
+						ArrayList<ItemStack> ingots = OreDictManager.getOres(OP.ingot, m, false);
 						if(!ingots.isEmpty()) {
-							TGregworks.repair.registerOreDictRepairMaterial(m, OrePrefixes.ingot.get(m).toString(), 2);
+							TGregworks.repair.registerOreDictRepairMaterial(m, OP.ingot.dat(m).toString(), 2);
 						} else if(addGemToolPartRecipes) {
-							ingots.addAll(GT_OreDictUnificator.getOres(OrePrefixes.gem, m));
-							TGregworks.repair.registerOreDictRepairMaterial(m, OrePrefixes.gem.get(m).toString(), 2);
+							ingots.addAll(OreDictManager.getOres(OP.gem, m, false));
+							TGregworks.repair.registerOreDictRepairMaterial(m, OP.gem.dat(m).toString(), 2);
 						}
 						for(ItemStack ingot : ingots) {
 							if(ingot != null && ingot.getItem() != null) {
