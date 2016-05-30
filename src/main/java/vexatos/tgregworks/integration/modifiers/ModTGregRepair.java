@@ -18,7 +18,7 @@ import java.util.Set;
 public class ModTGregRepair extends ItemModifier {
 
 	public ModTGregRepair() {
-		super(new ItemStack[0], 0, "");
+		super(new ItemStack[0], 0, "TGregRepair");
 	}
 
 	@Override
