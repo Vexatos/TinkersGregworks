@@ -3,7 +3,7 @@ package vexatos.tgregworks.integration;
 import cpw.mods.fml.common.registry.GameRegistry;
 import gregapi.data.MT;
 import gregapi.data.OP;
-import gregapi.old.ToolDictNames;
+import gregapi.data.CS;
 import gregapi.oredict.OreDictManager;
 import gregapi.oredict.OreDictMaterial;
 import gregapi.recipes.Recipe.RecipeMap;
@@ -175,7 +175,7 @@ public class TGregRecipeRegistry {
 				" CH",
 				" PF",
 				"   ",
-				'C', ToolDictNames.craftingToolHardHammer.name(), 'H', ToolDictNames.craftingToolKnife.name(), 'F', ToolDictNames.craftingToolFile.name(), 'P', "plateBrass"
+				'C', CS.TOOL_hammer, 'H', CS.TOOL_sword, 'F', CS.TOOL_file, 'P', "plateBrass" //I hope CS.TOOL_sowrd is the rigth replace for Knife
 			));
 		}
 	}
