@@ -1,8 +1,8 @@
 package vexatos.tgregworks.integration;
 
 import com.google.common.collect.HashMultimap;
-import gregtech.api.enums.Materials;
-import gregtech.api.util.GT_OreDictUnificator;
+import gregapi.oredict.OreDictMaterial;
+import gregapi.util.OM;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import vexatos.tgregworks.TGregworks;
@@ -13,7 +13,7 @@ import vexatos.tgregworks.util.TGregUtils;
  * @author Vexatos
  */
 public class TGregRepairRegistry {
-	public final HashMultimap<Materials, RepairMaterial> repairMaterials = HashMultimap.create();
+	public final HashMultimap<OreDictMaterial, RepairMaterial> repairMaterials = HashMultimap.create();
 
 	public static abstract class RepairMaterial {
 		public final int value;
@@ -27,9 +27,9 @@ public class TGregRepairRegistry {
 
 	public static class ShardRepairMaterial extends RepairMaterial {
 
-		public final Materials m;
+		public final OreDictMaterial m;
 
-		public ShardRepairMaterial(Materials m, int value) {
+		public ShardRepairMaterial(OreDictMaterial m, int value) {
 			super(value);
 			this.m = m;
 		}
@@ -41,7 +41,7 @@ public class TGregRepairRegistry {
 				if(!data.hasKey("material")) {
 					return false;
 				}
-				Materials material = Materials.get(data.getString("material"));
+				OreDictMaterial material = OreDictMaterial.get(data.getString("material"));
 				if(material != null && material == this.m) {
 					return true;
 				}
@@ -60,15 +60,15 @@ public class TGregRepairRegistry {
 
 		@Override
 		public boolean matches(ItemStack input) {
-			return GT_OreDictUnificator.isItemStackInstanceOf(input, tag);
+			return OM.is(tag, input);
 		}
 	}
 
-	public void registerShardRepairMaterial(Materials m, int value) {
+	public void registerShardRepairMaterial(OreDictMaterial m, int value) {
 		repairMaterials.put(m, new ShardRepairMaterial(m, value));
 	}
 
-	public void registerOreDictRepairMaterial(Materials m, String tag, int value) {
+	public void registerOreDictRepairMaterial(OreDictMaterial m, String tag, int value) {
 		repairMaterials.put(m, new OreDictRepairMaterial(tag, value));
 	}
 }

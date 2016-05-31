@@ -1,6 +1,6 @@
 package vexatos.tgregworks.proxy;
 
-import gregtech.api.enums.Materials;
+import gregapi.oredict.OreDictMaterial;
 import tconstruct.library.client.TConstructClientRegistry;
 import vexatos.tgregworks.TGregworks;
 
@@ -11,7 +11,7 @@ public class ClientProxy extends CommonProxy {
 
 	@Override
 	public void addToolRenderMappings() {
-		for(Materials m : TGregworks.registry.toolMaterials) {
+		for(OreDictMaterial m : TGregworks.registry.toolMaterials) {
 			TConstructClientRegistry.addMaterialRenderMapping(TGregworks.registry.matIDs.get(m), "tgregworks", "", true);
 		}
 	}
