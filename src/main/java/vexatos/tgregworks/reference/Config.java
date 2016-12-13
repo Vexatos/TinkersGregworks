@@ -12,6 +12,12 @@ public class Config {
 			Recipes = "recipe",
 			Global = "global",
 			General = "general";
+
+		public static final String
+			AlloySmelter = "alloysmelter",
+			Extruder = "extruder",
+			Solidifier = "fluidsolidifier",
+			Extractor = "fluidextractor";
 	}
 
 	public static final String

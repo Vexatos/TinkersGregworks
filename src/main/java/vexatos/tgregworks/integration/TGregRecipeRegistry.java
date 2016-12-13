@@ -43,9 +43,12 @@ public class TGregRecipeRegistry {
 	public boolean addReverseSmelting = false;
 	public boolean addShardToIngotSmelting = false;
 	public boolean addIngotToShard = false;
+	public boolean addMoltenToShard = false;
 	public boolean addShardToToolPart = false;
 	public boolean addExtruderRecipes = false;
 	public boolean addSolidifierRecipes = false;
+	public boolean addFluidExtractorRecipes = false;
+	public boolean addShardExtractorRecipes = false;
 	public boolean addShardRepair = true;
 	public boolean addIngotRepair = false;
 	public boolean addGemToolPartRecipes = true;
@@ -54,26 +57,36 @@ public class TGregRecipeRegistry {
 	public float energyMultiplier = 0F;
 
 	public void addGregTechPartRecipes() {
-		addReverseSmelting = TGregworks.config.get(Config.concat(Config.Category.Enable, Config.Category.Recipes), "reverseSmelting",
-			true, "Enable smelting tool parts in an alloy smelter to get shards back").getBoolean(true);
-		addShardToIngotSmelting = TGregworks.config.get(Config.concat(Config.Category.Enable, Config.Category.Recipes), "shardToIngotSmelting",
-			true, "Enable smelting two shards into one ingot in an alloy smelter").getBoolean(true);
-		addIngotToShard = TGregworks.config.get(Config.concat(Config.Category.Enable, Config.Category.Recipes), "ingotToShardRecipe",
-			true, "Enable creating shards from ingots in the extruder (if extruder is enabled)").getBoolean(true);
-		addShardToToolPart = TGregworks.config.get(Config.concat(Config.Category.Enable, Config.Category.Recipes), "shardToToolPartRecipe",
-			true, "Enable creating tool parts from shards in the extruder (if extruder is enabled)").getBoolean(true);
-		addExtruderRecipes = TGregworks.config.get(Config.concat(Config.Category.Enable, Config.Category.Recipes), "extruderRecipes",
-			true, "Enable tool part recipes in the extruder").getBoolean(true);
-		addSolidifierRecipes = TGregworks.config.get(Config.concat(Config.Category.Enable, Config.Category.Recipes), "solidifierRecipes",
-			false, "Enable tool part recipes in the fluid solidifier").getBoolean(false);
-		addGemToolPartRecipes = TGregworks.config.get(Config.concat(Config.Category.Enable, Config.Category.Recipes), "gemToolPartRecipes",
-			true, "Enable recipes for tool parts made of gems").getBoolean(true);
-		useNonGTFluidsForBolts = TGregworks.config.getBoolean("useNonGTFluidsForBolts", Config.concat(Config.Category.Enable, Config.Category.Recipes), true,
-			"Register Fluid Solidifier recipes for bolts with non-GT fluids.");
-		useNonGTToolRodsForBolts = TGregworks.config.getBoolean("useNonGTToolRodsForBolts", Config.concat(Config.Category.Enable, Config.Category.Recipes), true,
-			"Register Fluid Solidifier recipes for bolts with tool rods from non-GT materials.");
+		addGemToolPartRecipes = TGregworks.config.getBoolean("gemToolPartRecipes", Config.concat(Config.Category.Enable, Config.Category.Recipes),
+			true, "Enable recipes for tool parts made of gems");
 		energyMultiplier = TGregworks.config.getFloat("energyUsageMultiplier", Config.concat(Config.Category.General),
 			1F, 0F, 4500F, "Energy usage multiplier for the extruder and solidifier. Base EU/t is either 30 or 120");
+
+		addReverseSmelting = TGregworks.config.getBoolean("reverseSmelting", Config.concat(Config.Category.Enable, Config.Category.Recipes, Config.Category.AlloySmelter),
+			true, "Enable smelting tool parts in an alloy smelter to get shards back");
+		addShardToIngotSmelting = TGregworks.config.getBoolean("shardToIngotSmelting", Config.concat(Config.Category.Enable, Config.Category.Recipes, Config.Category.AlloySmelter),
+			true, "Enable smelting two shards into one ingot in an alloy smelter");
+
+		addExtruderRecipes = TGregworks.config.getBoolean("extruderRecipes", Config.concat(Config.Category.Enable, Config.Category.Recipes, Config.Category.Extruder),
+			true, "Enable tool part recipes in the extruder");
+		addShardToToolPart = TGregworks.config.getBoolean("shardToToolPartRecipe", Config.concat(Config.Category.Enable, Config.Category.Recipes, Config.Category.Extruder),
+			true, "Enable creating tool parts from shards in the extruder (if 'extruderRecipes' is enabled)");
+		addIngotToShard = TGregworks.config.getBoolean("ingotToShardRecipe", Config.concat(Config.Category.Enable, Config.Category.Recipes, Config.Category.Extruder),
+			true, "Enable creating shards from ingots in the extruder");
+
+		addSolidifierRecipes = TGregworks.config.getBoolean("solidifierRecipes", Config.concat(Config.Category.Enable, Config.Category.Recipes, Config.Category.Solidifier),
+			false, "Enable tool part recipes in the fluid solidifier");
+		addMoltenToShard = TGregworks.config.getBoolean("moltenToShardRecipe", Config.concat(Config.Category.Enable, Config.Category.Recipes, Config.Category.Solidifier),
+			false, "Enable creating shards from molten material in the fluid solidifier");
+		useNonGTFluidsForBolts = TGregworks.config.getBoolean("useNonGTFluidsForBolts", Config.concat(Config.Category.Enable, Config.Category.Recipes, Config.Category.Solidifier), true,
+			"Register Fluid Solidifier recipes for bolts with non-GT fluids.");
+		useNonGTToolRodsForBolts = TGregworks.config.getBoolean("useNonGTToolRodsForBolts", Config.concat(Config.Category.Enable, Config.Category.Recipes, Config.Category.Solidifier), true,
+			"Register Fluid Solidifier recipes for bolts with tool rods from non-GT materials.");
+
+		addFluidExtractorRecipes = TGregworks.config.getBoolean("fluidExtractorRecipes", Config.concat(Config.Category.Enable, Config.Category.Recipes, Config.Category.Extractor),
+			false, "Enable extracting the molten material out of tool parts in the fluid extractor");
+		addShardExtractorRecipes = TGregworks.config.getBoolean("shardExtractorRecipes", Config.concat(Config.Category.Enable, Config.Category.Recipes, Config.Category.Extractor),
+			false, "Enable extracting the molten material out of shards in the fluid extractor");
 
 		//Make sure eu/t isn't 0 or the higher end materials eu/t does not exceed ultimate voltage
 		if(energyMultiplier < 0 || (120 * energyMultiplier) > 524288) {
@@ -99,11 +112,17 @@ public class TGregRecipeRegistry {
 							GT_Values.RA.addExtruderRecipe(stack.copy(), pattern.copy(), input.copy(), Math.max(80, m.mDurability * price),
 								powerRequired);
 						}
-						if(addSolidifierRecipes) {
+						{
 							FluidStack molten = m.getMolten((GT_Values.L / 2) * p.getPrice());
 							if(molten != null && molten.getFluid() != null) {
-								GT_Values.RA.addFluidSolidifierRecipe(pattern.copy(), molten, input.copy(), Math.max(80, m.mDurability * price),
-									powerRequired);
+								if(addSolidifierRecipes) {
+									GT_Values.RA.addFluidSolidifierRecipe(pattern.copy(), molten.copy(), input.copy(), Math.max(80, m.mDurability * price),
+										powerRequired);
+								}
+								if(addFluidExtractorRecipes) {
+									GT_Values.RA.addFluidExtractionRecipe(input.copy(), null, molten.copy(), 0, Math.max(80, m.mDurability * price),
+										powerRequired);
+								}
 							}
 							//GregTech_API.sRecipeAdder.addAlloySmelterRecipe(getChunk(m, p.price), p.pattern, input, 80 * p.price, 30);
 						}
@@ -127,9 +146,22 @@ public class TGregRecipeRegistry {
 				ingotStack = GT_OreDictUnificator.get(OrePrefixes.gem, m, 1);
 			}
 			if(stack != null && ingotStack != null) {
-				if(addExtruderRecipes && addIngotToShard) {
-					GT_Values.RA.addExtruderRecipe(ingotStack, new ItemStack(TGregworks.shardCast, 0, 0), stack, Math.max(160, m.mDurability),
+				if(addIngotToShard) {
+					GT_Values.RA.addExtruderRecipe(ingotStack, new ItemStack(TGregworks.shardCast, 0, 0), stack.copy(), Math.max(160, m.mDurability),
 						powerRequired);
+				}
+				ItemStack halfStack = stack.copy();
+				halfStack.stackSize = 1;
+				FluidStack molten = m.getMolten((GT_Values.L / 2));
+				if(molten != null && molten.getFluid() != null) {
+					if(addMoltenToShard) {
+						GT_Values.RA.addFluidSolidifierRecipe(new ItemStack(TGregworks.shardCast, 0, 0), molten.copy(), halfStack.copy(), Math.max(160, m.mDurability),
+							powerRequired);
+					}
+					if(addShardExtractorRecipes) {
+						GT_Values.RA.addFluidExtractionRecipe(halfStack.copy(), null, molten.copy(), 0, Math.max(160, m.mDurability),
+							powerRequired);
+					}
 				}
 				if(addShardToIngotSmelting) {
 					GT_Values.RA.addAlloySmelterRecipe(stack.copy(), new ItemStack(MetalPatterns.ingot.getPatternItem(), 0, MetalPatterns.ingot.ordinal()),
@@ -138,7 +170,7 @@ public class TGregRecipeRegistry {
 			}
 		}
 
-		if(TGregworks.config.get(Config.concat(Config.Category.Enable, Config.Category.Recipes), "tinkersconstructcastrecipe", true, "Enable the Shard Cast recipe using Tinkers' Construct shards").getBoolean(true)) {
+		if(TGregworks.config.getBoolean("tinkersconstructcastrecipe", Config.concat(Config.Category.Enable, Config.Category.Recipes), true, "Enable the Shard Cast recipe using Tinkers' Construct shards")) {
 			ItemStack brassstack = GT_OreDictUnificator.get(OrePrefixes.plate, Materials.Brass, 1);
 			if(TinkerTools.toolShard != null) {
 			/*ArrayList list = new ArrayList();
@@ -160,7 +192,7 @@ public class TGregRecipeRegistry {
 				}
 			}
 		}
-		if(TGregworks.config.get(Config.concat(Config.Category.Enable, Config.Category.Recipes), "gregtechcastrecipe", true, "Enable the GregTech style Shard Cast recipe").getBoolean(true)) {
+		if(TGregworks.config.getBoolean("gregtechcastrecipe", Config.concat(Config.Category.Enable, Config.Category.Recipes), true, "Enable the GregTech style Shard Cast recipe")) {
 			GameRegistry.addRecipe(new ShapedOreRecipe(
 				new ItemStack(TGregworks.shardCast, 1, 0),
 				" CH",
