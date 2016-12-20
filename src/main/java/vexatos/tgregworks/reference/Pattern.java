@@ -3,6 +3,7 @@ package vexatos.tgregworks.reference;
 import net.minecraft.item.Item;
 import tconstruct.smeltery.TinkerSmeltery;
 import tconstruct.weaponry.TinkerWeaponry;
+import vexatos.tgregworks.integration.smeltery.CastLegacy;
 
 /**
  * @author Vexatos
@@ -39,7 +40,7 @@ public interface Pattern {
 		nugget;
 
 		public Item getPatternItem() {
-			return TinkerSmeltery.metalPattern;
+			return TinkerSmeltery.metalPattern != null ? TinkerSmeltery.metalPattern : CastLegacy.metalPattern;
 		}
 	}
 

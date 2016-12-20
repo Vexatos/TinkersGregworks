@@ -2,8 +2,10 @@ package vexatos.tgregworks;
 
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLMissingMappingsEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -14,6 +16,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.config.Configuration;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import tconstruct.TConstruct;
 import tconstruct.library.TConstructCreativeTab;
 import tconstruct.library.crafting.ModifyBuilder;
 import vexatos.tgregworks.integration.TGregRecipeRegistry;
@@ -21,6 +24,7 @@ import vexatos.tgregworks.integration.TGregRegistry;
 import vexatos.tgregworks.integration.TGregRepairRegistry;
 import vexatos.tgregworks.integration.iguanatweakstconstruct.IntegrationITT;
 import vexatos.tgregworks.integration.modifiers.ModTGregRepair;
+import vexatos.tgregworks.integration.smeltery.CastLegacy;
 import vexatos.tgregworks.integration.tictooltips.IntegrationTiCTooltips;
 import vexatos.tgregworks.proxy.CommonProxy;
 import vexatos.tgregworks.reference.Config;
@@ -64,7 +68,7 @@ public class TGregworks {
 		}
 	}
 
-	@Mod.EventHandler
+	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
 		config = new Configuration(event.getSuggestedConfigurationFile());
 		config.load();
@@ -93,6 +97,10 @@ public class TGregworks {
 			.setMaxDamage(0).setHasSubtypes(false).setMaxStackSize(1);
 		GameRegistry.registerItem(shardCast, "tgregworks.shardcast");
 
+		if(!TConstruct.pulsar.isPulseLoaded("Tinkers' Smeltery")) {
+			CastLegacy.preInit();
+		}
+
 		{
 			ItemStack stack = new ItemStack(registry.toolParts.get(PartTypes.LargeSwordBlade));
 			NBTTagCompound data = TGregUtils.getTagCompound(stack);
@@ -104,7 +112,7 @@ public class TGregworks {
 		//registry.registerTools();
 	}
 
-	@Mod.EventHandler
+	@EventHandler
 	public void init(FMLInitializationEvent event) {
 		proxy.addToolRenderMappings();
 		registry.registerFluids();
@@ -115,12 +123,14 @@ public class TGregworks {
 		}
 	}
 
-	@Mod.EventHandler
+	@EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
 		recipes.addRecipesForToolBuilder();
 		recipes.addGregTechPartRecipes();
+		recipes.registerCastRecipes();
 		recipes.registerRepairMaterials();
 		recipes.registerBoltRecipes();
+
 		/*if(Loader.isModLoaded(Mods.TinkersTailor)) {
 			tinkersTailor = new IntegrationTinkersTailor();
 			tinkersTailor.registerArmorPartRecipes();
@@ -136,5 +146,10 @@ public class TGregworks {
 			ModifyBuilder.registerModifier(new ModTGregRepair());
 		}
 		config.save();
+	}
+
+	@EventHandler
+	public void remap(FMLMissingMappingsEvent e) {
+		CastLegacy.remap(e);
 	}
 }
