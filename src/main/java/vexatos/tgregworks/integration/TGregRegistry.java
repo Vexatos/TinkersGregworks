@@ -32,7 +32,7 @@ public class TGregRegistry {
 
 	private int getLatestAvailableNumber() {
 		for(int i = latestAvailableNumber; i < 16383; i++) {
-			if(!TConstructRegistry.toolMaterials.containsKey(i)) {
+			if(!TConstructRegistry.toolMaterials.containsKey(i) && !configIDs.contains(i)) {
 				latestAvailableNumber = i + 1;
 				return i;
 			}
@@ -40,12 +40,19 @@ public class TGregRegistry {
 		throw new RuntimeException("TConstruct tool material registry ran out of IDs!");
 	}
 
+	private final HashMap<Materials, Property> configProps = new HashMap<Materials, Property>();
+	private final ArrayList<Integer> configIDs = new ArrayList<Integer>();
+
 	private int getMaterialID(Materials m) {
-		Property configProp = TGregworks.config.get(Config.onMaterial(Config.MaterialID), m.name(), 0, null, 0, 100000);
+		Property configProp = configProps.get(m);
+		if(configProp == null) {
+			configProp = TGregworks.config.get(Config.onMaterial(Config.MaterialID), m.name(), 0, null, 0, 100000);
+		}
 		final int configID = configProp.getInt();
 		if(configID > 0) {
 			return configID;
 		}
+
 		final int newID = getLatestAvailableNumber();
 		configProp.set(newID);
 		return newID;
@@ -63,6 +70,9 @@ public class TGregRegistry {
 		for(Materials m : Materials.values()) {
 			if(((m.mTypes & 64) == 64) && !doesMaterialExist(m) && gtMaterials.contains(m) && TGregworks.config.get(Config.Category.Enable, m.name(), true).getBoolean(true)) {
 				toolMaterials.add(m);
+				Property configProp = TGregworks.config.get(Config.onMaterial(Config.MaterialID), m.name(), 0, null, 0, 100000);
+				configProps.put(m, configProp);
+				configIDs.add(configProp.getInt());
 			}
 		}
 		for(Materials m : toolMaterials) {
@@ -83,6 +93,8 @@ public class TGregRegistry {
 			matIDs.put(m, matID);
 			materialIDMap.put(matID, m);
 		}
+		configProps.clear();
+		configIDs.clear();
 
 		ItemTGregPart.toolMaterialNames = toolMaterialNames;
 	}
