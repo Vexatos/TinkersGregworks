@@ -85,6 +85,7 @@ public class TGregworks {
 		config.setCategoryComment(Config.onMaterial(Config.MiningSpeed), "Values between 0.0 and 10000.0 are allowed. Will be directly multiplied with the internally calculated value.");
 		config.setCategoryComment(Config.onMaterial(Config.Attack), "Values between 0.0 and 10000.0 are allowed. Will be directly multiplied with the internally calculated value.");
 		config.setCategoryComment(Config.onMaterial(Config.HandleModifier), "Values between 0.0 and 10000.0 are allowed. Will be directly multiplied with the internally calculated value.");
+		config.setCategoryComment(Config.onMaterial(Config.MaterialID), "Values between 0 and 100000 are allowed. The ID of each individual material. Setting an ID to 0 will regenerate it. When changing materialIDRangeStart, you might want to delete this category so the tool IDs can be regenerated.");
 		config.setCategoryComment(Config.StoneboundLevel, "Values between -3 and 3 are allowed. Positive Values give the Stonebound effect, negative values give Jagged. "
 			+ "Keep in mind that neither 'Stonebound' nor 'Jagged' will actually appear on the tool's item tooltip, due to technical limitations.");
 		config.setCategoryComment(Config.ReinforcedLevel, "Values between 0 and 3 are allowed. Gives the according level of Reinforced.");

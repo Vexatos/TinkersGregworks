@@ -3,6 +3,7 @@ package vexatos.tgregworks.integration;
 import cpw.mods.fml.common.registry.GameRegistry;
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.Materials;
+import net.minecraftforge.common.config.Property;
 import tconstruct.library.TConstructRegistry;
 import tconstruct.library.crafting.FluidType;
 import vexatos.tgregworks.TGregworks;
@@ -39,6 +40,17 @@ public class TGregRegistry {
 		throw new RuntimeException("TConstruct tool material registry ran out of IDs!");
 	}
 
+	private int getMaterialID(Materials m) {
+		Property configProp = TGregworks.config.get(Config.onMaterial(Config.MaterialID), m.name(), 0, null, 0, 100000);
+		final int configID = configProp.getInt();
+		if(configID > 0) {
+			return configID;
+		}
+		final int newID = getLatestAvailableNumber();
+		configProp.set(newID);
+		return newID;
+	}
+
 	public TGregRegistry() {
 		latestAvailableNumber = TGregworks.config.getInt("materialIDRangeStart", Config.Category.General, 1500, 300, 15000,
 			"The lowest ID for TGregworks materials. Only material IDs higher than this will be used, and only if the ID has not been registered before. Other mods might not check if the material ID is already in use and thus crash, if the crash occurs with a TGregworks material, changing this number may fix it.");
@@ -55,7 +67,7 @@ public class TGregRegistry {
 		}
 		for(Materials m : toolMaterials) {
 			toolMaterialNames.add(m.mDefaultLocalName);
-			int matID = getLatestAvailableNumber();
+			int matID = getMaterialID(m);
 			TConstructRegistry.addToolMaterial(matID, m.name(), m.mDefaultLocalName, m.mToolQuality,
 				(int) (m.mDurability * getGlobalMultiplier(Config.Durability) * getMultiplier(m, Config.Durability)), // Durability
 				(int) (m.mToolSpeed * 100F * getGlobalMultiplier(Config.MiningSpeed) * getMultiplier(m, Config.MiningSpeed)), // Mining speed

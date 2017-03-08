@@ -24,7 +24,8 @@ public class Config {
 		Durability = "durability",
 		MiningSpeed = "miningspeed",
 		Attack = "attack",
-		HandleModifier = "handlemodifier";
+		HandleModifier = "handlemodifier",
+		MaterialID = "material-id";
 
 	public static final String
 		StoneboundLevel = Category.Materials + ".stoneboundlevel",
