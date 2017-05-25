@@ -104,7 +104,7 @@ public class ItemTGregPart extends CraftingItem implements IToolPart {
 	@Override
 	public void getSubItems(Item b, CreativeTabs tab, List list) {
 		for(Materials m : TGregworks.registry.toolMaterials) {
-			ItemStack stack = new ItemStack(b, 1, TGregworks.registry.toolMaterials.indexOf(m) + 1);
+			ItemStack stack = new ItemStack(b, 1, TGregworks.registry.matIDs.get(m));
 			NBTTagCompound data = TGregUtils.getTagCompound(stack);
 			data.setString("material", m.name());
 			stack.setTagCompound(data);
@@ -151,7 +151,10 @@ public class ItemTGregPart extends CraftingItem implements IToolPart {
 		}
 		Materials m = Materials.get(data.getString("material"));
 		if(m != null) {
-			stack.setItemDamage(TGregworks.registry.toolMaterials.indexOf(m) + 1);
+			Integer matID = TGregworks.registry.matIDs.get(m);
+			if(matID != stack.getItemDamage()) {
+				stack.setItemDamage(matID);
+			}
 		}
 	}
 

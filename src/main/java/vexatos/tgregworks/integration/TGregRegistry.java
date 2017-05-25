@@ -46,7 +46,7 @@ public class TGregRegistry {
 	private int getMaterialID(Materials m) {
 		Property configProp = configProps.get(m);
 		if(configProp == null) {
-			configProp = TGregworks.config.get(Config.onMaterial(Config.MaterialID), m.name(), 0, null, 0, 100000);
+			configProp = TGregworks.config.get(Config.onMaterial(Config.MaterialID), m.name(), 0, null, 0, 30000);
 		}
 		final int configID = configProp.getInt();
 		if(configID > 0) {
