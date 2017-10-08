@@ -42,7 +42,7 @@ public class TGregUtils {
 	}
 
 	public static ItemStack newItemStack(OreDictMaterial m, PartTypes p, int amount) {
-		ItemStack stack = new ItemStack(TGregworks.registry.toolParts.get(p), amount, TGregworks.registry.toolMaterials.indexOf(m) + 1);
+		ItemStack stack = new ItemStack(TGregworks.registry.toolParts.get(p), amount, TGregworks.registry.matIDs.get(m));
 		NBTTagCompound data = TGregUtils.getTagCompound(stack);
 		data.setString("material", m.mNameInternal);
 		stack.setTagCompound(data);

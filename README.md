@@ -3,7 +3,7 @@ Tinkers' Gregworks
 
 This is an Addon for the Minecraft mods Tinkers' Construct and GregTech. It is entirely made for fun, and nothing else.
 
-###What does it do?
+### What does it do?
 
 The mod adds tool parts for every GregTech material that is valid as a GregTech tool. That means, if you can make a GregTech tool out of a material, you can also make TConstruct tool parts out of it (provided you have TGregworks installed).
 
@@ -25,10 +25,10 @@ It also has support for TiCTooltips.
 
 This mod is not compatible with GregTech 6 right now due to the lack of machines that could be used for adding recipes (GregTech 6 is still considered "Alpha"). Any version of GregTech 5 after (and including) GregTech 5.07.07 should work (including GregTech 5 Unofficial etc.).
 
-###Downloads
+### Downloads
 
 Downloads can be found [here](http://files.vex.tty.sh/TGregworks/).
 
-###License:
+### License:
 
 Tinkers' Gregworks is licensed under Calclavia's Educational Public License (https://github.com/Vexatos/TinkersGregworks/blob/master/LICENSE.md/). By using or interacting with this software in any way shape or form, you agree to the license of this software.

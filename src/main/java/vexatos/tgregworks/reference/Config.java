@@ -12,13 +12,20 @@ public class Config {
 			Recipes = "recipe",
 			Global = "global",
 			General = "general";
+
+		public static final String
+			AlloySmelter = "alloysmelter",
+			Extruder = "extruder",
+			Solidifier = "fluidsolidifier",
+			Extractor = "fluidextractor";
 	}
 
 	public static final String
 		Durability = "durability",
 		MiningSpeed = "miningspeed",
 		Attack = "attack",
-		HandleModifier = "handlemodifier";
+		HandleModifier = "handlemodifier",
+		MaterialID = "material-id";
 
 	public static final String
 		StoneboundLevel = Category.OreDictMaterial + ".stoneboundlevel",

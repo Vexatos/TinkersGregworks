@@ -108,7 +108,7 @@ public class ItemTGregPart extends CraftingItem implements IToolPart, IOreDictIt
 	@Override
 	public void getSubItems(Item b, CreativeTabs tab, List list) {
 		for(OreDictMaterial m : TGregworks.registry.toolMaterials) {
-			ItemStack stack = new ItemStack(b, 1, TGregworks.registry.toolMaterials.indexOf(m) + 1);
+			ItemStack stack = new ItemStack(b, 1, TGregworks.registry.matIDs.get(m));
 			NBTTagCompound data = TGregUtils.getTagCompound(stack);
 			data.setString("material", m.mNameInternal);
 			stack.setTagCompound(data);
@@ -155,7 +155,10 @@ public class ItemTGregPart extends CraftingItem implements IToolPart, IOreDictIt
 		}
 		OreDictMaterial m = OreDictMaterial.get(data.getString("material"));
 		if(m != null) {
-			stack.setItemDamage(TGregworks.registry.toolMaterials.indexOf(m) + 1);
+			Integer matID = TGregworks.registry.matIDs.get(m);
+			if(matID != stack.getItemDamage()) {
+				stack.setItemDamage(matID);
+			}
 		}
 	}
 

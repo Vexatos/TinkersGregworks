@@ -7,6 +7,7 @@ import gregapi.data.TD;
 import gregapi.oredict.OreDictMaterial;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.common.config.Property;
 import tconstruct.library.TConstructRegistry;
 import tconstruct.library.crafting.FluidType;
 import vexatos.tgregworks.TGregworks;
@@ -35,12 +36,30 @@ public class TGregRegistry {
 
 	private int getLatestAvailableNumber() {
 		for(int i = latestAvailableNumber; i < 16383; i++) {
-			if(!TConstructRegistry.toolMaterials.containsKey(i)) {
+			if(!TConstructRegistry.toolMaterials.containsKey(i) && !configIDs.contains(i)) {
 				latestAvailableNumber = i + 1;
 				return i;
 			}
 		}
 		throw new RuntimeException("TConstruct tool material registry ran out of IDs!");
+	}
+
+	private final HashMap<Materials, Property> configProps = new HashMap<Materials, Property>();
+	private final ArrayList<Integer> configIDs = new ArrayList<Integer>();
+
+	private int getMaterialID(Materials m) {
+		Property configProp = configProps.get(m);
+		if(configProp == null) {
+			configProp = TGregworks.config.get(Config.onMaterial(Config.MaterialID), m.name(), 0, null, 0, 30000);
+		}
+		final int configID = configProp.getInt();
+		if(configID > 0) {
+			return configID;
+		}
+
+		final int newID = getLatestAvailableNumber();
+		configProp.set(newID);
+		return newID;
 	}
 
 	public TGregRegistry() {
@@ -54,11 +73,14 @@ public class TGregRegistry {
 		for(OreDictMaterial m : OreDictMaterial.MATERIAL_ARRAY) {
 			if(m != null && m.contains(TD.Properties.HAS_TOOL_STATS) && !doesMaterialExist(m) && TGregworks.config.get(Config.Category.Enable, m.mNameInternal, true).getBoolean(true)) {
 				toolMaterials.add(m);
+				Property configProp = TGregworks.config.get(Config.onMaterial(Config.MaterialID), m.name(), 0, null, 0, 100000);
+				configProps.put(m, configProp);
+				configIDs.add(configProp.getInt());
 			}
 		}
 		for(OreDictMaterial m : toolMaterials) {
 			toolMaterialNames.add(m.mNameLocal);
-			int matID = getLatestAvailableNumber();
+			int matID = getMaterialID(m);
 			TConstructRegistry.addToolMaterial(matID, m.mNameInternal, m.mNameLocal, m.mToolQuality,
 				(int) (m.mToolDurability * getGlobalMultiplier(Config.Durability) * getMultiplier(m, Config.Durability)), // Durability
 				(int) (m.mToolSpeed * 100F * getGlobalMultiplier(Config.MiningSpeed) * getMultiplier(m, Config.MiningSpeed)), // Mining speed
@@ -74,6 +96,8 @@ public class TGregRegistry {
 			matIDs.put(m, matID);
 			materialIDMap.put(matID, m);
 		}
+		configProps.clear();
+		configIDs.clear();
 
 		ItemTGregPart.toolMaterialNames = toolMaterialNames;
 	}
