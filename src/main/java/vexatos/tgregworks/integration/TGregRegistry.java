@@ -44,13 +44,13 @@ public class TGregRegistry {
 		throw new RuntimeException("TConstruct tool material registry ran out of IDs!");
 	}
 
-	private final HashMap<Materials, Property> configProps = new HashMap<Materials, Property>();
+	private final HashMap<OreDictMaterial, Property> configProps = new HashMap<OreDictMaterial, Property>();
 	private final ArrayList<Integer> configIDs = new ArrayList<Integer>();
 
-	private int getMaterialID(Materials m) {
+	private int getMaterialID(OreDictMaterial m) {
 		Property configProp = configProps.get(m);
 		if(configProp == null) {
-			configProp = TGregworks.config.get(Config.onMaterial(Config.MaterialID), m.name(), 0, null, 0, 30000);
+			configProp = TGregworks.config.get(Config.onMaterial(Config.MaterialID), m.mNameInternal, 0, null, 0, 30000);
 		}
 		final int configID = configProp.getInt();
 		if(configID > 0) {
@@ -73,13 +73,13 @@ public class TGregRegistry {
 		for(OreDictMaterial m : OreDictMaterial.MATERIAL_ARRAY) {
 			if(m != null && m.contains(TD.Properties.HAS_TOOL_STATS) && !doesMaterialExist(m) && TGregworks.config.get(Config.Category.Enable, m.mNameInternal, true).getBoolean(true)) {
 				toolMaterials.add(m);
-				Property configProp = TGregworks.config.get(Config.onMaterial(Config.MaterialID), m.name(), 0, null, 0, 100000);
+				Property configProp = TGregworks.config.get(Config.onMaterial(Config.MaterialID), m.mNameInternal, 0, null, 0, 100000);
 				configProps.put(m, configProp);
 				configIDs.add(configProp.getInt());
 			}
 		}
 		for(OreDictMaterial m : toolMaterials) {
-			toolMaterialNames.add(m.mNameLocal);
+			toolMaterialNames.add(m.mNameInternal);
 			int matID = getMaterialID(m);
 			TConstructRegistry.addToolMaterial(matID, m.mNameInternal, m.mNameLocal, m.mToolQuality,
 				(int) (m.mToolDurability * getGlobalMultiplier(Config.Durability) * getMultiplier(m, Config.Durability)), // Durability

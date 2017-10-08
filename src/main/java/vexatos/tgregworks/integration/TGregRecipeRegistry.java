@@ -1,18 +1,18 @@
 package vexatos.tgregworks.integration;
 
 import cpw.mods.fml.common.registry.GameRegistry;
-import gregapi.data.CS;
 import gregapi.data.CS.OreDictToolNames;
 import gregapi.data.MT;
 import gregapi.data.OP;
 import gregapi.data.RM;
 import gregapi.oredict.OreDictManager;
 import gregapi.oredict.OreDictMaterial;
-import gregapi.recipes.Recipe.RecipeMap;
+import gregapi.oredict.OreDictMaterialStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.ShapedOreRecipe;
+import net.minecraftforge.oredict.ShapelessOreRecipe;
 import tconstruct.TConstruct;
 import tconstruct.library.TConstructRegistry;
 import tconstruct.library.crafting.CastingRecipe;
@@ -20,6 +20,7 @@ import tconstruct.library.crafting.FluidType;
 import tconstruct.library.crafting.LiquidCasting;
 import tconstruct.library.crafting.PatternBuilder;
 import tconstruct.library.crafting.ToolBuilder;
+import tconstruct.library.tools.DualMaterialToolPart;
 import tconstruct.library.tools.ToolCore;
 import tconstruct.library.tools.ToolMaterial;
 import tconstruct.library.util.IToolPart;
@@ -167,7 +168,7 @@ public class TGregRecipeRegistry {
 			}
 			if(stack != null && ingotStack != null) {
 				if(addIngotToShard) {
-					RM.Extruder.addRecipe2(T, powerRequired,  Math.max(160, m.mToolDurability), ingotStack, new ItemStack(TGregworks.shardCast, 0, 0), stack.copy());
+					RM.Extruder.addRecipe2(T, powerRequired, Math.max(160, m.mToolDurability), ingotStack, new ItemStack(TGregworks.shardCast, 0, 0), stack.copy());
 				}
 				ItemStack halfStack = stack.copy();
 				halfStack.stackSize = 1;
@@ -348,6 +349,15 @@ public class TGregRecipeRegistry {
 		ToolMaterial toolRodMaterial = TConstructRegistry.toolMaterials.get(toolRodMaterialID);
 		ToolMaterial arrowheadMaterial = TConstructRegistry.toolMaterials.get(arrowheadMaterialID);
 		if(toolRodMaterial != null && arrowheadMaterial != null) {
+			OreDictMaterialStack arrowmat = OreDictMaterial.FLUID_MAP.get(fluid.getFluid().getName());
+			if(arrowmat != null) {
+				String arrowhead = OP.toolHeadArrow.dat(arrowmat.mMaterial).toString();
+				GameRegistry.addRecipe(new ShapelessOreRecipe(
+					DualMaterialToolPart.createDualMaterial(TinkerWeaponry.partBolt, toolRodMaterialID, arrowheadMaterialID),
+					toolRod,
+					arrowhead, arrowhead, arrowhead, arrowhead
+				));
+			}
 			/*RA.addFluidSolidifierRecipe( TODO Fluid solidifier recipes
 				toolRod,
 				fluid,
@@ -422,15 +432,15 @@ public class TGregRecipeRegistry {
 				ItemStack stack = p.getPatternItem();
 				if(stack != null && stack.getItem() != null) {
 					for(OreDictMaterial m : castingMaterials) {
-						RM.Extruder.addRecipe2(T,  getPowerRequired(m),800, OP.plate.mat(m, 1), new ItemStack(p.getCounterpart(), 0, Short.MAX_VALUE), stack.copy());
-						RM.Extruder.addRecipe2(T,  getPowerRequired(m),800, OP.plate.mat(m, 1), new ItemStack(TGregworks.registry.toolParts.get(p), 0, Short.MAX_VALUE), stack.copy());
+						RM.Extruder.addRecipe2(T, getPowerRequired(m), 800, OP.plate.mat(m, 1), new ItemStack(p.getCounterpart(), 0, Short.MAX_VALUE), stack.copy());
+						RM.Extruder.addRecipe2(T, getPowerRequired(m), 800, OP.plate.mat(m, 1), new ItemStack(TGregworks.registry.toolParts.get(p), 0, Short.MAX_VALUE), stack.copy());
 					}
 				}
 			}
 			for(OreDictMaterial m : castingMaterials) {
 				FluidStack molten = m.liquid(U, true);
 				if(molten != null && molten.getFluid() != null) {
-					RM.Extruder.addRecipe2(T,getPowerRequired(m), 800, OP.plate.mat(m, 1), new ItemStack(TGregworks.registry.toolParts.get(PartTypes.Chunk), 0, Short.MAX_VALUE), new ItemStack(TGregworks.shardCast, 1, 0));
+					RM.Extruder.addRecipe2(T, getPowerRequired(m), 800, OP.plate.mat(m, 1), new ItemStack(TGregworks.registry.toolParts.get(PartTypes.Chunk), 0, Short.MAX_VALUE), new ItemStack(TGregworks.shardCast, 1, 0));
 				}
 			}
 		}
