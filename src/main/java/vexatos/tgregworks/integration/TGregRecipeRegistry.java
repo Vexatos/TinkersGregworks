@@ -4,6 +4,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import gregapi.data.CS.OreDictToolNames;
 import gregapi.data.MT;
 import gregapi.data.OP;
+import gregapi.data.RM;
 import gregapi.oredict.OreDictManager;
 import gregapi.oredict.OreDictMaterial;
 import gregapi.recipes.Recipe.RecipeMap;
@@ -38,6 +39,7 @@ import vexatos.tgregworks.util.TGregUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static gregapi.data.CS.T;
@@ -105,7 +107,7 @@ public class TGregRecipeRegistry {
 					}
 					if(stack != null) {
 						if(addExtruderRecipes) {
-							RecipeMap.sExtruderRecipes.addRecipe2(T, powerRequired, Math.max(80, m.mToolDurability * price),
+							RM.Extruder.addRecipe2(T, powerRequired, Math.max(80, m.mToolDurability * price),
 								stack.copy(), pattern.copy(), input.copy());
 						}
 						/*if(addSolidifierRecipes) {
@@ -119,7 +121,7 @@ public class TGregRecipeRegistry {
 						stack = getChunk(m, price);
 						if(stack != null) {
 							if(addExtruderRecipes && addShardToToolPart) {
-								RecipeMap.sExtruderRecipes.addRecipe2(T, powerRequired, 80 + (m.mToolDurability * price),
+								RM.Extruder.addRecipe2(T, powerRequired, 80 + (m.mToolDurability * price),
 									stack.copy(), pattern.copy(), input.copy());
 							}
 							/*if(addReverseSmelting) { Handled by GT 6 recycling
@@ -137,7 +139,7 @@ public class TGregRecipeRegistry {
 			}
 			if(stack != null && ingotStack != null) {
 				if(addExtruderRecipes && addIngotToShard) {
-					RecipeMap.sExtruderRecipes.addRecipe2(T, powerRequired, Math.max(160, m.mToolDurability),
+					RM.Extruder.addRecipe2(T, powerRequired, Math.max(160, m.mToolDurability),
 						ingotStack, new ItemStack(TGregworks.shardCast, 0, 0), stack);
 				}
 				/*if(addShardToIngotSmelting) { Handled by GT 6 recycling
@@ -158,13 +160,13 @@ public class TGregRecipeRegistry {
 				}
 			}*/
 				if(TinkerTools.blankPattern != null) {
-					RecipeMap.sExtruderRecipes.addRecipe2(T, Math.round(30 * energyMultiplier), 800, new ItemStack(TinkerTools.blankPattern, 1, 1),
+					RM.Extruder.addRecipe2(T, Math.round(30 * energyMultiplier), 800, new ItemStack(TinkerTools.blankPattern, 1, 1),
 						new ItemStack(TinkerTools.toolShard, 1, TinkerTools.MaterialID.Obsidian), new ItemStack(TGregworks.shardCast, 1, 0));
-					RecipeMap.sExtruderRecipes.addRecipe2(T, Math.round(30 * energyMultiplier), 800, new ItemStack(TinkerTools.blankPattern, 1, 2),
+					RM.Extruder.addRecipe2(T, Math.round(30 * energyMultiplier), 800, new ItemStack(TinkerTools.blankPattern, 1, 2),
 						new ItemStack(TinkerTools.toolShard, 1, TinkerTools.MaterialID.Obsidian), new ItemStack(TGregworks.shardCast, 1, 0));
 				}
 				if(brassstack != null) {
-					RecipeMap.sExtruderRecipes.addRecipe2(T, Math.round(30 * energyMultiplier), 800, brassstack,
+					RM.Extruder.addRecipe2(T, Math.round(30 * energyMultiplier), 800, brassstack,
 						new ItemStack(TinkerTools.toolShard, 1, TinkerTools.MaterialID.Obsidian), new ItemStack(TGregworks.shardCast, 1, 0));
 				}
 			}
@@ -209,7 +211,7 @@ public class TGregRecipeRegistry {
 						TGregworks.repair.registerShardRepairMaterial(m, 1);
 					}
 					if(addIngotRepair) {
-						ArrayList<ItemStack> ingots = OreDictManager.getOres(OP.ingot, m, false);
+						List<ItemStack> ingots = OreDictManager.getOres(OP.ingot, m, false);
 						if(!ingots.isEmpty()) {
 							TGregworks.repair.registerOreDictRepairMaterial(m, OP.ingot.dat(m).toString(), 2);
 						} else if(addGemToolPartRecipes) {

@@ -28,14 +28,22 @@ group= "vexatos.tgregworks" // http://maven.apache.org/guides/mini/guide-naming-
 archivesBaseName = "TGregworks"
 
 repositories {
-    /*maven {
-        name 'CB Maven FS'
-        url "http://chickenbones.net/maven/"
+    maven {
+        name = "gt"
+        url = "http://gregtech.overminddl1.com/"
     }
     maven {
-        name "DVS1 Maven FS'"
-        url 'http://dvs1.progwml6.com/files/maven'
-    }*/
+        name = "forge"
+        url = "http://files.minecraftforge.net/maven"
+    }
+    maven {
+        name = "OC repo"
+        url = "http://maven.cil.li/"
+    }
+    maven {
+        name = "ic2"
+        url = "http://maven.ic2.player.to/"
+    }
 }
 
 configurations {
