@@ -27,7 +27,7 @@ This mod is not compatible with GregTech 6 right now due to the lack of machines
 
 ### Downloads
 
-Downloads can be found [here](http://files.vex.tty.sh/TGregworks/).
+Downloads can be found [here](http://files.vexatos.com/TGregworks/).
 
 ### License:
 
