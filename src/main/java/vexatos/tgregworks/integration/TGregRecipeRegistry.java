@@ -403,8 +403,12 @@ public class TGregRecipeRegistry {
 			ToolBuilder.addCustomToolRecipe(new TGregBowRecipe(partMap.get(PartTypes.CrossbowLimb), partMap.get(PartTypes.CrossbowBody), TinkerWeaponry.bowstring,
 				partMap.get(PartTypes.ToughBind), TinkerWeaponry.crossbow));
 
-			ToolBuilder.addCustomToolRecipe(new TGregAmmoRecipe(partMap.get(PartTypes.ArrowHead), partMap.get(PartTypes.ToolRod), TinkerWeaponry.fletching,
-				TinkerWeaponry.arrowAmmo));
+			{
+				TGregAmmoRecipe arrowRecipe = new TGregAmmoRecipe(partMap.get(PartTypes.ArrowHead), partMap.get(PartTypes.ToolRod), TinkerWeaponry.fletching,
+					TinkerWeaponry.arrowAmmo);
+				arrowRecipe.addHandleItem(TinkerWeaponry.partArrowShaft);
+				ToolBuilder.addCustomToolRecipe(arrowRecipe);
+			}
 			ToolBuilder.addCustomToolRecipe(new TGregToolRecipe(partMap.get(PartTypes.Shuriken), partMap.get(PartTypes.Shuriken),
 				partMap.get(PartTypes.Shuriken), partMap.get(PartTypes.Shuriken), TinkerWeaponry.shuriken));
 			addTGregToolRecipe(TinkerWeaponry.throwingknife, PartTypes.KnifeBlade, PartTypes.ToolRod);
