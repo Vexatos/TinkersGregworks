@@ -13,6 +13,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IIcon;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import tconstruct.library.util.IToolPart;
 import vexatos.tgregworks.TGregworks;
@@ -45,18 +46,16 @@ public class ItemTGregPart extends CraftingItem implements IToolPart {
 		NBTTagCompound data = TGregUtils.getTagCompound(stack);
 		String matName;
 		if(!data.hasKey("material") || Materials.get(data.getString("material")) == Materials._NULL) {
-			matName = "Unknown";
+			matName = StatCollector.translateToLocal("tgregworks.materials.unknown");
 		} else {
-			matName = Materials.get(data.getString("material")).mDefaultLocalName;
+			matName = Materials.get(data.getString("material")).mLocalizedName;
 		}
 
-		matName = matName + " " + type.getPartName();
-		//String material = StatCollector.translateToLocal("tgregworks.parttype." + matName);
-		//String name = StatCollector.translateToLocal("tgregworks.toolpart." + PartTypes.getFromID(stack.getItemDamage()) + "." + matName);
-		//name = name.replaceAll("%%material", material);
+		String name = StatCollector.translateToLocal("tgregworks.toolpart." + type.getID());
+		matName = name.replaceAll("%%material", matName);
 
 		if(stack.getItemDamage() == 0) {
-			matName = matName + " (Deprecated)";
+			matName = matName + StatCollector.translateToLocal("tgregworks.tool.deprecated");
 		}
 
 		return matName;

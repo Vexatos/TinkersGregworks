@@ -2,3 +2,36 @@
 itemGroup.tabTGregworks=Tinkers' Gregworks
 
 item.tgregworks.shardcast.name=Shard Cast
+
+tgregworks.toolpart.0=%%material Pickaxe Head
+tgregworks.toolpart.1=%%material Shovel Head
+tgregworks.toolpart.2=%%material Axe Head
+tgregworks.toolpart.3=%%material Tool Binding
+tgregworks.toolpart.4=%%material Tough Binding
+tgregworks.toolpart.5=%%material Tool Rod
+tgregworks.toolpart.6=%%material Tough Tool Rod
+tgregworks.toolpart.7=%%material Large Plate
+tgregworks.toolpart.8=%%material Sword Blade
+tgregworks.toolpart.9=%%material Wide Guard
+tgregworks.toolpart.10=%%material Hand Guard
+tgregworks.toolpart.11=%%material Crossbar
+tgregworks.toolpart.12=%%material Knife Blade
+tgregworks.toolpart.13=%%material Full Guard
+tgregworks.toolpart.14=%%material Pan
+tgregworks.toolpart.15=%%material Sign Head
+tgregworks.toolpart.16=%%material Chisel Head
+tgregworks.toolpart.17=%%material Scythe Head
+tgregworks.toolpart.18=%%material Broad Axe Head
+tgregworks.toolpart.19=%%material Excavator Head
+tgregworks.toolpart.20=%%material Large Sword Blade
+tgregworks.toolpart.21=%%material Hammer Head
+tgregworks.toolpart.22=%%material Shard
+tgregworks.toolpart.23=%%material Arrow Head
+tgregworks.toolpart.24=%%material Shuriken
+tgregworks.toolpart.25=%%material Crossbow Limb
+tgregworks.toolpart.26=%%material Crossbow Body
+tgregworks.toolpart.27=%%material Bow Limb
+
+tgregworks.tool.deprecated= (Deprecated)
+
+tgregworks.materials.unknown=Unknown

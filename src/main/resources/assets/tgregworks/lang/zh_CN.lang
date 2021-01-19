@@ -1,0 +1,37 @@
+# English lang file
+itemGroup.tabTGregworks=Tinkers' Gregworks
+
+item.tgregworks.shardcast.name=碎片铸模
+
+tgregworks.toolpart.0=%%material镐头
+tgregworks.toolpart.1=%%material铲头
+tgregworks.toolpart.2=%%material斧刃
+tgregworks.toolpart.3=%%material绑定结
+tgregworks.toolpart.4=%%material坚韧绑定结
+tgregworks.toolpart.5=%%material手柄
+tgregworks.toolpart.6=%%material坚韧手柄
+tgregworks.toolpart.7=%%material大板
+tgregworks.toolpart.8=%%material剑刃
+tgregworks.toolpart.9=%%material宽护手
+tgregworks.toolpart.10=%%material护手
+tgregworks.toolpart.11=%%material十字柄
+tgregworks.toolpart.12=%%material刀刃
+tgregworks.toolpart.13=%%material大型护手
+tgregworks.toolpart.14=%%material盘
+tgregworks.toolpart.15=%%material牌板
+tgregworks.toolpart.16=%%material凿刃
+tgregworks.toolpart.17=%%material镰刀刀刃
+tgregworks.toolpart.18=%%material宽斧刃
+tgregworks.toolpart.19=%%material开掘铲头
+tgregworks.toolpart.20=%%material大剑刃
+tgregworks.toolpart.21=%%material锤头
+tgregworks.toolpart.22=%%material碎片
+tgregworks.toolpart.23=%%material箭头
+tgregworks.toolpart.24=%%material回旋镖
+tgregworks.toolpart.25=%%material弩臂
+tgregworks.toolpart.26=%%material弩身
+tgregworks.toolpart.27=%%material弓臂
+
+tgregworks.tool.deprecated= (损坏的)
+
+tgregworks.materials.unknown=未知
