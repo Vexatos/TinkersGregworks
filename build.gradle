@@ -28,30 +28,14 @@ group= "vexatos.tgregworks" // http://maven.apache.org/guides/mini/guide-naming-
 archivesBaseName = "TGregworks"
 
 repositories {
+    /*maven {
+        name 'CB Maven FS'
+        url "http://chickenbones.net/maven/"
+    }
     maven {
-        name = 'Forge'
-        url = 'http://files.minecraftforge.net/maven'
-    }
-    
-    maven { // TConstruct, Mantle
-        name = 'DVS1 Maven FS'
-        url = 'http://dvs1.progwml6.com/files/maven'
-    }
-
-    ivy {
-        name = 'gtnh_download_source_stupid_underscore_typo'
-        artifactPattern("http://downloads.gtnewhorizons.com/Mods_for_Jenkins/[module]_[revision].[ext]")
-    }
-
-    ivy { // GregTech
-        name = 'gtnh_download_source'
-        artifactPattern("http://downloads.gtnewhorizons.com/Mods_for_Jenkins/[module]-[revision].[ext]")
-    }
-
-    ivy { // CoFH Core, TiCToolTips, IguanaTinkerTweaks
-        name = 'gtnh_download_source_dev'
-        artifactPattern("http://downloads.gtnewhorizons.com/Dev-Pack/Files/mods/[module]-[revision].[ext]")
-    }
+        name "DVS1 Maven FS'"
+        url 'http://dvs1.progwml6.com/files/maven'
+    }*/
 }
 
 configurations {
@@ -62,15 +46,11 @@ configurations {
 }
 
 dependencies {
+    //compile "mantle:Mantle:1.7.10-0.3.1.jenkins176:deobf"
     //compile "codechicken:CodeChickenCore:1.7.10-1.0.2.9:dev"
     //compile "codechicken:NotEnoughItems:1.7.10-1.0.2.15:dev"
-    compileOnly "mantle:Mantle:${config.minecraft.version}-${config.mantle.version}:deobf"
-    compileOnly "tconstruct:TConstruct:${config.minecraft.version}-${config.tconstruct.version}:deobf"
-    compileOnly "gregtech:gregtech-${config.gregtech.version}:dev"
-
-    compileOnly name: 'CoFHCore', version: "${config.cofhcore.version}", ext: 'jar'
-    compileOnly name: 'TiCTooltips', version: "mc${config.minecraft.version}-${config.tictooltips.version}", ext: 'jar'
-    compileOnly name: 'IguanaTinkerTweaks', version: "${config.minecraft.version}-${config.iguanatinkertweaks.version}", ext: 'jar'
+    //compile "tconstruct:TConstruct:1.7.10-1.6.0.build638:deobf"
+    provided "com.gregoriust.gregtech:gregtech_1.7.10:5.07.07:dev"
 }
 
 minecraft {
