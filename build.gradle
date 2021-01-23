@@ -9,9 +9,12 @@ buildscript {
             name = "sonatype"
             url = "https://oss.sonatype.org/content/repositories/snapshots/"
         }
+        maven {
+            url = "https://jitpack.io"
+        }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
+        classpath 'com.github.CDAGaming:ForgeGradle:1c670759c5'
     }
 }
 
@@ -39,18 +42,17 @@ repositories {
 }
 
 configurations {
-    provided
     embedded
-    compile.extendsFrom provided, embedded
+    implementation.extendsFrom embedded
     all*.exclude group: "codechicken"
 }
 
 dependencies {
-    //compile "mantle:Mantle:1.7.10-0.3.1.jenkins176:deobf"
-    //compile "codechicken:CodeChickenCore:1.7.10-1.0.2.9:dev"
-    //compile "codechicken:NotEnoughItems:1.7.10-1.0.2.15:dev"
-    //compile "tconstruct:TConstruct:1.7.10-1.6.0.build638:deobf"
-    provided "com.gregoriust.gregtech:gregtech_1.7.10:5.07.07:dev"
+    //implementation "mantle:Mantle:1.7.10-0.3.1.jenkins176:deobf"
+    //implementation "codechicken:CodeChickenCore:1.7.10-1.0.2.9:dev"
+    //implementation "codechicken:NotEnoughItems:1.7.10-1.0.2.15:dev"
+    //implementation "tconstruct:TConstruct:1.7.10-1.6.0.build638:deobf"
+    compileOnly "com.gregoriust.gregtech:gregtech_1.7.10:5.07.07:dev"
 }
 
 minecraft {
@@ -63,15 +65,14 @@ minecraft {
 
 sourceSets {
     main {
-        output.resourcesDir = 'build/classes/main'
+        output.resourcesDir = 'build/classes/java/main'
     }
 }
 
 apply plugin: 'idea'
 idea {
     module {
-        scopes.PROVIDED.plus += [configurations.provided]
-        outputDir = file('build/classes/main')
+        outputDir = file('build/classes/java/main')
     }
 }
 
@@ -104,7 +105,7 @@ task deobfJar(type: Jar) {
     description = 'Creates a jar file containing the non-obfuscated class files'
     classifier = 'deobf'
     destinationDir = file(libDir)
-    from sourceSets.main.output.classesDir
+    from sourceSets.main.output.classesDirs
 }
 
 task apiZip(type: Zip) {
@@ -115,7 +116,7 @@ task apiZip(type: Zip) {
     include 'vexatos/**/api/**'
 }
 
-task makeJars << {
+task makeJars {
     description = 'Creates the mod files'
 }
 
