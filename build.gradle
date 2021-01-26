@@ -39,6 +39,11 @@ repositories {
         name "DVS1 Maven FS'"
         url 'http://dvs1.progwml6.com/files/maven'
     }*/
+
+    ivy { // GregTech
+        name = 'gtnh_download_source'
+        artifactPattern("http://downloads.gtnewhorizons.com/Mods_for_Jenkins/[module]-[revision].[ext]")
+    }
 }
 
 configurations {
@@ -52,7 +57,7 @@ dependencies {
     //implementation "codechicken:CodeChickenCore:1.7.10-1.0.2.9:dev"
     //implementation "codechicken:NotEnoughItems:1.7.10-1.0.2.15:dev"
     //implementation "tconstruct:TConstruct:1.7.10-1.6.0.build638:deobf"
-    compileOnly "com.gregoriust.gregtech:gregtech_1.7.10:5.07.07:dev"
+    implementation "gregtech:gregtech-${config.gregtech.version}:dev"
 }
 
 minecraft {
