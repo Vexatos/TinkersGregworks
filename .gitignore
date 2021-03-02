@@ -9,8 +9,8 @@
 !/.gitignore
 !/README.md
 !/LICENSE.md
-!/build.gradle
+!/build.gradle.kts
 !/gradlew
 !/gradlew.bat
 
-!/build.properties
+!/gradle.properties
