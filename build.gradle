@@ -2,16 +2,16 @@ buildscript {
     repositories {
         mavenCentral()
         maven {
-            name = "gt"
-            url = "https://gregtech.overminddl1.com/"
+            name = "forge"
+            url = "http://files.minecraftforge.net/maven"
         }
         maven {
-            name = "jitpack"
-            url = "https://jitpack.io"
+            name = "sonatype"
+            url = "https://oss.sonatype.org/content/repositories/snapshots/"
         }
     }
     dependencies {
-        classpath "com.github.GTNH2:ForgeGradle:FG_1.2-SNAPSHOT"
+        classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
     }
 }
 
@@ -24,22 +24,18 @@ file "build.properties" withReader {
 }
 
 version = "${config.minecraft.version}-${config.tgregworks.version}"
-group = "vexatos.tgregworks" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+group= "vexatos.tgregworks" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "TGregworks"
 
 repositories {
     /*maven {
         name 'CB Maven FS'
         url "http://chickenbones.net/maven/"
-    }*/
-    maven {
-        name 'Curseforge Maven'
-        url 'http://minecraft.curseforge.com/api/maven/'
     }
     maven {
         name "DVS1 Maven FS'"
         url 'http://dvs1.progwml6.com/files/maven'
-    }
+    }*/
 }
 
 configurations {
@@ -53,11 +49,7 @@ dependencies {
     //compile "mantle:Mantle:1.7.10-0.3.1.jenkins176:deobf"
     //compile "codechicken:CodeChickenCore:1.7.10-1.0.2.9:dev"
     //compile "codechicken:NotEnoughItems:1.7.10-1.0.2.15:dev"
-    compile "tconstruct:TConstruct:1.7.10-1.8.4.build951:deobf"
-    compile "boni:IguanaTinkerTweaks:1.7.10-2.1.6.164:deobf"
-    compile "tic-tooltips:TiCTooltips:mc1.7.10:1.2.5"
-    compile "cofh:CoFHCore:1.7.10R3.0.4:dev"
-    compile "cofh:CoFHLib:1.7.10R3.0.3:dev"
+    //compile "tconstruct:TConstruct:1.7.10-1.6.0.build638:deobf"
     provided "com.gregoriust.gregtech:gregtech_1.7.10:5.07.07:dev"
 }
 
@@ -131,4 +123,3 @@ makeJars.dependsOn clean, build, deobfJar, apiZip
 build.shouldRunAfter clean
 deobfJar.shouldRunAfter build
 apiZip.shouldRunAfter deobfJar
-

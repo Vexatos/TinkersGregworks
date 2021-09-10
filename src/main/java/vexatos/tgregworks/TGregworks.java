@@ -9,6 +9,7 @@ import cpw.mods.fml.common.event.FMLMissingMappingsEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
+import gregtech.api.GregTech_API;
 import gregtech.api.enums.Materials;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -65,6 +66,9 @@ public class TGregworks {
 	public TGregworks() {
 		if(Loader.isModLoaded(Mods.TConstruct)) {
 			log.info("TConstruct detected, initializing Intergalactical integration...");
+		}
+		if(GregTech_API.VERSION < 509) {
+			throw new RuntimeException("Your GregTech version is too old for this edition of the mod! It only works with GregTech 5 Unofficial. Please use the main version of TGregworks or switch to GT5U.");
 		}
 	}
 
