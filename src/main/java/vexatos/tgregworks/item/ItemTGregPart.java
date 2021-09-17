@@ -48,7 +48,7 @@ public class ItemTGregPart extends CraftingItem implements IToolPart {
 		if(!data.hasKey("material") || Materials.get(data.getString("material")) == Materials._NULL) {
 			matName = StatCollector.translateToLocal("tgregworks.materials.unknown");
 		} else {
-			matName = Materials.get(data.getString("material")).mLocalizedName;
+			matName = Materials.get(data.getString("material")).mDefaultLocalName;
 		}
 
 		String name = StatCollector.translateToLocal("tgregworks.toolpart." + type.getPartName().replace(" ", "_").toLowerCase());
