@@ -9,9 +9,6 @@ buildscript {
             name = "jitpack"
             url = "https://jitpack.io"
         }
-        maven {
-            url = "https://jitpack.io"
-        }
     }
     dependencies {
         classpath "com.github.GTNH2:ForgeGradle:FG_1.2-SNAPSHOT"
@@ -46,8 +43,9 @@ repositories {
 }
 
 configurations {
+    provided
     embedded
-    implementation.extendsFrom embedded
+    compile.extendsFrom provided, embedded
     all*.exclude group: "codechicken"
 }
 
@@ -73,19 +71,19 @@ minecraft {
 
 sourceSets {
     main {
-        output.resourcesDir = 'build/classes/java/main'
+        output.resourcesDir = 'build/classes/main'
     }
 }
 
 apply plugin: 'idea'
 idea {
     module {
-        outputDir = file('build/classes/java/main')
+        scopes.PROVIDED.plus += [configurations.provided]
+        outputDir = file('build/classes/main')
     }
 }
 
-processResources
-{
+processResources {
     // this will ensure that this task is redone when the versions change.
     inputs.property "version", project.version
     inputs.property "mcversion", project.minecraft.version
@@ -93,11 +91,11 @@ processResources
     // replace stuff in mcmod.info, nothing else
     from(sourceSets.main.resources.srcDirs) {
         include 'mcmod.info'
-                
+
         // replace version and mcversion
         expand 'version':project.version, 'mcversion':project.minecraft.version
     }
-        
+
     // copy everything else, thats not the mcmod.info
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
@@ -132,4 +130,3 @@ makeJars.dependsOn clean, build, deobfJar, apiZip
 build.shouldRunAfter clean
 deobfJar.shouldRunAfter build
 apiZip.shouldRunAfter deobfJar
-
