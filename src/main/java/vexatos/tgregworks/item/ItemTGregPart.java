@@ -151,7 +151,7 @@ public class ItemTGregPart extends CraftingItem implements IToolPart {
 		Materials m = Materials.get(data.getString("material"));
 		if(m != null) {
 			Integer matID = TGregworks.registry.matIDs.get(m);
-			if(matID != stack.getItemDamage()) {
+			if(matID != null && matID != stack.getItemDamage()) {
 				stack.setItemDamage(matID);
 			}
 		}
