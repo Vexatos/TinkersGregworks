@@ -2,16 +2,16 @@ buildscript {
     repositories {
         mavenCentral()
         maven {
-            name = "forge"
-            url = "http://files.minecraftforge.net/maven"
+            name = "gt"
+            url = "https://gregtech.overminddl1.com/"
         }
         maven {
-            name = "sonatype"
-            url = "https://oss.sonatype.org/content/repositories/snapshots/"
+            name = "jitpack"
+            url = "https://jitpack.io"
         }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
+        classpath "com.github.GTNH2:ForgeGradle:FG_1.2-SNAPSHOT"
     }
 }
 
@@ -24,18 +24,22 @@ file "build.properties" withReader {
 }
 
 version = "${config.minecraft.version}-${config.tgregworks.version}"
-group= "vexatos.tgregworks" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+group = "vexatos.tgregworks" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "TGregworks"
 
 repositories {
     /*maven {
         name 'CB Maven FS'
         url "http://chickenbones.net/maven/"
+    }*/
+    maven {
+        name 'Curseforge Maven'
+        url 'http://minecraft.curseforge.com/api/maven/'
     }
     maven {
         name "DVS1 Maven FS'"
         url 'http://dvs1.progwml6.com/files/maven'
-    }*/
+    }
 }
 
 configurations {
@@ -49,7 +53,11 @@ dependencies {
     //compile "mantle:Mantle:1.7.10-0.3.1.jenkins176:deobf"
     //compile "codechicken:CodeChickenCore:1.7.10-1.0.2.9:dev"
     //compile "codechicken:NotEnoughItems:1.7.10-1.0.2.15:dev"
-    //compile "tconstruct:TConstruct:1.7.10-1.6.0.build638:deobf"
+    compile "tconstruct:TConstruct:1.7.10-1.8.4.build951:deobf"
+    compile "boni:IguanaTinkerTweaks:1.7.10-2.1.6.164:deobf"
+    compile "tic-tooltips:TiCTooltips:mc1.7.10:1.2.5"
+    compile "cofh:CoFHCore:1.7.10R3.0.4:dev"
+    compile "cofh:CoFHLib:1.7.10R3.0.3:dev"
     provided "com.gregoriust.gregtech:gregtech_1.7.10:5.07.07:dev"
 }
 
@@ -75,8 +83,7 @@ idea {
     }
 }
 
-processResources
-{
+processResources {
     // this will ensure that this task is redone when the versions change.
     inputs.property "version", project.version
     inputs.property "mcversion", project.minecraft.version
@@ -84,11 +91,11 @@ processResources
     // replace stuff in mcmod.info, nothing else
     from(sourceSets.main.resources.srcDirs) {
         include 'mcmod.info'
-                
+
         // replace version and mcversion
         expand 'version':project.version, 'mcversion':project.minecraft.version
     }
-        
+
     // copy everything else, thats not the mcmod.info
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
@@ -104,7 +111,7 @@ task deobfJar(type: Jar) {
     description = 'Creates a jar file containing the non-obfuscated class files'
     classifier = 'deobf'
     destinationDir = file(libDir)
-    from sourceSets.main.output.classesDir
+    from sourceSets.main.output.classesDirs
 }
 
 task apiZip(type: Zip) {
@@ -115,7 +122,7 @@ task apiZip(type: Zip) {
     include 'vexatos/**/api/**'
 }
 
-task makeJars << {
+task makeJars {
     description = 'Creates the mod files'
 }
 
