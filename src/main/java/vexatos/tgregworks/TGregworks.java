@@ -20,6 +20,7 @@ import org.apache.logging.log4j.Logger;
 import tconstruct.TConstruct;
 import tconstruct.library.TConstructCreativeTab;
 import tconstruct.library.crafting.ModifyBuilder;
+import tconstruct.tools.items.Pattern;
 import vexatos.tgregworks.integration.TGregRecipeRegistry;
 import vexatos.tgregworks.integration.TGregRegistry;
 import vexatos.tgregworks.integration.TGregRepairRegistry;
@@ -27,6 +28,7 @@ import vexatos.tgregworks.integration.iguanatweakstconstruct.IntegrationITT;
 import vexatos.tgregworks.integration.modifiers.ModTGregRepair;
 import vexatos.tgregworks.integration.smeltery.CastLegacy;
 import vexatos.tgregworks.integration.tictooltips.IntegrationTiCTooltips;
+import vexatos.tgregworks.item.ShardPattern;
 import vexatos.tgregworks.proxy.CommonProxy;
 import vexatos.tgregworks.reference.Config;
 import vexatos.tgregworks.reference.Mods;
@@ -55,7 +57,7 @@ public class TGregworks {
 	public static TGregRecipeRegistry recipes;
 	public static TGregRepairRegistry repair;
 
-	public static Item shardCast;
+	public static ShardPattern shardCast;
 
 	public static IntegrationTiCTooltips ticTooltips;
 	public static IntegrationITT iguanatweakstconstruct;
@@ -98,10 +100,10 @@ public class TGregworks {
 		config.setCategoryComment(Config.onMaterial(Config.ArrowMass), "Values between 0.0 and 10000.0 are allowed. Will be directly multiplied with the internally calculated value.");
 		config.setCategoryComment(Config.onMaterial(Config.ArrowBreakChance), "Values between 0.0 and 10000.0 are allowed. Determines the break chance of arrows.");
 
-		shardCast = new Item().setCreativeTab(tab).setUnlocalizedName("tgregworks.shardcast").setTextureName("tgregworks:cast_shard")
-			.setMaxDamage(0).setHasSubtypes(false).setMaxStackSize(1);
+		shardCast = new ShardPattern(tab);
+		shardCast.setCreativeTab(tab).setUnlocalizedName("tgregworks.shardcast").setTextureName("tgregworks:cast_shard").setMaxDamage(0).setHasSubtypes(false).setMaxStackSize(1);
 		GameRegistry.registerItem(shardCast, "tgregworks.shardcast");
-
+		//shardCast = new Item().setCreativeTab(tab).setUnlocalizedName("tgregworks.shardcast").setTextureName("tgregworks:cast_shard").setMaxDamage(0).setHasSubtypes(false).setMaxStackSize(1);
 		if(!TConstruct.pulsar.isPulseLoaded("Tinkers' Smeltery")) {
 			CastLegacy.preInit();
 		}
