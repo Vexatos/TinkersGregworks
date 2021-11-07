@@ -2,19 +2,16 @@ buildscript {
     repositories {
         mavenCentral()
         maven {
-            name = "forge"
-            url = "http://files.minecraftforge.net/maven"
+            name = "gt"
+            url = "https://gregtech.overminddl1.com/"
         }
         maven {
-            name = "sonatype"
-            url = "https://oss.sonatype.org/content/repositories/snapshots/"
-        }
-        maven {
+            name = "jitpack"
             url = "https://jitpack.io"
         }
     }
     dependencies {
-        classpath 'com.github.CDAGaming:ForgeGradle:1c670759c5'
+        classpath "com.github.GTNH2:ForgeGradle:FG_1.2-SNAPSHOT"
     }
 }
 
@@ -27,37 +24,41 @@ file "build.properties" withReader {
 }
 
 version = "${config.minecraft.version}-${config.tgregworks.version}"
-group= "vexatos.tgregworks" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+group = "vexatos.tgregworks" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "TGregworks"
 
 repositories {
     /*maven {
         name 'CB Maven FS'
         url "http://chickenbones.net/maven/"
+    }*/
+    maven {
+        name 'Curseforge Maven'
+        url 'http://minecraft.curseforge.com/api/maven/'
     }
     maven {
         name "DVS1 Maven FS'"
         url 'http://dvs1.progwml6.com/files/maven'
-    }*/
-
-    ivy { // GregTech
-        name = 'gtnh_download_source'
-        artifactPattern("http://downloads.gtnewhorizons.com/Mods_for_Jenkins/[module]-[revision].[ext]")
     }
 }
 
 configurations {
+    provided
     embedded
-    implementation.extendsFrom embedded
+    compile.extendsFrom provided, embedded
     all*.exclude group: "codechicken"
 }
 
 dependencies {
-    //implementation "mantle:Mantle:1.7.10-0.3.1.jenkins176:deobf"
-    //implementation "codechicken:CodeChickenCore:1.7.10-1.0.2.9:dev"
-    //implementation "codechicken:NotEnoughItems:1.7.10-1.0.2.15:dev"
-    //implementation "tconstruct:TConstruct:1.7.10-1.6.0.build638:deobf"
-    implementation "gregtech:gregtech-${config.gregtech.version}:dev"
+    //compile "mantle:Mantle:1.7.10-0.3.1.jenkins176:deobf"
+    //compile "codechicken:CodeChickenCore:1.7.10-1.0.2.9:dev"
+    //compile "codechicken:NotEnoughItems:1.7.10-1.0.2.15:dev"
+    compile "tconstruct:TConstruct:1.7.10-1.8.4.build951:deobf"
+    compile "boni:IguanaTinkerTweaks:1.7.10-2.1.6.164:deobf"
+    compile "tic-tooltips:TiCTooltips:mc1.7.10:1.2.5"
+    compile "cofh:CoFHCore:1.7.10R3.0.4:dev"
+    compile "cofh:CoFHLib:1.7.10R3.0.3:dev"
+    provided "com.gregoriust.gregtech:gregtech_1.7.10:5.07.07:dev"
 }
 
 minecraft {
@@ -70,19 +71,19 @@ minecraft {
 
 sourceSets {
     main {
-        output.resourcesDir = 'build/classes/java/main'
+        output.resourcesDir = 'build/classes/main'
     }
 }
 
 apply plugin: 'idea'
 idea {
     module {
-        outputDir = file('build/classes/java/main')
+        scopes.PROVIDED.plus += [configurations.provided]
+        outputDir = file('build/classes/main')
     }
 }
 
-processResources
-{
+processResources {
     // this will ensure that this task is redone when the versions change.
     inputs.property "version", project.version
     inputs.property "mcversion", project.minecraft.version
@@ -90,11 +91,11 @@ processResources
     // replace stuff in mcmod.info, nothing else
     from(sourceSets.main.resources.srcDirs) {
         include 'mcmod.info'
-                
+
         // replace version and mcversion
         expand 'version':project.version, 'mcversion':project.minecraft.version
     }
-        
+
     // copy everything else, thats not the mcmod.info
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
@@ -129,4 +130,3 @@ makeJars.dependsOn clean, build, deobfJar, apiZip
 build.shouldRunAfter clean
 deobfJar.shouldRunAfter build
 apiZip.shouldRunAfter deobfJar
-
