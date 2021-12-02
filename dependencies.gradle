@@ -1,0 +1,8 @@
+// Add your dependencies here
+
+dependencies {
+    compile("com.github.GTNewHorizons:TinkersConstruct:master-SNAPSHOT:dev")
+    compile("com.github.GTNewHorizons:IguanaTweaksTConstruct:master-SNAPSHOT:dev")
+    compile("com.github.GTNewHorizons:GT5-Unofficial:master-SNAPSHOT:dev")
+    compile("com.github.GTNewHorizons:TiC-Tooltips:master-SNAPSHOT:dev")
+}
