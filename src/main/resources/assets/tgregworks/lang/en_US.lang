@@ -2,6 +2,7 @@
 itemGroup.tabTGregworks=Tinkers' Gregworks
 
 item.tgregworks.shardcast.name=Shard Cast
+item.tgregworks.shardcast.cast_shard.name=Shard Cast
 
 tgregworks.toolpart.pickaxe_head=%%material Pickaxe Head
 tgregworks.toolpart.shovel_head=%%material Shovel Head
