@@ -3,7 +3,7 @@ buildscript {
         mavenCentral()
         maven {
             name = "forge"
-            url = "http://files.minecraftforge.net/maven"
+            url = "https://maven.minecraftforge.net/"
         }
         maven {
             name = "sonatype"
@@ -14,7 +14,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'com.github.CDAGaming:ForgeGradle:1c670759c5'
+        classpath 'com.github.GTNewHorizons:ForgeGradle:1.2.4'
     }
 }
 
@@ -40,9 +40,9 @@ repositories {
         url 'http://dvs1.progwml6.com/files/maven'
     }*/
 
-    ivy { // GregTech
+    maven {
         name = 'gtnh_download_source'
-        artifactPattern("http://downloads.gtnewhorizons.com/Mods_for_Jenkins/[module]-[revision].[ext]")
+        url "http://jenkins.usrv.eu:8081/nexus/content/repositories/releases"
     }
 }
 
@@ -57,7 +57,7 @@ dependencies {
     //implementation "codechicken:CodeChickenCore:1.7.10-1.0.2.9:dev"
     //implementation "codechicken:NotEnoughItems:1.7.10-1.0.2.15:dev"
     //implementation "tconstruct:TConstruct:1.7.10-1.6.0.build638:deobf"
-    implementation "gregtech:gregtech-${config.gregtech.version}:dev"
+    implementation "com.github.GTNewHorizons:GT5-Unofficial:${config.gregtech.version}:dev"
 }
 
 minecraft {
