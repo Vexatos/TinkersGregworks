@@ -78,7 +78,7 @@ public class TGregRegistry {
 		for(Materials m : toolMaterials) {
 			toolMaterialNames.add(m.mDefaultLocalName);
 			int matID = getMaterialID(m);
-			TConstructRegistry.addToolMaterial(matID, m.name(), m.mDefaultLocalName, m.mToolQuality,
+			TConstructRegistry.addToolMaterial(matID, m.name(), m.mLocalizedName, m.mToolQuality,
 				(int) (m.mDurability * getGlobalMultiplier(Config.Durability) * getMultiplier(m, Config.Durability)), // Durability
 				(int) (m.mToolSpeed * 100F * getGlobalMultiplier(Config.MiningSpeed) * getMultiplier(m, Config.MiningSpeed)), // Mining speed
 				(int) (m.mToolQuality * getGlobalMultiplier(Config.Attack) * getMultiplier(m, Config.Attack)), // Attack
