@@ -6,6 +6,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.world.World;
 import net.minecraftforge.oredict.RecipeSorter;
+
 import tconstruct.library.tools.DualMaterialToolPart;
 import tconstruct.library.util.IToolPart;
 import tconstruct.weaponry.TinkerWeaponry;
@@ -17,79 +18,84 @@ import vexatos.tgregworks.reference.PartTypes;
  * @author SlimeKnights, Vexatos
  */
 public class TGregAlternateBoltRecipe implements IRecipe {
-	static {
-		// register the recipe with the recipesorter
-		RecipeSorter.register(Mods.TGregworks + ":part", TGregAlternateBoltRecipe.class, RecipeSorter.Category.SHAPELESS, "");
-	}
 
-	protected ItemStack outputPart;
+    static {
+        // register the recipe with the recipesorter
+        RecipeSorter.register(
+                Mods.TGregworks + ":part",
+                TGregAlternateBoltRecipe.class,
+                RecipeSorter.Category.SHAPELESS,
+                "");
+    }
 
-	@Override
-	public boolean matches(InventoryCrafting inventoryCrafting, World world) {
-		outputPart = null;
-		ItemStack rod = null;
-		ItemStack head = null;
+    protected ItemStack outputPart;
 
-		for(int i = 0; i < inventoryCrafting.getSizeInventory(); i++) {
-			ItemStack slot = inventoryCrafting.getStackInSlot(i);
-			// empty slot
-			if(slot == null) {
-				continue;
-			}
+    @Override
+    public boolean matches(InventoryCrafting inventoryCrafting, World world) {
+        outputPart = null;
+        ItemStack rod = null;
+        ItemStack head = null;
 
-			// is it the tool?
-			if(isEqualType(PartTypes.ArrowHead, slot.getItem())) {
-				// only one arrowhead
-				if(head != null) {
-					return false;
-				}
+        for (int i = 0; i < inventoryCrafting.getSizeInventory(); i++) {
+            ItemStack slot = inventoryCrafting.getStackInSlot(i);
+            // empty slot
+            if (slot == null) {
+                continue;
+            }
 
-				head = slot;
-			} else if(isEqualType(PartTypes.ToolRod, slot.getItem())) {
-				// only one rod
-				if(rod != null) {
-					return false;
-				}
+            // is it the tool?
+            if (isEqualType(PartTypes.ArrowHead, slot.getItem())) {
+                // only one arrowhead
+                if (head != null) {
+                    return false;
+                }
 
-				rod = slot;
-			} else {
-				// unknown object
-				return false;
-			}
-		}
+                head = slot;
+            } else if (isEqualType(PartTypes.ToolRod, slot.getItem())) {
+                // only one rod
+                if (rod != null) {
+                    return false;
+                }
 
-		if(rod == null || head == null) {
-			return false;
-		}
+                rod = slot;
+            } else {
+                // unknown object
+                return false;
+            }
+        }
 
-		// craft the bolt
-		int mat1 = ((IToolPart) rod.getItem()).getMaterialID(rod);
-		int mat2 = ((IToolPart) head.getItem()).getMaterialID(head);
+        if (rod == null || head == null) {
+            return false;
+        }
 
-		outputPart = DualMaterialToolPart.createDualMaterial(TinkerWeaponry.partBolt, mat1, mat2);
+        // craft the bolt
+        int mat1 = ((IToolPart) rod.getItem()).getMaterialID(rod);
+        int mat2 = ((IToolPart) head.getItem()).getMaterialID(head);
 
-		return true;
-	}
+        outputPart = DualMaterialToolPart.createDualMaterial(TinkerWeaponry.partBolt, mat1, mat2);
 
-	protected boolean isEqualType(PartTypes part, Item input) {
-		if(input instanceof ItemTGregPart) {
-			return part == ((ItemTGregPart) input).getType();
-		}
-		return input == part.getCounterpart();
-	}
+        return true;
+    }
 
-	@Override
-	public ItemStack getCraftingResult(InventoryCrafting inventory) {
-		return outputPart;
-	}
+    protected boolean isEqualType(PartTypes part, Item input) {
+        if (input instanceof ItemTGregPart) {
+            return part == ((ItemTGregPart) input).getType();
+        }
+        return input == part.getCounterpart();
+    }
 
-	@Override
-	public int getRecipeSize() {
-		return 2;
-	}
+    @Override
+    public ItemStack getCraftingResult(InventoryCrafting inventory) {
+        return outputPart;
+    }
 
-	@Override
-	public ItemStack getRecipeOutput() {
-		return outputPart;
-	}
+    @Override
+    public int getRecipeSize() {
+        return 2;
+    }
+
+    @Override
+    public ItemStack getRecipeOutput() {
+        return outputPart;
+    }
 }
