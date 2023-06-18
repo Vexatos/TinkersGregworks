@@ -3,8 +3,8 @@ package vexatos.tgregworks.integration.recipe.tconstruct;
 import net.minecraft.block.Block;
 import net.minecraftforge.fluids.Fluid;
 
-import tconstruct.library.crafting.FluidType;
 import gregtech.api.enums.Materials;
+import tconstruct.library.crafting.FluidType;
 
 /**
  * @author Vexatos

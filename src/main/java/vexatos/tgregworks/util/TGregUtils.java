@@ -3,9 +3,9 @@ package vexatos.tgregworks.util;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
+import gregtech.api.enums.Materials;
 import vexatos.tgregworks.TGregworks;
 import vexatos.tgregworks.reference.PartTypes;
-import gregtech.api.enums.Materials;
 
 /**
  * @author Vexatos

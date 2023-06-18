@@ -9,6 +9,12 @@ import net.minecraft.util.MathHelper;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 
+import cpw.mods.fml.common.registry.GameRegistry;
+import gregtech.api.enums.GT_Values;
+import gregtech.api.enums.Materials;
+import gregtech.api.enums.OrePrefixes;
+import gregtech.api.enums.ToolDictNames;
+import gregtech.api.util.GT_OreDictUnificator;
 import tconstruct.TConstruct;
 import tconstruct.library.TConstructRegistry;
 import tconstruct.library.crafting.*;
@@ -28,12 +34,6 @@ import vexatos.tgregworks.reference.Config;
 import vexatos.tgregworks.reference.PartTypes;
 import vexatos.tgregworks.reference.Pattern.MetalPatterns;
 import vexatos.tgregworks.util.TGregUtils;
-import cpw.mods.fml.common.registry.GameRegistry;
-import gregtech.api.enums.GT_Values;
-import gregtech.api.enums.Materials;
-import gregtech.api.enums.OrePrefixes;
-import gregtech.api.enums.ToolDictNames;
-import gregtech.api.util.GT_OreDictUnificator;
 
 /**
  * @author SlimeKnights, Vexatos

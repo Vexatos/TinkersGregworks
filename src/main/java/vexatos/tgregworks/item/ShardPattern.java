@@ -1,10 +1,9 @@
 package vexatos.tgregworks.item;
 
-import mantle.items.abstracts.CraftingItem;
-
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 
+import mantle.items.abstracts.CraftingItem;
 import tconstruct.library.crafting.PatternBuilder;
 import tconstruct.library.util.IPattern;
 

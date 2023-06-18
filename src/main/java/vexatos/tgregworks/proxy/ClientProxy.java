@@ -1,8 +1,8 @@
 package vexatos.tgregworks.proxy;
 
+import gregtech.api.enums.Materials;
 import tconstruct.library.client.TConstructClientRegistry;
 import vexatos.tgregworks.TGregworks;
-import gregtech.api.enums.Materials;
 
 /**
  * @author Vexatos

@@ -3,8 +3,8 @@ package vexatos.tgregworks.integration.iguanatweakstconstruct;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
-import vexatos.tgregworks.integration.modifiers.ModTGregRepair;
 import iguanaman.iguanatweakstconstruct.reference.Config;
+import vexatos.tgregworks.integration.modifiers.ModTGregRepair;
 
 /**
  * Copied from IguanaTweaksTConstruct to support that mod's limited tool repair config option. All credits go to their

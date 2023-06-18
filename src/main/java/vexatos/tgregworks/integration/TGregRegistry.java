@@ -7,6 +7,9 @@ import java.util.List;
 
 import net.minecraftforge.common.config.Property;
 
+import cpw.mods.fml.common.registry.GameRegistry;
+import gregtech.api.GregTech_API;
+import gregtech.api.enums.Materials;
 import tconstruct.library.TConstructRegistry;
 import tconstruct.library.crafting.FluidType;
 import vexatos.tgregworks.TGregworks;
@@ -14,9 +17,6 @@ import vexatos.tgregworks.integration.recipe.tconstruct.TGregFluidType;
 import vexatos.tgregworks.item.ItemTGregPart;
 import vexatos.tgregworks.reference.Config;
 import vexatos.tgregworks.reference.PartTypes;
-import cpw.mods.fml.common.registry.GameRegistry;
-import gregtech.api.GregTech_API;
-import gregtech.api.enums.Materials;
 
 /**
  * @author Vexatos
@@ -109,8 +109,7 @@ public class TGregRegistry {
                 m.mName,
                 m.mLocalizedName,
                 m.mToolQuality,
-                (int) (m.mDurability * getGlobalMultiplier(Config.Durability)
-                        * getMultiplier(m, Config.Durability)), // Durability
+                (int) (m.mDurability * getGlobalMultiplier(Config.Durability) * getMultiplier(m, Config.Durability)), // Durability
                 (int) (m.mToolSpeed * 100F
                         * getGlobalMultiplier(Config.MiningSpeed)
                         * getMultiplier(m, Config.MiningSpeed)), // Mining speed
