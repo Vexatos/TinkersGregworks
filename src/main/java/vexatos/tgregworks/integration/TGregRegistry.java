@@ -102,7 +102,7 @@ public class TGregRegistry {
                             * getGlobalMultiplier(Config.MiningSpeed)
                             * getMultiplier(m, Config.MiningSpeed)), // Mining speed
                     (int) (m.mToolQuality * getGlobalMultiplier(Config.Attack) * getMultiplier(m, Config.Attack)), // Attack
-                    (m.mToolQuality - 0.5F) * getGlobalMultiplier(Config.HandleModifier)
+                    (sanitizeToolQuality(m.mToolQuality) - 0.5F) * getGlobalMultiplier(Config.HandleModifier)
                             * getMultiplier(m, Config.HandleModifier), // Handle Modifier
                     getReinforcedLevel(m),
                     getStoneboundLevel(m),
@@ -110,10 +110,10 @@ public class TGregRegistry {
                     (m.getRGBA()[0] << 16) | (m.getRGBA()[1] << 8) | (m.getRGBA()[2]));
             TConstructRegistry.addBowMaterial(
                     matID,
-                    (int) ((float) m.mToolQuality * 10F
+                    (int) (sanitizeToolQuality(m.mToolQuality) * 10F
                             * getGlobalMultiplier(Config.BowDrawSpeed)
                             * getMultiplier(m, Config.BowDrawSpeed)),
-                    (((float) m.mToolQuality) - 0.5F) * getGlobalMultiplier(Config.BowFlightSpeed)
+                    (sanitizeToolQuality(m.mToolQuality) - 0.5F) * getGlobalMultiplier(Config.BowFlightSpeed)
                             * getMultiplier(m, Config.BowFlightSpeed));
             TConstructRegistry.addArrowMaterial(
                     matID,
@@ -127,6 +127,13 @@ public class TGregRegistry {
         configIDs.clear();
 
         ItemTGregPart.toolMaterialNames = toolMaterialNames;
+    }
+
+    /**
+     * {@link Materials#mToolQuality} may be 0, which can be problematic for some stats.
+     */
+    private static int sanitizeToolQuality(int toolQuality) {
+        return Math.max(toolQuality, 1);
     }
 
     public HashMap<Materials, TGregFluidType> toolMaterialFluidTypes = new HashMap<Materials, TGregFluidType>();
