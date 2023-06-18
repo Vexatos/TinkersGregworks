@@ -49,7 +49,7 @@ public class TGregUtils {
                 amount,
                 TGregworks.registry.matIDs.get(m));
         NBTTagCompound data = TGregUtils.getTagCompound(stack);
-        data.setString("material", m.name());
+        data.setString("material", m.mName);
         stack.setTagCompound(data);
         return stack;
     }

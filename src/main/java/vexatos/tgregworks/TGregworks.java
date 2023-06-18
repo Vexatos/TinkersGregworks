@@ -148,7 +148,7 @@ public class TGregworks {
         {
             ItemStack stack = new ItemStack(registry.toolParts.get(PartTypes.LargeSwordBlade));
             NBTTagCompound data = TGregUtils.getTagCompound(stack);
-            data.setString("material", Materials.Osmiridium.name());
+            data.setString("material", Materials.Osmiridium.mName);
             stack.setTagCompound(data);
             TGregworks.tab.init(stack);
         }

@@ -114,7 +114,7 @@ public class ItemTGregPart extends CraftingItem implements IToolPart {
         for (Materials m : TGregworks.registry.toolMaterials) {
             ItemStack stack = new ItemStack(b, 1, TGregworks.registry.matIDs.get(m));
             NBTTagCompound data = TGregUtils.getTagCompound(stack);
-            data.setString("material", m.name());
+            data.setString("material", m.mName);
             stack.setTagCompound(data);
             list.add(stack);
         }
