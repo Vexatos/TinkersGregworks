@@ -78,9 +78,9 @@ public class TGregRegistry {
 		for(Materials m : toolMaterials) {
 			toolMaterialNames.add(m.mDefaultLocalName);
 			int matID = getMaterialID(m);
-            addToolMaterial(matID, m);
-            addBowMaterial(matID, m);
-            addArrowMaterial(matID, m);
+			addToolMaterial(matID, m);
+			addBowMaterial(matID, m);
+			addArrowMaterial(matID, m);
 			matIDs.put(m, matID);
 			materialIDMap.put(matID, m);
 		}
@@ -90,33 +90,33 @@ public class TGregRegistry {
 		ItemTGregPart.toolMaterialNames = toolMaterialNames;
 	}
 
-    public void addToolMaterial(int matID, Materials m) {
-			TConstructRegistry.addToolMaterial(matID, m.name(), m.mLocalizedName, m.mToolQuality,
-				(int) (m.mDurability * getGlobalMultiplier(Config.Durability) * getMultiplier(m, Config.Durability)), // Durability
-				(int) (m.mToolSpeed * 100F * getGlobalMultiplier(Config.MiningSpeed) * getMultiplier(m, Config.MiningSpeed)), // Mining speed
-				(int) (m.mToolQuality * getGlobalMultiplier(Config.Attack) * getMultiplier(m, Config.Attack)), // Attack
-				(sanitizeToolQuality(m.mToolQuality) - 0.5F) * getGlobalMultiplier(Config.HandleModifier) * getMultiplier(m, Config.HandleModifier), // Handle Modifier
-				getReinforcedLevel(m), getStoneboundLevel(m), "", (m.getRGBA()[0] << 16) | (m.getRGBA()[1] << 8) | (m.getRGBA()[2]));
-    }
+	public void addToolMaterial(int matID, Materials m) {
+		TConstructRegistry.addToolMaterial(matID, m.name(), m.mLocalizedName, m.mToolQuality,
+			(int) (m.mDurability * getGlobalMultiplier(Config.Durability) * getMultiplier(m, Config.Durability)), // Durability
+			(int) (m.mToolSpeed * 100F * getGlobalMultiplier(Config.MiningSpeed) * getMultiplier(m, Config.MiningSpeed)), // Mining speed
+			(int) (m.mToolQuality * getGlobalMultiplier(Config.Attack) * getMultiplier(m, Config.Attack)), // Attack
+			(sanitizeToolQuality(m.mToolQuality) - 0.5F) * getGlobalMultiplier(Config.HandleModifier) * getMultiplier(m, Config.HandleModifier), // Handle Modifier
+			getReinforcedLevel(m), getStoneboundLevel(m), "", (m.getRGBA()[0] << 16) | (m.getRGBA()[1] << 8) | (m.getRGBA()[2]));
+	}
 
-    public void addBowMaterial(int matID, Materials m) {
-			TConstructRegistry.addBowMaterial(matID,
-				(int) (sanitizeToolQuality(m.mToolQuality) * 10F * getGlobalMultiplier(Config.BowDrawSpeed) * getMultiplier(m, Config.BowDrawSpeed)),
-				(sanitizeToolQuality(m.mToolQuality) - 0.5F) * getGlobalMultiplier(Config.BowFlightSpeed) * getMultiplier(m, Config.BowFlightSpeed));
-    }
+	public void addBowMaterial(int matID, Materials m) {
+		TConstructRegistry.addBowMaterial(matID,
+			(int) (sanitizeToolQuality(m.mToolQuality) * 10F * getGlobalMultiplier(Config.BowDrawSpeed) * getMultiplier(m, Config.BowDrawSpeed)),
+			(sanitizeToolQuality(m.mToolQuality) - 0.5F) * getGlobalMultiplier(Config.BowFlightSpeed) * getMultiplier(m, Config.BowFlightSpeed));
+	}
 
-    public void addArrowMaterial(int matID, Materials m) {
-			TConstructRegistry.addArrowMaterial(matID,
-				(float) ((((double) m.getMass()) / 10F) * getGlobalMultiplier(Config.ArrowMass) * getMultiplier(m, Config.ArrowMass)),
-				getGlobalMultiplier(Config.ArrowBreakChance, 0.9) * getMultiplier(m, Config.ArrowBreakChance));
-    }
+	public void addArrowMaterial(int matID, Materials m) {
+		TConstructRegistry.addArrowMaterial(matID,
+			(float) ((((double) m.getMass()) / 10F) * getGlobalMultiplier(Config.ArrowMass) * getMultiplier(m, Config.ArrowMass)),
+			getGlobalMultiplier(Config.ArrowBreakChance, 0.9) * getMultiplier(m, Config.ArrowBreakChance));
+	}
 
-    /**
-     * {@link Materials#mToolQuality} may be 0, which can be problematic for some stats.
-     */
-    private static int sanitizeToolQuality(int toolQuality) {
-        return Math.max(toolQuality, 1);
-    }
+	/**
+	 * {@link Materials#mToolQuality} may be 0, which can be problematic for some stats.
+	 */
+	private static int sanitizeToolQuality(int toolQuality) {
+		return Math.max(toolQuality, 1);
+	}
 
 	public HashMap<Materials, TGregFluidType> toolMaterialFluidTypes = new HashMap<Materials, TGregFluidType>();
 
@@ -256,7 +256,7 @@ public class TGregRegistry {
 
 	public int getReinforcedLevel(Materials m) {
 		return TGregworks.config.get(Config.ReinforcedLevel, m.name(),
-			reinforced1Mats.contains(m) ? 1 : reinforced2Mats.contains(m) ? 2 : m == Materials.Osmiridium ? 3 : 0, null, 0, 3)
+				reinforced1Mats.contains(m) ? 1 : reinforced2Mats.contains(m) ? 2 : m == Materials.Osmiridium ? 3 : 0, null, 0, 3)
 			.getInt(reinforced1Mats.contains(m) ? 1 : reinforced2Mats.contains(m) ? 2 : m == Materials.Osmiridium ? 3 : 0);
 	}
 
