@@ -1,0 +1,38 @@
+# Ukrainian lang file
+itemGroup.tabTGregworks=Tinkers' Gregworks
+
+item.tgregworks.shardcast.name=Злипок уламку
+item.tgregworks.shardcast.cast_shard.name=Злипок уламку
+
+tgregworks.toolpart.pickaxe_head=%%material навершя кайла
+tgregworks.toolpart.shovel_head=%%material навершя лопати
+tgregworks.toolpart.axe_head=%%material навершя сокири
+tgregworks.toolpart.tool_binding=%%material кріплення
+tgregworks.toolpart.tough_binding=%%material жорсткого кріплення
+tgregworks.toolpart.tool_rod=%%material жорсткого стрижня
+tgregworks.toolpart.tough_tool_rod=%%material жорсткого стрижня
+tgregworks.toolpart.large_plate=%%material велика плита
+tgregworks.toolpart.sword_blade=%%material лезо меча
+tgregworks.toolpart.wide_guard=%%material широка гарда
+tgregworks.toolpart.hand_guard=%%material мала гарда
+tgregworks.toolpart.crossbar=%%material поперечина
+tgregworks.toolpart.knife_blade=%%material лезо ножа
+tgregworks.toolpart.full_guard=%%material повна гарда
+tgregworks.toolpart.pan=%%material сковорода
+tgregworks.toolpart.sign_head=%%material широка дошка
+tgregworks.toolpart.chisel_head=%%material навершя долота
+tgregworks.toolpart.scythe_head=%%material навершя коси
+tgregworks.toolpart.broad_axe_head=%%material велике навершя сокири
+tgregworks.toolpart.excavator_head=%%material навершя екскаватора
+tgregworks.toolpart.large_sword_blade=%%material велике лезо
+tgregworks.toolpart.hammer_head=%%material навершя молота
+tgregworks.toolpart.shard=%%material уламок
+tgregworks.toolpart.arrow_head=%%material накінечник стріли
+tgregworks.toolpart.shuriken=%%material сюрікена
+tgregworks.toolpart.crossbow_limb=%%material плеча арбалета
+tgregworks.toolpart.crossbow_body=%%material основи арбалета
+tgregworks.toolpart.bow_limb=%%material плеча лука
+
+tgregworks.tool.deprecated= (Застаріле)
+
+tgregworks.materials.unknown=Невідоме
