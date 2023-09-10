@@ -3,14 +3,13 @@ package vexatos.tgregworks.integration;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
-import vexatos.tgregworks.TGregworks;
-import vexatos.tgregworks.reference.PartTypes;
-import vexatos.tgregworks.util.TGregUtils;
-
 import com.google.common.collect.HashMultimap;
 
 import gregtech.api.enums.Materials;
 import gregtech.api.util.GT_OreDictUnificator;
+import vexatos.tgregworks.TGregworks;
+import vexatos.tgregworks.reference.PartTypes;
+import vexatos.tgregworks.util.TGregUtils;
 
 /**
  * @author Vexatos

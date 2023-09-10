@@ -7,10 +7,10 @@ import java.util.List;
 
 import net.minecraft.item.Item;
 
+import cpw.mods.fml.common.Optional;
 import vexatos.tgregworks.TGregworks;
 import vexatos.tgregworks.reference.Mods;
 import vexatos.tgregworks.reference.PartTypes;
-import cpw.mods.fml.common.Optional;
 
 /**
  * @author Vexatos
