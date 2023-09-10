@@ -3,13 +3,13 @@ package vexatos.tgregworks.integration.smeltery;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
+import cpw.mods.fml.common.event.FMLMissingMappingsEvent;
+import cpw.mods.fml.common.registry.GameRegistry;
 import tconstruct.library.TConstructRegistry;
 import tconstruct.smeltery.TinkerSmeltery;
 import tconstruct.smeltery.items.MetalPattern;
 import vexatos.tgregworks.TGregworks;
 import vexatos.tgregworks.reference.Mods;
-import cpw.mods.fml.common.event.FMLMissingMappingsEvent;
-import cpw.mods.fml.common.registry.GameRegistry;
 
 /**
  * @author Vexatos

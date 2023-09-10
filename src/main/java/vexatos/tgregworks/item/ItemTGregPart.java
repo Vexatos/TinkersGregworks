@@ -3,8 +3,6 @@ package vexatos.tgregworks.item;
 import java.util.ArrayList;
 import java.util.List;
 
-import mantle.items.abstracts.CraftingItem;
-
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
@@ -17,13 +15,14 @@ import net.minecraft.util.IIcon;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import gregtech.api.enums.Materials;
+import mantle.items.abstracts.CraftingItem;
 import tconstruct.library.util.IToolPart;
 import vexatos.tgregworks.TGregworks;
 import vexatos.tgregworks.reference.PartTypes;
 import vexatos.tgregworks.util.TGregUtils;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import gregtech.api.enums.Materials;
 
 /**
  * @author Vexatos

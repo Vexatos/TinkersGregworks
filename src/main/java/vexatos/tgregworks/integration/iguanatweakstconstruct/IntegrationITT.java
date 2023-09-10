@@ -1,10 +1,10 @@
 package vexatos.tgregworks.integration.iguanatweakstconstruct;
 
+import iguanaman.iguanatweakstconstruct.IguanaTweaksTConstruct;
+import iguanaman.iguanatweakstconstruct.reference.Config;
 import tconstruct.library.crafting.ModifyBuilder;
 import vexatos.tgregworks.TGregworks;
 import vexatos.tgregworks.integration.modifiers.ModTGregRepair;
-import iguanaman.iguanatweakstconstruct.IguanaTweaksTConstruct;
-import iguanaman.iguanatweakstconstruct.reference.Config;
 
 /**
  * @author Vexatos
