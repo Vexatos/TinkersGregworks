@@ -38,7 +38,7 @@ import vexatos.tgregworks.util.TGregUtils;
 /**
  * @author Vexatos
  */
-@Mod(modid = Mods.TGregworks, name = Mods.TGregworks_NAME, version = "@VERSION@",
+@Mod(modid = Mods.TGregworks, name = Mods.TGregworks_NAME, version = Tags.VERSION,
 	dependencies = "required-after:" + Mods.TConstruct + "@[1.7.10-1.8.6b.build977,);"
 		+ "required-after:" + Mods.GregTech + "@[MC1710];"
 		+ "before:" + Mods.TiCTooltips + "@[1.2.4,)")
