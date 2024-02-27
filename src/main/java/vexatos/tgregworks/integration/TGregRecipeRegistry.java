@@ -35,6 +35,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import static gregtech.api.recipe.RecipeCategories.alloySmelterRecycling;
+import static gregtech.api.recipe.RecipeCategories.ticBoltMolding;
+import static gregtech.api.recipe.RecipeCategories.ticPartExtruding;
 import static gregtech.api.recipe.RecipeMaps.alloySmelterRecipes;
 import static gregtech.api.recipe.RecipeMaps.extruderRecipes;
 import static gregtech.api.recipe.RecipeMaps.fluidExtractionRecipes;
@@ -125,6 +128,7 @@ public class TGregRecipeRegistry {
                         .itemOutputs(input.copy())
                         .duration(Math.max(80, m.mDurability * price))
                         .eut(powerRequired)
+                        .recipeCategory(ticPartExtruding)
                         .addTo(extruderRecipes);
                 }
                 {
@@ -156,6 +160,7 @@ public class TGregRecipeRegistry {
                         .itemOutputs(input.copy())
                         .duration(80 + (m.mDurability * price))
                         .eut(powerRequired)
+                        .recipeCategory(ticPartExtruding)
                         .addTo(extruderRecipes);
                 }
                 if (addReverseSmelting) {
@@ -164,6 +169,7 @@ public class TGregRecipeRegistry {
                         .itemOutputs(stack.copy())
                         .duration(80 + (m.mDurability * price))
                         .eut(powerRequired)
+                        .recipeCategory(alloySmelterRecycling)
                         .addTo(alloySmelterRecipes);
                 }
             }
@@ -179,6 +185,7 @@ public class TGregRecipeRegistry {
                     .itemOutputs(stack.copy())
                     .duration(Math.max(160, m.mDurability))
                     .eut(powerRequired)
+                    .recipeCategory(ticPartExtruding)
                     .addTo(extruderRecipes);
             }
             ItemStack halfStack = stack.copy();
@@ -209,6 +216,7 @@ public class TGregRecipeRegistry {
                     .itemOutputs(ingotStack.copy())
                     .duration(Math.max(160, m.mDurability))
                     .eut(powerRequired)
+                    .recipeCategory(alloySmelterRecycling)
                     .addTo(alloySmelterRecipes);
             }
         }
@@ -223,6 +231,7 @@ public class TGregRecipeRegistry {
                         .itemOutputs(new ItemStack(TGregworks.shardCast, 1, 0))
                         .duration(800)
                         .eut(Math.round(30 * energyMultiplier))
+                        .recipeCategory(ticPartExtruding)
                         .addTo(extruderRecipes);
                     GT_Values.RA.stdBuilder()
                         .itemInputs(new ItemStack(TinkerTools.blankPattern, 1, 2),
@@ -230,6 +239,7 @@ public class TGregRecipeRegistry {
                         .itemOutputs(new ItemStack(TGregworks.shardCast, 1, 0))
                         .duration(800)
                         .eut(Math.round(30 * energyMultiplier))
+                        .recipeCategory(ticPartExtruding)
                         .addTo(extruderRecipes);
 				}
 				if(brassstack != null && !addCastExtruderRecipes) {
@@ -238,6 +248,7 @@ public class TGregRecipeRegistry {
                         .itemOutputs(new ItemStack(TGregworks.shardCast, 1, 0))
                         .duration(800)
                         .eut(Math.round(30 * energyMultiplier))
+                        .recipeCategory(ticPartExtruding)
                         .addTo(extruderRecipes);
 				}
 			}
@@ -383,6 +394,7 @@ public class TGregRecipeRegistry {
                 .itemOutputs(DualMaterialToolPart.createDualMaterial(TinkerWeaponry.partBolt, toolRodMaterialID, arrowheadMaterialID))
                 .duration(80 + (toolRodMaterial.durability + arrowheadMaterial.durability) * 2)
                 .eut(Math.max(getPowerRequired(toolRodMaterial), getPowerRequired(arrowheadMaterial)))
+                .recipeCategory(ticBoltMolding)
                 .addTo(fluidSolidifierRecipes);
 		}
 	}
@@ -460,12 +472,14 @@ public class TGregRecipeRegistry {
                             .itemOutputs(stack.copy())
                             .duration(800)
                             .eut(getPowerRequired(m))
+                            .recipeCategory(ticPartExtruding)
                             .addTo(extruderRecipes);
                         GT_Values.RA.stdBuilder()
                             .itemInputs(GT_OreDictUnificator.get(OrePrefixes.plate, m, 1), new ItemStack(TGregworks.registry.toolParts.get(p), 0, Short.MAX_VALUE))
                             .itemOutputs(stack.copy())
                             .duration(800)
                             .eut(getPowerRequired(m))
+                            .recipeCategory(ticPartExtruding)
                             .addTo(extruderRecipes);
 					}
 				}
@@ -478,6 +492,7 @@ public class TGregRecipeRegistry {
                         .itemOutputs(new ItemStack(TGregworks.shardCast, 1, 0))
                         .duration(800)
                         .eut(getPowerRequired(m))
+                        .recipeCategory(ticPartExtruding)
                         .addTo(extruderRecipes);
 				}
 			}
