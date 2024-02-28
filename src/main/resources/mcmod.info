@@ -1,11 +1,11 @@
 {
 	"modListVersion": 2,
 	"modList": [{
-		"modid": "tgregworks",
-		"name": "Tinkers' Gregworks",
-		"description": "A GregTech - Tinkers' Contruct crossover addon.",
-		"version": "${version}",
-		"mcversion": "${mcversion}",
+		"modid": "${modId}",
+		"name": "${modName}",
+		"description": "A GregTech - Tinkers' Construct crossover addon.",
+		"version": "${modVersion}",
+		"mcversion": "${minecraftVersion}",
 		"url": "",
 		"updateUrl": "",
 		"authorList": ["Vexatos"],
@@ -16,6 +16,6 @@
 		"requiredMods": [],
 		"dependencies": [],
 		"dependants": [],
-		"useDependencyInformation": true
+		"useDependencyInformation": false
 	}]
 }
