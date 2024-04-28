@@ -12,6 +12,7 @@ import javax.annotation.Nonnull;
  * @author Vexatos
  */
 public class TGregUtils {
+
 	public static NBTTagCompound getTagCompound(ItemStack stack) {
 		if(stack.hasTagCompound()) {
 			return stack.getTagCompound();
@@ -43,7 +44,7 @@ public class TGregUtils {
 		return matID != null ? matID : 0;
 	}
 
-    @Nonnull
+	@Nonnull
 	public static ItemStack newItemStack(Materials m, PartTypes p, int amount) {
 		ItemStack stack = new ItemStack(TGregworks.registry.toolParts.get(p), amount, TGregworks.registry.matIDs.get(m));
 		NBTTagCompound data = TGregUtils.getTagCompound(stack);
