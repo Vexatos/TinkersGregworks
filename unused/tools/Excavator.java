@@ -2,7 +2,7 @@ package vexatos.tgregworks.tools;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import gregtech.api.util.GT_ModHandler;
+import gregtech.api.util.GTModHandler;
 import ic2.api.item.ElectricItem;
 import ic2.api.item.IElectricItem;
 import ic2.api.item.IElectricItemManager;
@@ -211,7 +211,7 @@ public class Excavator extends tconstruct.items.tools.Excavator implements ITGre
 		}
 		for(int i = 1; i < 5; i++) {
 			ItemStack tArmor = entityLivingBase.getEquipmentInSlot(i);
-			if(GT_ModHandler.isElectricItem(tArmor)) {
+			if(GTModHandler.isElectricItem(tArmor)) {
 				IElectricItem tArmorItem = (IElectricItem) tArmor.getItem();
 				if(tArmorItem.canProvideEnergy(tArmor) && tArmorItem.getTier(tArmor) >= getTier(itemStack)) {
 					double tCharge = ElectricItem.manager.discharge(tArmor, charge(itemStack, Integer.MAX_VALUE - 1, Integer.MAX_VALUE, true, true), Integer.MAX_VALUE, true, true, false);

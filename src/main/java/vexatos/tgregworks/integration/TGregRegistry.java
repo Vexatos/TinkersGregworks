@@ -1,7 +1,7 @@
 package vexatos.tgregworks.integration;
 
 import cpw.mods.fml.common.registry.GameRegistry;
-import gregtech.api.GregTech_API;
+import gregtech.api.GregTechAPI;
 import gregtech.api.enums.Materials;
 import net.minecraftforge.common.config.Property;
 import tconstruct.library.TConstructRegistry;
@@ -66,7 +66,7 @@ public class TGregRegistry {
 
 	public void registerToolParts() {
 		TGregworks.log.info("Registering TGregworks tool parts.");
-		List<Materials> gtMaterials = Arrays.asList(GregTech_API.sGeneratedMaterials);
+		List<Materials> gtMaterials = Arrays.asList(GregTechAPI.sGeneratedMaterials);
 		for(Materials m : Materials.values()) {
 			if(((m.mTypes & 64) == 64) && !doesMaterialExist(m) && gtMaterials.contains(m) && TGregworks.config.get(Config.Category.Enable, m.name(), true).getBoolean(true)) {
 				toolMaterials.add(m);
@@ -219,7 +219,7 @@ public class TGregRegistry {
 		registerModifierRecipe(Materials.Master);
 		registerModifierRecipe(Materials.Ultimate);
 
-		registerModifierRecipe(ItemList.ZPM.get(1), GT_OreDictUnificator.get(OrePrefixes.circuit, Materials.Primitive, 1));
+		registerModifierRecipe(ItemList.ZPM.get(1), GTOreDictUnificator.get(OrePrefixes.circuit, Materials.Primitive, 1));
 
 		TGregRegistry.batteryModifier.singleuse.add(ItemList.ZPM.get(1));
 		ModifyBuilder.registerModifier(TGregRegistry.batteryModifier);
@@ -235,8 +235,8 @@ public class TGregRegistry {
 	public HashMap<Long, Integer> modifierCharges = new HashMap<Long, Integer>();
 
 	private static void registerModifierRecipe(Materials material) {
-		TGregRegistry.batteryModifier.batteries.put(GT_OreDictUnificator.get(OrePrefixes.battery, material, 1),
-			GT_OreDictUnificator.get(OrePrefixes.circuit, material, 1));
+		TGregRegistry.batteryModifier.batteries.put(GTOreDictUnificator.get(OrePrefixes.battery, material, 1),
+			GTOreDictUnificator.get(OrePrefixes.circuit, material, 1));
 	}
 
 	private static void registerModifierRecipe(ItemStack stack1, ItemStack stack2) {
@@ -262,7 +262,7 @@ public class TGregRegistry {
 
 	private boolean doesMaterialExist(Materials m) {
 		return !addMaterialsAnyway && TConstructRegistry.toolMaterialStrings.containsKey(m.name());
-		// && Arrays.asList(GregTech_API.sGeneratedMaterials).contains(m);
+		// && Arrays.asList(GregTechAPI.sGeneratedMaterials).contains(m);
 	}
 
 	public HashMap<PartTypes, ItemTGregPart> toolParts = new HashMap<PartTypes, ItemTGregPart>();
