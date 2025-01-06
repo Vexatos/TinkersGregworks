@@ -20,7 +20,6 @@ import org.apache.logging.log4j.Logger;
 import tconstruct.TConstruct;
 import tconstruct.library.TConstructCreativeTab;
 import tconstruct.library.crafting.ModifyBuilder;
-import tconstruct.modifiers.armor.TravelModRepair;
 import tconstruct.modifiers.tools.ModToolRepair;
 import tconstruct.tools.items.Pattern;
 import vexatos.tgregworks.integration.TGregRecipeRegistry;
