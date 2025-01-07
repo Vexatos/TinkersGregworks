@@ -20,6 +20,7 @@ import org.apache.logging.log4j.Logger;
 import tconstruct.TConstruct;
 import tconstruct.library.TConstructCreativeTab;
 import tconstruct.library.crafting.ModifyBuilder;
+import tconstruct.modifiers.tools.ModToolRepair;
 import tconstruct.tools.items.Pattern;
 import vexatos.tgregworks.integration.TGregRecipeRegistry;
 import vexatos.tgregworks.integration.TGregRegistry;
@@ -147,6 +148,7 @@ public class TGregworks {
 			ticTooltips.postInit();
 		}
 
+		ModifyBuilder.instance.itemModifiers.removeIf(im -> im.getClass().equals(ModToolRepair.class));
 		if(Loader.isModLoaded(Mods.IguanaTweaksTConstruct)) {
 			iguanatweakstconstruct.postInit();
 		} else {
