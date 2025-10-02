@@ -68,7 +68,7 @@ public class TGregRegistry {
 		TGregworks.log.info("Registering TGregworks tool parts.");
 		List<Materials> gtMaterials = Arrays.asList(GregTechAPI.sGeneratedMaterials);
 		for(Materials m : Materials.values()) {
-			if(((m.mTypes & 64) == 64) && !doesMaterialExist(m) && gtMaterials.contains(m) && TGregworks.config.get(Config.Category.Enable, m.name(), true).getBoolean(true)) {
+			if(m.hasToolHeadItems() && !doesMaterialExist(m) && gtMaterials.contains(m) && TGregworks.config.get(Config.Category.Enable, m.name(), true).getBoolean(true)) {
 				toolMaterials.add(m);
 				Property configProp = TGregworks.config.get(Config.onMaterial(Config.MaterialID), m.name(), 0, null, 0, 100000);
 				configProps.put(m, configProp);
