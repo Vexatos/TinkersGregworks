@@ -1,8 +1,12 @@
 package vexatos.tgregworks.integration;
 
 import cpw.mods.fml.common.registry.GameRegistry;
+import gnu.trove.map.hash.TIntObjectHashMap;
+import gnu.trove.map.hash.TObjectIntHashMap;
+import gnu.trove.set.hash.TIntHashSet;
 import gregtech.api.GregTechAPI;
 import gregtech.api.enums.Materials;
+import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Property;
 import tconstruct.library.TConstructRegistry;
 import tconstruct.library.crafting.FluidType;
@@ -25,14 +29,17 @@ public class TGregRegistry {
 	private int latestAvailableNumber = 1500;
 	private boolean addMaterialsAnyway = false;
 
-	public ArrayList<Materials> toolMaterials = new ArrayList<Materials>();
-	public ArrayList<String> toolMaterialNames = new ArrayList<String>();
-	public HashMap<Materials, Integer> matIDs = new HashMap<Materials, Integer>();
-	public HashMap<Integer, Materials> materialIDMap = new HashMap<Integer, Materials>();
+	public ArrayList<Materials> toolMaterials = new ArrayList<>();
+	public ArrayList<String> toolMaterialNames = new ArrayList<>();
+	public TObjectIntHashMap<Materials> matIDs = new TObjectIntHashMap<>();
+	public TIntObjectHashMap<Materials> materialIDMap = new  TIntObjectHashMap<>();
+	public TIntHashSet configMaterialIDs = new TIntHashSet();
 
 	private int getLatestAvailableNumber() {
+		initConfigMaterialIDs();
+
 		for(int i = latestAvailableNumber; i < 16383; i++) {
-			if(!TConstructRegistry.toolMaterials.containsKey(i) && !configIDs.contains(i)) {
+			if(!TConstructRegistry.toolMaterials.containsKey(i) && !configMaterialIDs.contains(i)) {
 				latestAvailableNumber = i + 1;
 				return i;
 			}
@@ -40,21 +47,32 @@ public class TGregRegistry {
 		throw new RuntimeException("TConstruct tool material registry ran out of IDs!");
 	}
 
-	public final HashMap<Materials, Property> configProps = new HashMap<>();
-	public final ArrayList<Integer> configIDs = new ArrayList<>();
+	private void initConfigMaterialIDs() {
+		if (!configMaterialIDs.isEmpty()) {
+			return;
+		}
+
+		ConfigCategory materialIdCategory = TGregworks.config.getCategory(Config.onMaterial(Config.MaterialID));
+		if (materialIdCategory != null) {
+			for (Property property : materialIdCategory.values()) {
+				int id = property.getInt();
+				if (id > 0) {
+					configMaterialIDs.add(property.getInt());
+				}
+			}
+		}
+	}
 
 	public int getMaterialID(Materials m) {
-		Property configProp = configProps.get(m);
-		if(configProp == null) {
-			configProp = TGregworks.config.get(Config.onMaterial(Config.MaterialID), m.getName(), 0, null, 0, 30000);
-		}
+		Property configProp = TGregworks.config.get(Config.onMaterial(Config.MaterialID), m.getName(), 0, null, 0, 30000);
 		final int configID = configProp.getInt();
 		if(configID > 0) {
 			return configID;
 		}
 
 		final int newID = getLatestAvailableNumber();
-		configProp.set(newID);
+		configProp.setValue(newID);
+		TGregworks.log.info("Automatically assigned material ID {} for material \"{}\"", newID, m.getName());
 		return newID;
 	}
 
@@ -68,11 +86,8 @@ public class TGregRegistry {
 		TGregworks.log.info("Registering TGregworks tool parts.");
 		List<Materials> gtMaterials = Arrays.asList(GregTechAPI.sGeneratedMaterials);
 		for(Materials m : Materials.values()) {
-            if(m.hasToolHeadItems() && !doesMaterialExist(m) && gtMaterials.contains(m) && TGregworks.config.get(Config.Category.Enable, m.getName(), true).getBoolean(true)) {
+			if(m.hasToolHeadItems() && !doesMaterialExist(m) && gtMaterials.contains(m) && TGregworks.config.get(Config.Category.Enable, m.getName(), true).getBoolean(true)) {
 				toolMaterials.add(m);
-				Property configProp = TGregworks.config.get(Config.onMaterial(Config.MaterialID), m.getName(), 0, null, 0, 100000);
-				configProps.put(m, configProp);
-				configIDs.add(configProp.getInt());
 			}
 		}
 		for(Materials m : toolMaterials) {
@@ -84,8 +99,6 @@ public class TGregRegistry {
 			matIDs.put(m, matID);
 			materialIDMap.put(matID, m);
 		}
-		configProps.clear();
-		configIDs.clear();
 
 		ItemTGregPart.toolMaterialNames = toolMaterialNames;
 	}
