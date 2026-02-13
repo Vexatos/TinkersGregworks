@@ -1,9 +1,6 @@
 package vexatos.tgregworks.integration;
 
 import cpw.mods.fml.common.registry.GameRegistry;
-import gnu.trove.map.hash.TIntObjectHashMap;
-import gnu.trove.map.hash.TObjectIntHashMap;
-import gnu.trove.set.hash.TIntHashSet;
 import gregtech.api.GregTechAPI;
 import gregtech.api.enums.Materials;
 import net.minecraftforge.common.config.ConfigCategory;
@@ -19,6 +16,7 @@ import vexatos.tgregworks.reference.PartTypes;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -29,11 +27,11 @@ public class TGregRegistry {
 	private int latestAvailableNumber = 1500;
 	private boolean addMaterialsAnyway = false;
 
-	public ArrayList<Materials> toolMaterials = new ArrayList<>();
-	public ArrayList<String> toolMaterialNames = new ArrayList<>();
-	public TObjectIntHashMap<Materials> matIDs = new TObjectIntHashMap<>();
-	public TIntObjectHashMap<Materials> materialIDMap = new  TIntObjectHashMap<>();
-	public TIntHashSet configMaterialIDs = new TIntHashSet();
+	public ArrayList<Materials> toolMaterials = new ArrayList<Materials>();
+	public ArrayList<String> toolMaterialNames = new ArrayList<String>();
+	public HashMap<Materials, Integer> matIDs = new HashMap<Materials, Integer>();
+	public HashMap<Integer, Materials> materialIDMap = new HashMap<Integer, Materials>();
+	public HashSet<Integer> configMaterialIDs = new HashSet<Integer>();
 
 	private int getLatestAvailableNumber() {
 		initConfigMaterialIDs();
