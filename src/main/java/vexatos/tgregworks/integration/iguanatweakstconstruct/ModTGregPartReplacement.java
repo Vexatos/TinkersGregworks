@@ -13,6 +13,7 @@ import tconstruct.library.modifier.ItemModifier;
 import tconstruct.library.tools.DualMaterialToolPart;
 import tconstruct.library.tools.ToolCore;
 import tconstruct.library.util.IToolPart;
+import tconstruct.library.weaponry.AmmoItem;
 import tconstruct.tools.TinkerTools;
 import tconstruct.weaponry.TinkerWeaponry;
 import vexatos.tgregworks.integration.recipe.tconstruct.TGregToolRecipe;
@@ -52,6 +53,10 @@ public class ModTGregPartReplacement extends ItemModifier {
 		if(tags.getInteger("Damage") > 0) {
 			return false;
 		}
+
+		// Durability is written on "Ammo" tag instead of "Damage" tag for AmmoWeapons
+		if (tool instanceof AmmoItem && ((AmmoItem) tool).getMaxAmmo(tags) != ((AmmoItem) tool).getAmmoCount(itemStack))
+			return false;
 
 		// check if any of the tools parts contain stone. we have to prevent exchanging that with disabled stone tools
 		// because otherwise the replacement-logic would not be able to obtain necessary information and crash.
