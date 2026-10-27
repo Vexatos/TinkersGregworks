@@ -2,7 +2,6 @@ package vexatos.tgregworks.integration.iguanatweakstconstruct;
 
 import iguanaman.iguanatweakstconstruct.leveling.LevelingLogic;
 import iguanaman.iguanatweakstconstruct.reference.Config;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -12,11 +11,10 @@ import tconstruct.library.crafting.ToolRecipe;
 import tconstruct.library.modifier.ItemModifier;
 import tconstruct.library.tools.DualMaterialToolPart;
 import tconstruct.library.tools.ToolCore;
-import tconstruct.library.util.IToolPart;
 import tconstruct.library.weaponry.AmmoItem;
-import tconstruct.tools.TinkerTools;
 import tconstruct.weaponry.TinkerWeaponry;
 import vexatos.tgregworks.integration.recipe.tconstruct.TGregToolRecipe;
+import vexatos.tgregworks.item.ItemTGregPart;
 
 import static iguanaman.iguanatweakstconstruct.replacing.ReplacementLogic.*;
 import static iguanaman.iguanatweakstconstruct.replacing.ReplacementLogic.PartTypes.*;
@@ -91,18 +89,8 @@ public class ModTGregPartReplacement extends ItemModifier {
 			}
 			Item item = parts[i].getItem();
 
-			if(tool == TinkerWeaponry.arrowAmmo) {
-				if(item == Items.reeds || item == Items.blaze_rod || item == Items.bone || item == Items.stick) {
-					item = TinkerWeaponry.partArrowShaft;
-				}
-			}
-
-			if(item == Items.bone || item == Items.stick) {
-				item = TinkerTools.toolRod;
-			}
-
-			// is it a toolpart?
-			if(!(item instanceof IToolPart)) {
+			// only TGreg parts. regular parts and vanilla items are left to Iguana's ModPartReplacement
+			if(!(item instanceof ItemTGregPart)) {
 				return false;
 			}
 
@@ -139,7 +127,6 @@ public class ModTGregPartReplacement extends ItemModifier {
 		// determine materials
 		int newMatId = ToolBuilder.instance.getMaterialID(parts[partIndex]);
 		int oldMatId = getToolPartMaterial(tags, partType);
-		int modifiers = tags.getInteger("Modifiers");
 
 		// detect possible secondary position for part (e.g. hammer has 2 plates, etc.)
 		// index 0 = handle
@@ -159,13 +146,23 @@ public class ModTGregPartReplacement extends ItemModifier {
 			}
 		}
 
-		// do we have enough modifiers left if we exchange this part?
-		// This probably doesn't work right for bolts (which replace two parts at a time).
-		if(hasExtraModifier(oldMatId)) // paper or thaumium. sadly hardcoded.
-		{
-			modifiers--;
+		// can the tool be built with the new part, and do we have enough modifiers left if we exchange it?
+		PartTypes buildPartType = getBuildPartType(tool, partType);
+		ItemStack[] rebuilt = rebuildTool(tool, tags, buildPartType, parts[partIndex]);
+		if(rebuilt == null) {
+			return false;
 		}
-		if(hasExtraModifier(newMatId)) {
+
+		NBTTagCompound originalTags = rebuilt[0].getTagCompound().getCompoundTag("InfiTool");
+		NBTTagCompound newTags = rebuilt[1].getTagCompound().getCompoundTag("InfiTool");
+		if(hasSameParts(originalTags, newTags)) {
+			return false;
+		}
+
+		int modifiers = getResultingModifierCount(tags, originalTags, newTags);
+
+		// replacing the head gives back the modifier used by the mob head boost
+		if(buildPartType == HEAD && Config.removeMobHeadOnPartReplacement && Config.mobHeadRequiresModifier && tags.hasKey("Mining Level Boost")) {
 			modifiers++;
 		}
 		if(modifiers < 0) {
@@ -205,16 +202,6 @@ public class ModTGregPartReplacement extends ItemModifier {
 			}
 			replacementPartItem = parts[i].getItem();
 			partIndex = i;
-		}
-
-		if(tool == TinkerWeaponry.arrowAmmo) {
-			if(replacementPartItem == Items.reeds || replacementPartItem == Items.blaze_rod || replacementPartItem == Items.bone || replacementPartItem == Items.stick) {
-				replacementPartItem = TinkerWeaponry.partArrowShaft;
-			}
-		}
-
-		if(replacementPartItem == Items.bone || replacementPartItem == Items.stick) {
-			replacementPartItem = TinkerTools.toolRod;
 		}
 
 		// detect which part to replace
